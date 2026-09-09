@@ -1,0 +1,27 @@
+<Project>
+    <PropertyGroup>
+        <!-- 
+        Nivel de reglas CAxxxx de los analyzers de .NET (Microsoft.CodeAnalysis.NetAnalyzers).
+        • None:         Ningún CA habilitado salvo que lo actives a mano.
+        • Default:      El subconjunto "de fábrica" del SDK — bastante conservador, muchas reglas quedan apagadas
+        • Minimum:      Solo lo más básico/seguro.
+        • Recommended:  Set más amplio, "buenas prácticas" recomendadas por Microsoft.
+        • All:          Todas las CAxxxx habilitadas, incluidas las más opinables/ruidosas.
+        -->
+        <AnalysisMode>All</AnalysisMode>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <!-- Agrega el paquete StyleCop.Analyzers a todos los pryectos. -->
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <!-- Integra el archivo stylecop.json a todos los pryectos. -->
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
+    </ItemGroup>
+
+</Project>
