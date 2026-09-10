@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My.System.Extensions", "Src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My.Data.InterceptableDbConnection", "Src\Core\My.Data.InterceptableDbConnection\My.Data.InterceptableDbConnection.csproj", "{AE4B1CF9-0D71-41F6-AAB2-A1F2585A6B3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Contracts", "Src\Services\Shared\Records.Shared.Contracts\Records.Shared.Contracts.csproj", "{99243116-ED1B-4965-92CD-A10AFAD583DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Infra.Http", "Src\Services\Shared\Records.Shared.Infra.Http\Records.Shared.Infra.Http.csproj", "{9CED4C99-3C87-4E5A-B213-9DE8340B2976}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +42,14 @@ Global
 		{AE4B1CF9-0D71-41F6-AAB2-A1F2585A6B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE4B1CF9-0D71-41F6-AAB2-A1F2585A6B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE4B1CF9-0D71-41F6-AAB2-A1F2585A6B3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99243116-ED1B-4965-92CD-A10AFAD583DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99243116-ED1B-4965-92CD-A10AFAD583DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99243116-ED1B-4965-92CD-A10AFAD583DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99243116-ED1B-4965-92CD-A10AFAD583DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CED4C99-3C87-4E5A-B213-9DE8340B2976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CED4C99-3C87-4E5A-B213-9DE8340B2976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CED4C99-3C87-4E5A-B213-9DE8340B2976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CED4C99-3C87-4E5A-B213-9DE8340B2976}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9FCEAFE3-ADB8-4A23-A91B-B7387D8B6F1B} = {F4B7F0A7-E0EA-4A9E-8041-5EA057250C7F}
@@ -49,5 +61,7 @@ Global
 		{00BE2FA3-A45F-40AC-A300-66B939421399} = {5B36C092-D2B3-470E-B5C4-F9258B61393C}
 		{5EB99CC1-9AA7-4E10-92B0-A9276CFB51AD} = {5B36C092-D2B3-470E-B5C4-F9258B61393C}
 		{AE4B1CF9-0D71-41F6-AAB2-A1F2585A6B3D} = {5B36C092-D2B3-470E-B5C4-F9258B61393C}
+		{99243116-ED1B-4965-92CD-A10AFAD583DD} = {A80515DE-53D5-4A23-A6A4-44AE89830F4B}
+		{9CED4C99-3C87-4E5A-B213-9DE8340B2976} = {8F5EE7EB-BD5F-4D53-89AB-2CEA908A1B20}
 	EndGlobalSection
 EndGlobal

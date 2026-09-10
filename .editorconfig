@@ -253,9 +253,11 @@ dotnet_diagnostic.SA1208.severity = suggestion
 # CAxxxx.
 dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA2007.severity = none
-
+dotnet_diagnostic.CA1822.severity = none # El miembro "GetValidationErrors" no tiene acceso a los datos de la instancia y se puede marcar como static.
 
 #### Rider/Resharper ####
 
 # ReSharper/Rider: preferencia de coma final en listas/inicializadores multilínea.
 resharper_csharp_trailing_comma_in_multiline_lists = true   # true = permitir/preferir coma final, false = quitarla.
+
+
