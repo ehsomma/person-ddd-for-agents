@@ -2,17 +2,23 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Records.Persons.Shared.Entities;
+using Records.Persons.Shared.Configuration;
 
 #endregion
 
-namespace Records.Persons.Shared.Configuration.DependencyInjection;
+namespace Records.Persons.Infra.Configuration.DependencyInjection;
 
 /// <summary>
 /// Extensions methods for dependency injection.
 /// </summary>
-public static class DependencyInjection
+public static class ServiceCollectionExtensions
 {
+    #region Definitions
+
+    private const string KeyNotFound = "The '{0}' configuration key was not found.";
+
+    #endregion
+
     #region Public methods
 
     /// <summary>
@@ -34,18 +40,21 @@ public static class DependencyInjection
         • Microsoft.Extensions.Options // .ValidateOnStart()
         • Microsoft.Extensions.Options.ConfigurationExtensions // .Bind()
         • Microsoft.Extensions.Options.DataAnnotations // .ValidateDataAnnotations()
+
+        To inject IOptions<AppSettings> via constructor on methods or clases.
+        To inject IOptionsSnapshot<AppSettings> via constructor on methods or clases.
+        To inject IOptionsMonitor<AppSettings> via constructor on methods or clases.
         */
 
-        // To inject IOptions<AppSettings> via constructor on methods or clases.
-        // To inject IOptionsSnapshot<AppSettings> via constructor on methods or clases.
-        // To inject IOptionsMonitor<AppSettings> via constructor on methods or clases.
+        // NOTE: Con el .Validate() no hace falta tener una clase (tipo ConfigurationManager)
+        // que controle si existen las keys de configuración, esto lo reemplaza.
         services
-            .AddOptions<PersonsAppSettings>()
-            .Bind(configuration.GetSection(PersonsAppSettings.SectionName))
+            .AddOptions<PersonsSettings>()
+            .Bind(configuration.GetSection(PersonsSettings.SettingsKey))
             .ValidateDataAnnotations()
             .Validate(
                 o => !string.IsNullOrWhiteSpace(o.Setting1),
-                "Falta la propiedad de configuración requerida 'AppSettings.Persons.Setting1'.")
+                string.Format(null, KeyNotFound, "AppSettings.Persons.Setting1"))
             .ValidateOnStart();
 
         // AppSettingsService (singleton).

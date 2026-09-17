@@ -1,9 +1,13 @@
 using Records.Shared.Infra.Http;
 
-namespace Records.Persons.Api.V1.Test;
+namespace Records.Persons.Api.V1.Test.HelloApi;
 
-public class HelloApi : IEndpoint
+/// <summary>
+/// Endpoint para el caso de uso `HelloApi`.
+/// </summary>
+internal sealed class HelloApiEndpoint : IEndpoint
 {
+    /// <inheritdoc/>
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         // Crea un grupo de rutas para organizar los endpoints relacionados con un path
@@ -14,13 +18,15 @@ public class HelloApi : IEndpoint
             .WithName("GetTestHelloApi");
     }
 
-    /// <summary>GET test/helloapi/{id}.</summary>
+    /// <summary>
+    /// GET test/helloapi/{id}.
+    /// </summary>
     /// <remarks>Endpoint de prueba para verificar funcionamiento de Api.</remarks>
     /// <param name="id" example="Abc123">ID único del elemento a recuperar.</param>
     /// <param name="logger">Injects the logger.</param>
     /// <response code="200">Mensaje de funcionamiento ok del Api.</response>
     /// <response code="400">Request inválido.</response>
-    private static string GetTestHelloApi(
+    private string GetTestHelloApi(
         string id,
         HttpContext httpContext,
         ILogger<Program> logger)

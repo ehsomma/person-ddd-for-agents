@@ -1,24 +1,33 @@
+using My.Exceptions;
 using Records.Shared.Infra.Http;
 
-namespace Records.Persons.Api.V1.Test;
+namespace Records.Persons.Api.V1.Test.ThrowException2;
 
-public class ThrowException1Endpoint : IEndpoint
+/// <summary>
+/// Endpoint para el caso de uso `ThrowException2`.
+/// </summary>
+internal sealed class ThrowException2Endpoint : IEndpoint
 {
+    /// <inheritdoc/>
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         // Crea un grupo de rutas para organizar los endpoints relacionados con un path
         // comun y nombre de grupo.
         RouteGroupBuilder routeGroup = app.MapGroup("/tests").WithTags("Tests");
 
-        routeGroup.MapGet("/exception1", ThrowException1)
-            .WithName("ThrowException1");
+        routeGroup.MapGet("/exception2", ThrowException2)
+            .WithName("ThrowException2");
     }
 
-    private IResult ThrowException1(HttpContext context)
+    /// <summary>
+    /// GET test/exception2.
+    /// </summary>
+    /// <remarks>Endpoint de prueba para verificar el manejo de excepciones de negocio del Api.</remarks>
+    /// <param name="context">HTTP-specific information about an individual HTTP request.</param>
+    private IResult ThrowException2(HttpContext context)
     {
-#pragma warning disable CA2201
-        Exception ex = new Exception("Excepción de prueba 1");
-#pragma warning restore CA2201
+        ForbiddenException ex = new ForbiddenException("Excepción de negocio de prueba");
+        ex.AddErrorCode("ERR.DOM.TESTEXCEPTION");
         ex.Data.Add("TraceIdentifier", context.TraceIdentifier);
         throw ex;
     }

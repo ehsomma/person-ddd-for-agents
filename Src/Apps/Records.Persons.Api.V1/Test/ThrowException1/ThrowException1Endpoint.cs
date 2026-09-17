@@ -1,9 +1,13 @@
 using Records.Shared.Infra.Http;
 
-namespace Records.Persons.Api.V1.Test;
+namespace Records.Persons.Api.V1.Test.ThrowException1;
 
-public class ThrowException1 : IEndpoint
+/// <summary>
+/// Endpoint para el caso de uso `ThrowException1`.
+/// </summary>
+internal sealed class ThrowException1Endpoint : IEndpoint
 {
+    /// <inheritdoc/>
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         // Crea un grupo de rutas para organizar los endpoints relacionados con un path
@@ -14,6 +18,11 @@ public class ThrowException1 : IEndpoint
             .WithName("ThrowException1");
     }
 
+    /// <summary>
+    /// GET test/helloapi/{id}.
+    /// </summary>
+    /// <remarks>Endpoint de prueba para verificar funcionamiento de Api.</remarks>
+    /// <param name="context">HTTP-specific information about an individual HTTP request.</param>
     private IResult ThrowException1(HttpContext context)
     {
 #pragma warning disable CA2201

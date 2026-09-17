@@ -7,7 +7,7 @@ public class SqlServerSettings
 {
     #region Declarations
 
-    /// <summary>The key to map from the appsettings.json file.</summary>
+    /// <summary>The key name to map from the appsettings.json file.</summary>
     public const string SettingsKey = "SqlServer"; // Without "...Settings" suffix.
 
     #endregion

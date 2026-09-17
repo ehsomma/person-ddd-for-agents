@@ -42,18 +42,15 @@ public static class ExceptionExtensions
     {
         ArgumentNullException.ThrowIfNull(ex);
 
-        string? errorLogId = null;
+        string? errorLogId;
 
-        if (ex != null)
+        if (ex.Data.Contains(ExDataKey.ErrorLogId))
         {
-            if (ex.Data.Contains(ExDataKey.ErrorLogId))
-            {
-                errorLogId = ex.Data[ExDataKey.ErrorLogId]?.ToString();
-            }
-            else
-            {
-                errorLogId = ex.InnerException?.GetErrorLogId();
-            }
+            errorLogId = ex.Data[ExDataKey.ErrorLogId]?.ToString();
+        }
+        else
+        {
+            errorLogId = ex.InnerException?.GetErrorLogId();
         }
 
         return errorLogId;

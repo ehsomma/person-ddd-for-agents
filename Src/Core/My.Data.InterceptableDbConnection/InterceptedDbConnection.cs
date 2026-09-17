@@ -1,4 +1,4 @@
-﻿#region Usings
+#region Usings
 
 using System.Data;
 using System.Data.Common;
@@ -93,7 +93,7 @@ public class InterceptedDbConnection : DbConnection
         await _connection.OpenAsync(cancellationToken);
     }
 
-    /// <inheritdoc cref="DbConnection.EnlistTransaction(System.Transactions.Transaction)"/>
+    /// <inheritdoc cref="DbConnection.EnlistTransaction(Transaction)"/>
     public override void EnlistTransaction(Transaction? transaction)
     {
         _connection.EnlistTransaction(transaction);

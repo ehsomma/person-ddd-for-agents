@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12"/>
+        <PackageReference Include="Scalar.AspNetCore" Version="2.16.20" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Services\Persons\Records.Persons.Infra.Configuration.DependencyInjection\Records.Persons.Infra.Configuration.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\Services\Persons\Records.Persons.Shared.Configuration\Records.Persons.Shared.Configuration.csproj" />
+      <ProjectReference Include="..\..\Services\Shared\Records.Shared.Contracts\Records.Shared.Contracts.csproj" />
+      <ProjectReference Include="..\..\Services\Shared\Records.Shared.Infra.Http.DependencyInjection\Records.Shared.Infra.Http.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\Services\Shared\Records.Shared.Infra.Http\Records.Shared.Infra.Http.csproj" />
+      <ProjectReference Include="..\..\Services\Shared\Records.Shared.Infra.OpenApi.DependencyInjection\Records.Shared.Infra.OpenApi.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\Services\Shared\Records.Shared.Infra.Serilog.DependencyInjection\Records.Shared.Infra.Serilog.DependencyInjection.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Person\CreatePerson\" />
+    </ItemGroup>
+
+</Project>

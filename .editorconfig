@@ -74,9 +74,9 @@ dotnet_style_allow_statement_immediately_after_block_experimental = true:silent 
 #### C# Coding Conventions ####
 
 # var preferences (IDE0007/IDE0008)
-csharp_style_var_for_built_in_types = true:silent                # "var" para tipos primitivos (int, string, etc.) cuando el tipo es obvio
-csharp_style_var_when_type_is_apparent = true:silent              # "var" cuando el tipo ya es evidente por la derecha (ej. "new Foo()")
-csharp_style_var_elsewhere = true:silent                          # "var" en el resto de los casos
+csharp_style_var_for_built_in_types = false:silent                # preferir tipo explícito en vez de "var" para tipos primitivos (int, string, etc.)
+csharp_style_var_when_type_is_apparent = false:silent              # preferir tipo explícito aunque sea evidente por la derecha (ej. "new Foo()")
+csharp_style_var_elsewhere = false:silent                          # preferir tipo explícito en el resto de los casos
 
 # Expression-bodied members (IDE0021/IDE0022/IDE0023/IDE0024/IDE0025/IDE0026/IDE0027/IDE0053...)
 csharp_style_expression_bodied_methods = false:silent              # métodos: preferir cuerpo con "{ }" en vez de "=>"
@@ -160,6 +160,16 @@ csharp_preserve_single_line_statements = true   # no forzar salto de línea si l
 csharp_preserve_single_line_blocks = true        # ídem para bloques cortos "{ }"
 
 #### Naming Styles ####
+
+# --- Constantes → PascalCase (VA ANTES de la regla de _field) ---
+dotnet_naming_rule.constants_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.constants_should_be_pascal_case.symbols = constant_fields
+dotnet_naming_rule.constants_should_be_pascal_case.style = pascal_case
+
+dotnet_naming_symbols.constant_fields.applicable_kinds = field
+dotnet_naming_symbols.constant_fields.applicable_accessibilities = *
+dotnet_naming_symbols.constant_fields.required_modifiers = const
+# --- fin constantes ---
 
 # Naming rules
 dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
@@ -250,14 +260,39 @@ dotnet_diagnostic.SA1208.severity = suggestion
 # "I prefer to use it as field just in protected fields in base classes like Repository base class."
 #dotnet_diagnostic.SA1401.severity = suggestion
 
+# SA1515: Single-line comment should be preceded by blank line
+dotnet_diagnostic.SA1515.severity = suggestion
+
 # CAxxxx.
 dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.CA1822.severity = none # El miembro "GetValidationErrors" no tiene acceso a los datos de la instancia y se puede marcar como static.
+dotnet_diagnostic.CA1305.severity = suggestion
+dotnet_diagnostic.CA1863.severity = suggestion
+dotnet_diagnostic.CA1716.severity = none # CA1716: Identifiers should not match keywords ("Shared" es keyword reservada en VB.NET; no aplica, este código es solo C#)
 
-#### Rider/Resharper ####
+# IDExxxx.
+dotnet_diagnostic.IDE0090.severity = suggestion # IDE0090: Use 'new(...)'
+dotnet_diagnostic.IDE0058.severity = none # IDE0058: Expression value is never used (ruido en fluent APIs, ej. minimal API .MapGet().WithName())
+dotnet_diagnostic.IDE0290.severity = silent # IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0066.severity = suggestion # IDE0066: Use switch expression.
 
-# ReSharper/Rider: preferencia de coma final en listas/inicializadores multilínea.
-resharper_csharp_trailing_comma_in_multiline_lists = true   # true = permitir/preferir coma final, false = quitarla.
+
+#### Overrides por patrón de archivo ####
+
+# IDE0038: Use pattern matching
+dotnet_diagnostic.IDE0038.severity = suggestion
+
+# IDE0045: Convert to conditional expression
+dotnet_diagnostic.IDE0045.severity = suggestion
+
+[*Endpoint.cs] # Solo para archivos que terminen con *Endpoint.
+dotnet_diagnostic.CA1812.severity = none # CA1812: Si es internal y no se instancia, borrar la clase (es un endpoint, por eso no se instancia).
+
+
+
+
+
+
 
 

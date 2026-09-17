@@ -121,6 +121,7 @@ public sealed class GlobalExceptionHandler(
     /// </summary>
     /// <param name="ex">The exception.</param>
     /// <returns>The resolved <see cref="HttpStatusCode"/>.</returns>
+    [SuppressMessage("Style", "IDE0051:Remove unused private members", Justification = "Queda por si en algún momento resolvermos el status code por tipo de excepción.")]
     private HttpStatusCode ResolveHttpStatusCode(Exception ex)
     {
         HttpStatusCode ret;
