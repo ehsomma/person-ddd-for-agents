@@ -480,3 +480,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Claude Code for Visual Studio: archivos personales/generados por la extension al conectar
+# (settings.json SI se trackea, es config compartida del equipo)
+.claude/settings.local.json
+.claude/vs-*.ps1
