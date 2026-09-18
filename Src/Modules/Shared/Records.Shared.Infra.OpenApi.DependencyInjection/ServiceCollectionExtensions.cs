@@ -94,6 +94,7 @@ public static class ServiceCollectionExtensions
             }
 
             // El tipo del schema lo puso el generador antes que nosotros.
+#pragma warning disable IDE0072 // Add missing cases
             concrete.Example = concrete.Type switch
             {
                 JsonSchemaType.Boolean when bool.TryParse(text, out bool b)
@@ -104,6 +105,7 @@ public static class ServiceCollectionExtensions
                     => JsonValue.Create(d),
                 _ => concrete.Example, // string, guid, fecha: se quedan como están
             };
+#pragma warning restore IDE0072 // Add missing cases
         }
     }
 

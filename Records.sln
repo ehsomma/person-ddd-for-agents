@@ -6,7 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{9FCEAFE3-A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{5B36C092-D2B3-470E-B5C4-F9258B61393C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C0B5A42E-5F7B-4927-9F2E-C9757687D9A6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{C0B5A42E-5F7B-4927-9F2E-C9757687D9A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persons", "Persons", "{C7D34EA1-5F52-4C78-A0BC-085A53B4D9A2}"
 EndProject
@@ -20,23 +20,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My.System.Extensions", "Src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My.Data.InterceptableDbConnection", "Src\Core\My.Data.InterceptableDbConnection\My.Data.InterceptableDbConnection.csproj", "{AE4B1CF9-0D71-41F6-AAB2-A1F2585A6B3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Contracts", "Src\Services\Shared\Records.Shared.Contracts\Records.Shared.Contracts.csproj", "{99243116-ED1B-4965-92CD-A10AFAD583DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Contracts", "Src\Modules\Shared\Records.Shared.Contracts\Records.Shared.Contracts.csproj", "{99243116-ED1B-4965-92CD-A10AFAD583DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Infra.Http", "Src\Services\Shared\Records.Shared.Infra.Http\Records.Shared.Infra.Http.csproj", "{9CED4C99-3C87-4E5A-B213-9DE8340B2976}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Infra.Http", "Src\Modules\Shared\Records.Shared.Infra.Http\Records.Shared.Infra.Http.csproj", "{9CED4C99-3C87-4E5A-B213-9DE8340B2976}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Configuration", "Src\Services\Shared\Records.Shared.Configuration\Records.Shared.Configuration.csproj", "{1D1616EA-C9EF-46A4-9301-36C08D0BE50C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Configuration", "Src\Modules\Shared\Records.Shared.Configuration\Records.Shared.Configuration.csproj", "{1D1616EA-C9EF-46A4-9301-36C08D0BE50C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Shared.Configuration", "Src\Services\Persons\Records.Persons.Shared.Configuration\Records.Persons.Shared.Configuration.csproj", "{01AA80E0-17A8-4437-9F64-41E46912B751}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Shared.Configuration", "Src\Modules\Persons\Records.Persons.Shared.Configuration\Records.Persons.Shared.Configuration.csproj", "{01AA80E0-17A8-4437-9F64-41E46912B751}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{365F7513-4E29-4867-A8DF-D2FB76575ED9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{44576F95-D848-4440-8F06-ACFBF5FC2032}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Infra.Configuration.DependencyInjection", "Src\Services\Persons\Records.Persons.Infra.Configuration.DependencyInjection\Records.Persons.Infra.Configuration.DependencyInjection.csproj", "{E71479E8-04D7-409A-A13D-F86488734658}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Infra.Configuration.DependencyInjection", "Src\Modules\Persons\Records.Persons.Infra.Configuration.DependencyInjection\Records.Persons.Infra.Configuration.DependencyInjection.csproj", "{E71479E8-04D7-409A-A13D-F86488734658}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Infra.OpenApi.DependencyInjection", "Src\Services\Shared\Records.Shared.Infra.OpenApi.DependencyInjection\Records.Shared.Infra.OpenApi.DependencyInjection.csproj", "{02ACBE6C-77A0-47BF-84DB-B634D929CC8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Infra.OpenApi.DependencyInjection", "Src\Modules\Shared\Records.Shared.Infra.OpenApi.DependencyInjection\Records.Shared.Infra.OpenApi.DependencyInjection.csproj", "{02ACBE6C-77A0-47BF-84DB-B634D929CC8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Infra.Serilog.DependencyInjection", "Src\Services\Shared\Records.Shared.Infra.Serilog.DependencyInjection\Records.Shared.Infra.Serilog.DependencyInjection.csproj", "{13F2E6BD-6318-4A0B-8544-18C1FAE7E48B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Infra.Serilog.DependencyInjection", "Src\Modules\Shared\Records.Shared.Infra.Serilog.DependencyInjection\Records.Shared.Infra.Serilog.DependencyInjection.csproj", "{13F2E6BD-6318-4A0B-8544-18C1FAE7E48B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{14F135E3-6009-4CE2-AEA0-F5F7FF2CF6EE}"
 	ProjectSection(SolutionItems) = preProject
@@ -48,7 +48,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Api.V1", "Src\Apps\Records.Persons.Api.V1\Records.Persons.Api.V1.csproj", "{9EAD933C-2B44-4CC1-8E58-CE0480906486}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Infra.Http.DependencyInjection", "Src\Services\Shared\Records.Shared.Infra.Http.DependencyInjection\Records.Shared.Infra.Http.DependencyInjection.csproj", "{5E16EEC9-0E7E-4A05-AEB6-28CC0FB1EA95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Shared.Infra.Http.DependencyInjection", "Src\Modules\Shared\Records.Shared.Infra.Http.DependencyInjection\Records.Shared.Infra.Http.DependencyInjection.csproj", "{5E16EEC9-0E7E-4A05-AEB6-28CC0FB1EA95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
