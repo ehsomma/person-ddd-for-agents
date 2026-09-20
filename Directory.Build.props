@@ -1,5 +1,8 @@
 <Project>
     <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <!-- 
         Nivel de reglas CAxxxx de los analyzers de .NET (Microsoft.CodeAnalysis.NetAnalyzers).
         • None:         Ningún CA habilitado salvo que lo actives a mano.
@@ -9,6 +12,7 @@
         • All:          Todas las CAxxxx habilitadas, incluidas las más opinables/ruidosas.
         -->
         <AnalysisMode>All</AnalysisMode>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
     
     <ItemGroup>

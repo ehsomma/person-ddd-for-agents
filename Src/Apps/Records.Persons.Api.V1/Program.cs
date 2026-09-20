@@ -1,14 +1,12 @@
-#region Usings
-
 using System.Reflection;
+using Records.Persons.Application;
 using Records.Persons.Infra.Configuration.DependencyInjection;
+using Records.Shared.Cqrs.DependencyInjection;
 using Records.Shared.Infra.Http;
 using Records.Shared.Infra.Http.DependencyInjection;
 using Records.Shared.Infra.OpenApi.DependencyInjection;
 using Records.Shared.Infra.Serilog.DependencyInjection;
 using Scalar.AspNetCore;
-
-#endregion
 
 namespace Records.Persons.Api.V1;
 
@@ -29,29 +27,39 @@ internal sealed class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+        IServiceCollection services = builder.Services;
+
         // Configures and registers Serilog as the logger.
         builder.AddSerilogCustom();
 
         // Registers the necessary configurations with the DI framework.
-        builder.Services.AddConfiguration(builder.Configuration);
+        services.AddConfiguration(builder.Configuration);
 
-        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
+        // Registers the necessary services for the CQRS pattern with the DI framework.
+        services.AddCqrs(typeof(AssemblyReference).Assembly);
+
+        services.AddEndpoints(Assembly.GetExecutingAssembly());
 
         // Adds services to the container.
-        builder.Services.AddAuthorization();
+        services.AddAuthorization();
 
         // Configura y registra la generación del documento OpenAPI.
+        //
+        // NOTE: AddOpenApi se llama acá (con "v1" como literal) y no en un helper de la librería
+        // compartida porque el source generator que lee los comentarios XML de los DTOs (<summary>,
+        // <example>, etc.) resuelve esos comentarios según las ProjectReference del proyecto donde
+        // está el call site. Ver el comentario en ConfigureOpenApiCustom para más detalle.
         const string description = "Proyecto modelo base aplicando estándares de estructura, " +
                                     "codificación, reglas y documentación de código.";
-        builder.Services.AddOpenApiCustom(
+        services.AddOpenApi("v1", options => options.ConfigureOpenApiCustom(
             title: "Demo proyecto Persons",
             version: "v1",
-            description: description);
+            description: description));
 
         // Enables API explorer for endpoints.
-        builder.Services.AddEndpointsApiExplorer();
+        services.AddEndpointsApiExplorer();
 
         WebApplication app = builder.Build();
 

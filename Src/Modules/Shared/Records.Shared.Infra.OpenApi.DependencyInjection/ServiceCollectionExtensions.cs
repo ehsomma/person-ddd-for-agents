@@ -1,7 +1,7 @@
 #region Usings
 
 using System.Text.Json.Nodes;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
 #endregion
@@ -16,48 +16,53 @@ public static class ServiceCollectionExtensions
     #region Public methods
 
     /// <summary>
-    /// Configures and registers OpenAPI document generation for the API.
+    /// Configures OpenAPI document generation for the API (title, description, schema fixes).
     /// </summary>
-    /// <param name="services">The service collection.</param>
+    /// <param name="options">The OpenAPI options to configure.</param>
     /// <param name="title">The API title shown in the OpenAPI document.</param>
-    /// <param name="version">The API version, used both as the document name and shown in the OpenAPI document.</param>
+    /// <param name="version">The API version shown in the OpenAPI document.</param>
     /// <param name="description">The API description shown in the OpenAPI document.</param>
-    /// <returns>The same service collection.</returns>
-    public static IServiceCollection AddOpenApiCustom(
-        this IServiceCollection services,
+    /// <returns>The same options instance.</returns>
+    /// <remarks>
+    /// NOTE: Esto configura las options de un <c>AddOpenApi(...)</c> ya registrado, en vez de llamarlo
+    /// directamente, porque el source generator de Microsoft.AspNetCore.OpenApi que lee los comentarios
+    /// XML (&lt;summary&gt;, &lt;example&gt;, etc.) de los DTOs resuelve esos comentarios según las
+    /// ProjectReference del proyecto donde está el call site literal de <c>AddOpenApi</c>. Esta librería
+    /// es compartida y no referencia los DTOs de cada módulo, así que si llamara a <c>AddOpenApi</c> acá
+    /// los comentarios XML de los DTOs (por ejemplo Records.Persons.Dtos) no se detectarían nunca. Por
+    /// eso <c>AddOpenApi("v1", ...)</c> se llama directamente en el Program.cs de cada API, que sí
+    /// referencia (transitivamente) sus propios DTOs, y acá solo se configuran las options.
+    /// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/openapi-comments#add-xml-documentation-sources.
+    /// </remarks>
+    public static OpenApiOptions ConfigureOpenApiCustom(
+        this OpenApiOptions options,
         string title,
         string version,
         string description)
     {
-        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(options);
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
         ArgumentException.ThrowIfNullOrWhiteSpace(version);
         ArgumentException.ThrowIfNullOrWhiteSpace(description);
 
-        // https://localhost:____/openapi/v1.json
-        // NOTE: No hace falta agregar archivos XML de otros proyectos, los reconoce automáticamente
-        // si el proyecto los genera. Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        services.AddOpenApi(version, options =>
+        options.AddDocumentTransformer((doc, _, _) =>
         {
-            options.AddDocumentTransformer((doc, _, _) =>
+            doc.Info = new OpenApiInfo
             {
-                doc.Info = new OpenApiInfo
-                {
-                    Title = title,
-                    Version = version,
-                    Description = description,
-                };
-                return Task.CompletedTask;
-            });
-
-            options.AddSchemaTransformer((schema, _, _) =>
-            {
-                FixTypedExamples(schema);
-                return Task.CompletedTask;
-            });
+                Title = title,
+                Version = version,
+                Description = description,
+            };
+            return Task.CompletedTask;
         });
 
-        return services;
+        options.AddSchemaTransformer((schema, _, _) =>
+        {
+            FixTypedExamples(schema);
+            return Task.CompletedTask;
+        });
+
+        return options;
     }
 
     #endregion

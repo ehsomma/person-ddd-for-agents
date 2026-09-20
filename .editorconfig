@@ -272,6 +272,10 @@ dotnet_diagnostic.CA1863.severity = suggestion
 # CA1716: Identifiers should not match keywords ("Shared" es keyword reservada en VB.NET; no aplica, este código es solo C#)
 dotnet_diagnostic.CA1716.severity = none
 
+# CA1724: Type names should not match namespaces (convención DDD: la carpeta/namespace del agregado coincide
+# a propósito con el nombre de su clase raíz, ej. Person/Person.cs)
+dotnet_diagnostic.CA1724.severity = none
+
 # IDExxxx.
 # IDE0090: Use 'new(...)'
 dotnet_diagnostic.IDE0090.severity = suggestion
@@ -281,6 +285,8 @@ dotnet_diagnostic.IDE0058.severity = none
 dotnet_diagnostic.IDE0290.severity = silent
 # IDE0066: Use switch expression.
 dotnet_diagnostic.IDE0066.severity = suggestion
+dotnet_diagnostic.IDE0001.severity = suggestion
+dotnet_diagnostic.IDE0305.severity = suggestion
 
 
 #### Overrides por patrón de archivo ####
@@ -291,6 +297,17 @@ dotnet_diagnostic.IDE0038.severity = suggestion
 # IDE0045: Convert to conditional expression
 dotnet_diagnostic.IDE0045.severity = suggestion
 
+
+dotnet_diagnostic.CA1040.severity = none
+
 [*Endpoint.cs]
 # CA1812: Si es internal y no se instancia, borrar la clase (es un endpoint, por eso no se instancia).
+dotnet_diagnostic.CA1812.severity = none
+
+[*CommandHandler.cs]
+# CA1812: los CommandHandler se instancian por reflection (services.Scan en AddCqrsCommandHandlers), nunca con "new".
+dotnet_diagnostic.CA1812.severity = none
+
+[*QueryHandler.cs]
+# CA1812: los QueryHandler se instancian por reflection (services.Scan en AddCqrsQueryHandlers), nunca con "new".
 dotnet_diagnostic.CA1812.severity = none

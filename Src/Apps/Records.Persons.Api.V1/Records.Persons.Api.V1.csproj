@@ -1,10 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
@@ -12,9 +6,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Application\Records.Persons.Application.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Infra.Configuration.DependencyInjection\Records.Persons.Infra.Configuration.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Shared.Configuration\Records.Persons.Shared.Configuration.csproj" />
       <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Contracts\Records.Shared.Contracts.csproj" />
+      <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Cqrs.DependencyInjection\Records.Shared.Cqrs.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Infra.Http.DependencyInjection\Records.Shared.Infra.Http.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Infra.Http\Records.Shared.Infra.Http.csproj" />
       <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Infra.OpenApi.DependencyInjection\Records.Shared.Infra.OpenApi.DependencyInjection.csproj" />
@@ -23,6 +19,7 @@
 
     <ItemGroup>
       <Folder Include="Person\CreatePerson\" />
+      <Folder Include="Person\GetPersonById\" />
     </ItemGroup>
 
 </Project>

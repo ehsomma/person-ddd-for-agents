@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Records.Shared.Cqrs.Abstractions\Records.Shared.Cqrs.Abstractions.csproj" />
+    <ProjectReference Include="..\Records.Persons.Dtos\Records.Persons.Dtos.csproj" />
+  </ItemGroup>
+
+</Project>

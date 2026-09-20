@@ -23,6 +23,7 @@ internal sealed class HelloApiEndpoint : IEndpoint
     /// </summary>
     /// <remarks>Endpoint de prueba para verificar funcionamiento de Api.</remarks>
     /// <param name="id" example="Abc123">ID único del elemento a recuperar.</param>
+    /// <param name="httpContext">Datos del contexto HTTP.</param>
     /// <param name="logger">Injects the logger.</param>
     /// <response code="200">Mensaje de funcionamiento ok del Api.</response>
     /// <response code="400">Request inválido.</response>
