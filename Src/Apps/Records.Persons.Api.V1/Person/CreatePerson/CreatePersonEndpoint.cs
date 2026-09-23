@@ -29,7 +29,7 @@ internal sealed class CreatePersonEndpoint : IEndpoint
     /// <param name="person">Datos de la persona a crear.</param>
     /// <param name="appKey" example="MyAppKey">Clave de la aplicación que origina el pedido.</param>
     /// <param name="dispatcher">Injects the command dispatcher.</param>
-    /// <param name="cancellationToken">Token de cancelación de la request.</param>
+    /// <param name="cancellationToken">Token de cancelación del request.</param>
     /// <response code="200">Persona creada.</response>
     /// <response code="400">Request inválido.</response>
     private async Task<Dto.Person> PostCreatePerson(
