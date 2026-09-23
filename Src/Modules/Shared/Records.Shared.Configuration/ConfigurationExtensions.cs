@@ -34,7 +34,7 @@ public static class ConfigurationExtensions
         {
             string assembly = Assembly.GetEntryAssembly()?.FullName ?? "(unresolved)";
 
-            throw new Exception($"Configuration section '{key}' not found in assemby {assembly}.");
+            throw new InvalidOperationException($"Configuration section '{key}' not found in assemby {assembly}.");
         }
 
         return settings;
