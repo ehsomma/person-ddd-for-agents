@@ -3,6 +3,9 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
 namespace Records.Persons.Application.Person.Commands.CreatePerson;
 
+/// <summary>
+/// Represents a command to create a new person.
+/// </summary>
 public sealed class CreatePersonCommand : ICommand<Dto.Person>
 {
     #region Contructor
