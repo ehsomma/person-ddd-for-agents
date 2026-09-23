@@ -17,9 +17,4 @@
       <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Infra.Serilog.DependencyInjection\Records.Shared.Infra.Serilog.DependencyInjection.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Person\CreatePerson\" />
-      <Folder Include="Person\GetPersonById\" />
-    </ItemGroup>
-
 </Project>

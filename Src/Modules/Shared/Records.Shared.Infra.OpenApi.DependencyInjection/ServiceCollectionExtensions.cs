@@ -1,10 +1,6 @@
-#region Usings
-
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
-
-#endregion
 
 namespace Records.Shared.Infra.OpenApi.DependencyInjection;
 

@@ -1,4 +1,6 @@
-﻿namespace Records.Shared.Configuration;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Records.Shared.Configuration;
 
 /// <summary>
 /// Represents the settings that will be mapped from the SqlServer key in the appsettings.json file.
@@ -19,9 +21,11 @@ public class SqlServerSettings
     ////public const string ProjectionDatabaseConnectionStringKey = "SqlProjectionDatabase";
 
     /// <summary>Connection string for the "Source" (Write) database.</summary>
+    [Required(AllowEmptyStrings = false)]
     public string SourceConnectionString { get; init; } = string.Empty;
 
     /// <summary>Connection string for the "Projection" (Read) database.</summary>
+    [Required(AllowEmptyStrings = false)]
     public string ProjectionConnectionString { get; init; } = string.Empty;
 
     #endregion
