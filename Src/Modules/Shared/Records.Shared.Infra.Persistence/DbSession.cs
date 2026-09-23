@@ -1,5 +1,5 @@
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using My.Data.InterceptableDbConnection;
 using Records.Shared.Configuration;
@@ -32,9 +32,20 @@ public sealed class DbSession : IDbSession
 
         // Connection to the "Source" DataBase.
         ////Connection = new SqlConnection(databaseSettings.SourceConnectionString);
-        Connection = new InterceptedDbConnection(new SqlConnection(databaseSettings.SourceConnectionString));
+        InterceptedDbConnection connection = new InterceptedDbConnection(new SqlConnection(databaseSettings.SourceConnectionString));
 
-        Connection.Open(); // The running proces IP must have access to server.
+        try
+        {
+            connection.Open(); // The running proces IP must have access to server.
+        }
+        catch
+        {
+            // If Open fails the constructor throws and nobody will call Dispose on this instance.
+            connection.Dispose();
+            throw;
+        }
+
+        Connection = connection;
     }
 
     #endregion

@@ -275,6 +275,9 @@ dotnet_diagnostic.CA1716.severity = none
 # CA1724: Type names should not match namespaces (convención DDD: la carpeta/namespace del agregado coincide
 # a propósito con el nombre de su clase raíz, ej. Person/Person.cs)
 dotnet_diagnostic.CA1724.severity = none
+# CA2000: Pasar un IDisposable al constructor de otro IDisposable transfiere la ownership
+# (patrón wrapper/decorator, ej. new InterceptedDbConnection(new SqlConnection(...)) en DbSession)
+dotnet_code_quality.CA2000.dispose_ownership_transfer_at_constructor = true
 
 # IDExxxx.
 # IDE0090: Use 'new(...)'
