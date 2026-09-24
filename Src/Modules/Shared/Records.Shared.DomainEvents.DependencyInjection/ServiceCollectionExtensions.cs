@@ -1,0 +1,1 @@
+namespace Records.Shared.DomainEvents.DependencyInjection;

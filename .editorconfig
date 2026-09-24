@@ -303,6 +303,9 @@ dotnet_diagnostic.IDE0045.severity = suggestion
 
 dotnet_diagnostic.CA1040.severity = none
 
+
+dotnet_diagnostic.CA1711.severity = none
+
 [*Endpoint.cs]
 # CA1812: Si es internal y no se instancia, borrar la clase (es un endpoint, por eso no se instancia).
 dotnet_diagnostic.CA1812.severity = none
