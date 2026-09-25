@@ -4,9 +4,8 @@ using Records.Shared.Cqrs.Abstractions;
 namespace Records.Shared.Cqrs;
 
 /// <summary>
-/// Default <see cref="ICommandDispatcher"/> implementation. Resolves the
-/// <see cref="ICommandHandler{TCommand, TCommandResponse}"/> registered for the command from
-/// the <see cref="IServiceProvider"/> supplied at construction time and delegates to it.
+/// Resolves the <see cref="ICommandHandler{TCommand, TCommandResponse}"/> registered for the command
+/// from the <see cref="IServiceProvider"/> supplied at construction time and delegates to it.
 /// </summary>
 public class CommandDispatcher : ICommandDispatcher
 {
