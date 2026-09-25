@@ -1,23 +1,20 @@
 namespace Records.Shared.DomainEvents.Abstractions;
 
 /// <summary>
-/// Represents the interface for an event that is raised within the domain and can be handled by a <see cref="IDomainEventHandler{TDomainEvent}"/>.
+/// Represents an event that is raised within the domain and can be handled by one or more
+/// <see cref="IDomainEventHandler{TEvent}"/>.
 /// </summary>
 public interface IDomainEvent
 {
-    #region Properties
-
     /// <summary>When the event occurred (UTC).</summary>
     public DateTime EventOccurredAtUtc { get; }
 
-    /// <summary>The aggregate id that the message belongs.</summary>
+    /// <summary>The id of the aggregate that raised the event.</summary>
     /// <remarks>
-    /// It is used to create MessageMetadata (and set the ContentId) to avoid navigating through
-    /// message content to get the id of the aggregate.
-    /// NOTE: Id could be string, guid, int, etc., so here we use string and you must cast your id
-    /// to string.
+    /// Lets consumers (logging, auditing, outbox, etc.) know which aggregate the event belongs to
+    /// without inspecting the concrete event type.
+    /// NOTE: the aggregate id could be a string, Guid, int, etc., so it is exposed as a string and
+    /// each event must convert its id to string.
     /// </remarks>
     public string AggregateId { get; }
-
-    #endregion
 }

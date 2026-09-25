@@ -303,8 +303,11 @@ dotnet_diagnostic.IDE0045.severity = suggestion
 
 dotnet_diagnostic.CA1040.severity = none
 
-
+[*EventHandler.cs]
+# CA1711: "EventHandler" es un sufijo reservado para delegados; acá es el contrato/handler de eventos de dominio.
 dotnet_diagnostic.CA1711.severity = none
+# CA1812: los EventHandler se instancian por reflection (services.Scan en AddDomainEvents), nunca con "new".
+dotnet_diagnostic.CA1812.severity = none
 
 [*Endpoint.cs]
 # CA1812: Si es internal y no se instancia, borrar la clase (es un endpoint, por eso no se instancia).
