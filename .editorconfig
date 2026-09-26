@@ -303,6 +303,9 @@ dotnet_diagnostic.IDE0045.severity = suggestion
 
 dotnet_diagnostic.CA1040.severity = none
 
+
+dotnet_diagnostic.IDE0028.severity = silent
+
 [*EventHandler.cs]
 # CA1711: "EventHandler" es un sufijo reservado para delegados; acá es el contrato/handler de eventos de dominio.
 dotnet_diagnostic.CA1711.severity = none

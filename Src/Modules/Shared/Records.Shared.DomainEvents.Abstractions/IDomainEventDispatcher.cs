@@ -1,8 +1,7 @@
 namespace Records.Shared.DomainEvents.Abstractions;
 
 /// <summary>
-/// Publishes a domain event to every <see cref="IDomainEventHandler{TEvent}"/> registered for its
-/// runtime type (zero, one or many), the same way MediatR's <c>Publish</c> does for notifications.
+/// Publishes a domain event to every <see cref="IDomainEventHandler{TEvent}"/> registered.
 /// </summary>
 public interface IDomainEventDispatcher
 {

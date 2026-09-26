@@ -6,14 +6,12 @@ using Records.Shared.DomainEvents.Abstractions;
 namespace Records.Shared.DomainEvents.DependencyInjection;
 
 /// <summary>
-/// Extension methods to register the domain event dispatcher and handlers with an <see cref="IServiceCollection"/>.
+/// Extension methods to register the domain event dispatcher and handlers.
 /// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Registers everything domain events need with the DI framework: <see cref="IDomainEventDispatcher"/>,
-    /// and also scans <paramref name="assembly"/> registering every <see cref="IDomainEventHandler{TEvent}"/>
-    /// found in it.
+    /// Registers everything domain events need with the DI framework.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="assembly">The assembly to scan for domain event handlers.</param>
