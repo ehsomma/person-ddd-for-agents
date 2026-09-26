@@ -56,9 +56,9 @@ public Person GetPerson(int id)
 
 ## Agrupar los miembros de las clases en regions
 
-Dentro de una clase, los miembros se agrupan en `#region`s con estos nombres y en este orden: `Declarations` (fields y constantes), `Constructor` (constructores), `Properties` (propiedades), `Public methods` (métodos `public` e `internal`), `Protected methods` (métodos `protected`, `protected internal` y `private protected`) y `Private methods` (métodos privados). Los constructores van siempre en `Constructor`, sea cual sea su visibilidad. Si la clase no tiene miembros de un tipo, esa region se omite (no se dejan regions vacías).
+Dentro de una clase, los miembros se agrupan en `#region`s con estos nombres y en este orden: `Declarations` (fields y constantes), `Constructor` (constructores), `Properties` (propiedades), `Public methods` (métodos `public` e `internal`), `Protected methods` (métodos `protected`, `protected internal` y `private protected`) y `Private methods` (métodos privados). Los constructores van siempre en `Constructor`, sea cual sea su visibilidad. Las implementaciones explícitas de interfaz (p.ej. `Task IRequestHandlerBase.Handle(...)`) van en `Public methods`: aunque no llevan modificador de acceso, son API que otras clases consumen a través de la interfaz. Si la clase no tiene miembros de un tipo, esa region se omite (no se dejan regions vacías).
 
-**Excepción:** no se usan regions en la sección de los `using`.
+**Excepción:** no se usan regions en la sección de los `using` ni en las interfaces (sus miembros son todos públicos y casi siempre del mismo tipo, así que quedaría una sola region que no aporta nada).
 
 **Por qué:** separar la clase en bloques con nombre hace que sea más fácil de leer y de navegar (se pueden colapsar en el IDE), y un orden fijo hace que siempre se sepa dónde buscar cada miembro. El orden de las regions respeta el que exige StyleCop (SA1201: constructores antes que propiedades), así el analyzer sigue validándolo. Los métodos se ordenan de más a menos visible (mismo criterio que SA1202); `internal` va con los públicos porque también es API que consumen otras clases. `SA1124` está desactivada en el `.editorconfig` justamente para permitirlo.
 
