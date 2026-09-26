@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Records.Shared.DomainEvents.Abstractions\Records.Shared.DomainEvents.Abstractions.csproj" />
-    <ProjectReference Include="..\Records.Shared.DomainEvents\Records.Shared.DomainEvents.csproj" />
+    <ProjectReference Include="..\Records.Shared.Mediator.Abstractions\Records.Shared.Mediator.Abstractions.csproj" />
+    <ProjectReference Include="..\Records.Shared.Mediator\Records.Shared.Mediator.csproj" />
   </ItemGroup>
 
 </Project>

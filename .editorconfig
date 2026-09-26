@@ -309,7 +309,7 @@ dotnet_diagnostic.IDE0028.severity = silent
 [*EventHandler.cs]
 # CA1711: "EventHandler" es un sufijo reservado para delegados; acá es el contrato/handler de eventos de dominio.
 dotnet_diagnostic.CA1711.severity = none
-# CA1812: los EventHandler se instancian por reflection (services.Scan en AddDomainEvents), nunca con "new".
+# CA1812: los EventHandler se instancian por reflection (services.Scan en AddMediator), nunca con "new".
 dotnet_diagnostic.CA1812.severity = none
 
 [*Endpoint.cs]
@@ -317,9 +317,9 @@ dotnet_diagnostic.CA1812.severity = none
 dotnet_diagnostic.CA1812.severity = none
 
 [*CommandHandler.cs]
-# CA1812: los CommandHandler se instancian por reflection (services.Scan en AddCqrsCommandHandlers), nunca con "new".
+# CA1812: los CommandHandler se instancian por reflection (services.Scan en AddMediator), nunca con "new".
 dotnet_diagnostic.CA1812.severity = none
 
 [*QueryHandler.cs]
-# CA1812: los QueryHandler se instancian por reflection (services.Scan en AddCqrsQueryHandlers), nunca con "new".
+# CA1812: los QueryHandler se instancian por reflection (services.Scan en AddMediator), nunca con "new".
 dotnet_diagnostic.CA1812.severity = none

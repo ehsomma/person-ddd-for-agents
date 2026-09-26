@@ -7,12 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scrutor" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Records.Shared.Cqrs.Abstractions\Records.Shared.Cqrs.Abstractions.csproj" />
-    <ProjectReference Include="..\Records.Shared.Cqrs\Records.Shared.Cqrs.csproj" />
+    <ProjectReference Include="..\Records.Shared.Mediator.Abstractions\Records.Shared.Mediator.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

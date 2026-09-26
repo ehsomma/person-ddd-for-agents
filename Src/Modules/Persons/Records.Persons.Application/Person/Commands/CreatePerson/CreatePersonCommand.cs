@@ -1,4 +1,4 @@
-using Records.Shared.Cqrs.Abstractions;
+using Records.Shared.Mediator.Abstractions;
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
 namespace Records.Persons.Application.Person.Commands.CreatePerson;

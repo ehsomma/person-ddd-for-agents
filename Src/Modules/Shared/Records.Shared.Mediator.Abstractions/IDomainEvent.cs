@@ -1,10 +1,11 @@
-namespace Records.Shared.DomainEvents.Abstractions;
+namespace Records.Shared.Mediator.Abstractions;
 
 /// <summary>
 /// Represents an event that is raised within the domain and can be handled by one or more
-/// <see cref="IDomainEventHandler{TEvent}"/>.
+/// <see cref="DomainEventHandler{TEvent}"/>. It is published with
+/// <see cref="IPublisher.Publish(INotification, CancellationToken)"/>.
 /// </summary>
-public interface IDomainEvent
+public interface IDomainEvent : INotification
 {
     /// <summary>When the event occurred (UTC).</summary>
     public DateTime EventOccurredAtUtc { get; }

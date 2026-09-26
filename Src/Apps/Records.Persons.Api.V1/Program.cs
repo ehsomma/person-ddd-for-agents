@@ -1,11 +1,11 @@
 using System.Reflection;
 using Records.Persons.Application;
 using Records.Persons.Infra.Configuration.DependencyInjection;
-using Records.Shared.Cqrs.DependencyInjection;
 using Records.Shared.Infra.Http;
 using Records.Shared.Infra.Http.DependencyInjection;
 using Records.Shared.Infra.OpenApi.DependencyInjection;
 using Records.Shared.Infra.Serilog.DependencyInjection;
+using Records.Shared.Mediator.DependencyInjection;
 using Scalar.AspNetCore;
 
 namespace Records.Persons.Api.V1;
@@ -37,8 +37,8 @@ internal sealed class Program
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        // Registers the necessary services for the CQRS pattern with the DI framework.
-        services.AddCqrs(typeof(AssemblyReference).Assembly);
+        // Registers the necessary services for the mediator (commands, queries and domain events) with the DI framework.
+        services.AddMediator(typeof(AssemblyReference).Assembly);
 
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 
