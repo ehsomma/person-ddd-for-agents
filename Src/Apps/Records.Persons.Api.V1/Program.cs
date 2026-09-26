@@ -37,7 +37,7 @@ internal sealed class Program
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        // Registers the necessary services for the mediator (commands, queries and domain events) with the DI framework.
+        // Registers the necessary services for the mediator (commands and queries) with the DI framework.
         services.AddMediator(typeof(AssemblyReference).Assembly);
 
         services.AddEndpoints(Assembly.GetExecutingAssembly());
