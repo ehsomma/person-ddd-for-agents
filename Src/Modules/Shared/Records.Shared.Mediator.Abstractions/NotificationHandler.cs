@@ -10,6 +10,8 @@ namespace Records.Shared.Mediator.Abstractions;
 public abstract class NotificationHandler<TNotification> : INotificationHandler<TNotification>
     where TNotification : INotification
 {
+    #region Public methods
+
     /// <inheritdoc/>
     public abstract Task Handle(TNotification notification, CancellationToken cancellationToken = default);
 
@@ -19,4 +21,6 @@ public abstract class NotificationHandler<TNotification> : INotificationHandler<
         Task handleTask = Handle((TNotification)notification, cancellationToken);
         return handleTask;
     }
+
+    #endregion
 }

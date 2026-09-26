@@ -16,6 +16,8 @@ namespace Records.Persons.Api.V1;
 /// </summary>
 internal sealed class Program
 {
+    #region Public methods
+
     /// <summary>
     /// Creates an instance of the web application’s host. The host is responsible for
     /// bootstrapping the application and setting up the necessary services and middleware.
@@ -88,4 +90,6 @@ internal sealed class Program
 
         app.Run();
     }
+
+    #endregion
 }

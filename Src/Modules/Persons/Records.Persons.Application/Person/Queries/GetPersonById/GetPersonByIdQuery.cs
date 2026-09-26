@@ -8,7 +8,7 @@ namespace Records.Persons.Application.Person.Queries.GetPersonById;
 /// </summary>
 public sealed class GetPersonByIdQuery : IQuery<Dto.Person>
 {
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetPersonByIdQuery"/> class.

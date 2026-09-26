@@ -9,6 +9,8 @@ namespace Records.Shared.Application.DependencyInjection;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
+    #region Public methods
+
     /// <summary>
     /// Registers the shared application services with the DI framework (e.g. <see cref="IDomainEventPublisher"/>).
     /// </summary>
@@ -25,4 +27,6 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    #endregion
 }

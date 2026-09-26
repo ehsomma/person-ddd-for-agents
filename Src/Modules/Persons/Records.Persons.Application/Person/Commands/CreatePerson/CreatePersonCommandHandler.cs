@@ -8,10 +8,14 @@ namespace Records.Persons.Application.Person.Commands.CreatePerson;
 /// </summary>
 internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCommand, Dto.Person>
 {
+    #region Public methods
+
     /// <inheritdoc />
     public override Task<Dto.Person> Handle(CreatePersonCommand command, CancellationToken cancellationToken = default)
     {
         // TODO: Crear clase base Shared.Application.CammandHandler (tomar ejemplo del proyecto DDD).
         return Task.FromResult(command.Person);
     }
+
+    #endregion
 }

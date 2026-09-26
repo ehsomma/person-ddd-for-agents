@@ -11,7 +11,13 @@ namespace Records.Shared.Mediator;
 /// </summary>
 public class Mediator : IMediator
 {
+    #region Declarations
+
     private readonly IServiceProvider _serviceProvider;
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Mediator"/> class.
@@ -25,6 +31,10 @@ public class Mediator : IMediator
     {
         _serviceProvider = serviceProvider;
     }
+
+    #endregion
+
+    #region Public methods
 
     /// <inheritdoc/>
     public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
@@ -76,4 +86,6 @@ public class Mediator : IMediator
             await handler.Handle(notification, cancellationToken);
         }
     }
+
+    #endregion
 }

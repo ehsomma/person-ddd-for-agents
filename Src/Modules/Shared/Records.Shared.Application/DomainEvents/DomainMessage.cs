@@ -9,6 +9,8 @@ namespace Records.Shared.Application.DomainEvents;
 /// </summary>
 public static class DomainMessage
 {
+    #region Public methods
+
     /// <summary>
     /// Creates a <see cref="DomainMessage{TEvent}"/> whose <c>TEvent</c> is the runtime type of
     /// <paramref name="domainEvent"/>.
@@ -35,6 +37,8 @@ public static class DomainMessage
         INotification message = (INotification)Activator.CreateInstance(messageType, metadata, domainEvent)!;
         return message;
     }
+
+    #endregion
 }
 
 /// <summary>
@@ -47,6 +51,8 @@ public static class DomainMessage
 public class DomainMessage<TEvent> : INotification
     where TEvent : IDomainEvent
 {
+    #region Constructor
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainMessage{TEvent}"/> class.
     /// </summary>
@@ -62,10 +68,16 @@ public class DomainMessage<TEvent> : INotification
         DomainEvent = domainEvent;
     }
 
+    #endregion
+
+    #region Properties
+
     /// <summary>The metadata of the message.</summary>
     public MessageMetadata Metadata { get; }
 
     /// <summary>The wrapped domain event.</summary>
     public TEvent DomainEvent { get; }
+
+    #endregion
 }
 #pragma warning restore SA1402

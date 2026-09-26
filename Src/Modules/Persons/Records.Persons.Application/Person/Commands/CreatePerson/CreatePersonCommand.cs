@@ -8,7 +8,7 @@ namespace Records.Persons.Application.Person.Commands.CreatePerson;
 /// </summary>
 public sealed class CreatePersonCommand : ICommand<Dto.Person>
 {
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreatePersonCommand"/> class.

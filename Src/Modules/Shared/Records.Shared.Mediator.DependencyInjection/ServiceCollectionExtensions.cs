@@ -10,6 +10,8 @@ namespace Records.Shared.Mediator.DependencyInjection;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
+    #region Public methods
+
     /// <summary>
     /// Registers everything the mediator needs with the DI framework: <see cref="IMediator"/>,
     /// <see cref="ISender"/> and <see cref="IPublisher"/> (the same scoped instance), and every request
@@ -60,6 +62,10 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    #endregion
+
+    #region Private methods
 
     /// <summary>
     /// The mediator resolves a single handler per request with <c>GetRequiredService</c>. If two classes
@@ -114,4 +120,6 @@ public static class ServiceCollectionExtensions
 
         throw new InvalidOperationException($"Notification handler registered more than once for the same notification: {details}");
     }
+
+    #endregion
 }

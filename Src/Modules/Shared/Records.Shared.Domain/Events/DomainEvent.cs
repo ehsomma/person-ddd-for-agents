@@ -6,6 +6,8 @@ namespace Records.Shared.Domain.Events;
 /// </summary>
 public abstract class DomainEvent : IDomainEvent
 {
+    #region Constructor
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainEvent"/> class.
     /// </summary>
@@ -16,9 +18,15 @@ public abstract class DomainEvent : IDomainEvent
         EventOccurredAtUtc = DateTime.UtcNow;
     }
 
+    #endregion
+
+    #region Properties
+
     /// <inheritdoc/>
     public DateTime EventOccurredAtUtc { get; }
 
     /// <inheritdoc/>
     public string AggregateId { get; }
+
+    #endregion
 }

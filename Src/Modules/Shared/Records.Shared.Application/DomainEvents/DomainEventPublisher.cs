@@ -10,7 +10,13 @@ namespace Records.Shared.Application.DomainEvents;
 /// </summary>
 public class DomainEventPublisher : IDomainEventPublisher
 {
+    #region Declarations
+
     private readonly IPublisher _publisher;
+
+    #endregion
+
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainEventPublisher"/> class.
@@ -20,6 +26,10 @@ public class DomainEventPublisher : IDomainEventPublisher
     {
         _publisher = publisher;
     }
+
+    #endregion
+
+    #region Public methods
 
     /// <inheritdoc/>
     public async Task Publish(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
@@ -36,4 +46,6 @@ public class DomainEventPublisher : IDomainEventPublisher
             await _publisher.Publish(message, cancellationToken);
         }
     }
+
+    #endregion
 }

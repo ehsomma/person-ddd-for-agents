@@ -11,6 +11,8 @@ namespace Records.Persons.Api.V1.Person.CreatePerson;
 /// </summary>
 internal sealed class CreatePersonEndpoint : IEndpoint
 {
+    #region Public methods
+
     /// <inheritdoc/>
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -21,6 +23,10 @@ internal sealed class CreatePersonEndpoint : IEndpoint
         routeGroup.MapPost("/", PostCreatePerson)
             .WithName("PostCreatePerson");
     }
+
+    #endregion
+
+    #region Private methods
 
     /// <summary>
     /// POST persons.
@@ -43,4 +49,6 @@ internal sealed class CreatePersonEndpoint : IEndpoint
         Dto.Person createdPerson = await sender.Send(command, cancellationToken);
         return createdPerson;
     }
+
+    #endregion
 }

@@ -8,9 +8,13 @@ namespace Records.Persons.Application.Person.Queries.GetPersonById;
 /// </summary>
 internal sealed class GetPersonByIdQueryHandler : QueryHandler<GetPersonByIdQuery, Dto.Person>
 {
+    #region Public methods
+
     /// <inheritdoc />
     public override Task<Dto.Person> Handle(GetPersonByIdQuery query, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(new Dto.Person());
     }
+
+    #endregion
 }
