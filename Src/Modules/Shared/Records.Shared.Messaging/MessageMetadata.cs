@@ -8,6 +8,8 @@ namespace Records.Shared.Messaging;
 /// </summary>
 public class MessageMetadata
 {
+    #region Constructor
+
     /// <summary>
     /// Initializes a new instance of the <see cref="MessageMetadata"/> class for a root message (one not
     /// caused by another message), so its <see cref="CorrelationId"/> and <see cref="CausationId"/> are
@@ -64,6 +66,10 @@ public class MessageMetadata
         ContentId = contentId;
     }
 
+    #endregion
+
+    #region Properties
+
     /// <summary>The unique id of the message.</summary>
     public Guid MessageId { get; init; }
 
@@ -89,6 +95,10 @@ public class MessageMetadata
     /// </remarks>
     public string ContentId { get; init; }
 
+    #endregion
+
+    #region Private methods
+
     /// <summary>
     /// Validates the argument before chaining to the private constructor (a constructor initializer
     /// cannot run statements before calling <c>this(...)</c>).
@@ -98,4 +108,6 @@ public class MessageMetadata
         ArgumentNullException.ThrowIfNull(causationMetadata);
         return causationMetadata;
     }
+
+    #endregion
 }
