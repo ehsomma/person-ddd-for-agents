@@ -53,3 +53,95 @@ public Person GetPerson(int id)
     return person;
 }
 ```
+
+## Agrupar los miembros de las clases en regions
+
+Dentro de una clase, los miembros se agrupan en `#region`s con estos nombres y en este orden: `Declarations` (fields y constantes), `Constructor` (constructores), `Properties` (propiedades), `Public methods` (métodos `public` e `internal`), `Protected methods` (métodos `protected`, `protected internal` y `private protected`) y `Private methods` (métodos privados). Los constructores van siempre en `Constructor`, sea cual sea su visibilidad. Si la clase no tiene miembros de un tipo, esa region se omite (no se dejan regions vacías).
+
+**Excepción:** no se usan regions en la sección de los `using`.
+
+**Por qué:** separar la clase en bloques con nombre hace que sea más fácil de leer y de navegar (se pueden colapsar en el IDE), y un orden fijo hace que siempre se sepa dónde buscar cada miembro. El orden de las regions respeta el que exige StyleCop (SA1201: constructores antes que propiedades), así el analyzer sigue validándolo. Los métodos se ordenan de más a menos visible (mismo criterio que SA1202); `internal` va con los públicos porque también es API que consumen otras clases. `SA1124` está desactivada en el `.editorconfig` justamente para permitirlo.
+
+✗ Incorrecto:
+```csharp
+#region Usings
+
+using System;
+
+#endregion
+
+public class PersonService
+{
+    private const int MaxNameLength = 100;
+    private readonly IPersonRepository _repository;
+
+    public PersonService(IPersonRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public int Count { get; private set; }
+
+    public Person GetPerson(int id)
+    {
+        Person person = _repository.FindById(id);
+        return person;
+    }
+
+    private static bool IsValidName(string name)
+    {
+        bool isValid = name.Length <= MaxNameLength;
+        return isValid;
+    }
+}
+```
+
+✓ Correcto:
+```csharp
+using System;
+
+public class PersonService
+{
+    #region Declarations
+
+    private const int MaxNameLength = 100;
+    private readonly IPersonRepository _repository;
+
+    #endregion
+
+    #region Constructor
+
+    public PersonService(IPersonRepository repository)
+    {
+        _repository = repository;
+    }
+
+    #endregion
+
+    #region Properties
+
+    public int Count { get; private set; }
+
+    #endregion
+
+    #region Public methods
+
+    public Person GetPerson(int id)
+    {
+        Person person = _repository.FindById(id);
+        return person;
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private static bool IsValidName(string name)
+    {
+        bool isValid = name.Length <= MaxNameLength;
+        return isValid;
+    }
+
+    #endregion
+}
+```
