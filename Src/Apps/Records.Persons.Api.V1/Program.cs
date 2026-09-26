@@ -1,6 +1,7 @@
 using System.Reflection;
 using Records.Persons.Application;
 using Records.Persons.Infra.Configuration.DependencyInjection;
+using Records.Shared.Application.DependencyInjection;
 using Records.Shared.Infra.Http;
 using Records.Shared.Infra.Http.DependencyInjection;
 using Records.Shared.Infra.OpenApi.DependencyInjection;
@@ -39,6 +40,9 @@ internal sealed class Program
 
         // Registers the necessary services for the mediator (commands and queries) with the DI framework.
         services.AddMediator(typeof(AssemblyReference).Assembly);
+
+        // Registers the shared application services (e.g. IDomainEventPublisher) with the DI framework.
+        services.AddApplication();
 
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 

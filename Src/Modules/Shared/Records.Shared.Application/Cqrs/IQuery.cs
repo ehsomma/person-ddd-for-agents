@@ -1,4 +1,6 @@
-namespace Records.Shared.Mediator.Abstractions;
+using Records.Shared.Mediator.Abstractions;
+
+namespace Records.Shared.Application.Cqrs;
 
 /// <summary>
 /// Marks a query (a request that only reads state) that produces a <typeparamref name="TResponse"/>

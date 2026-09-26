@@ -9,6 +9,7 @@
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Application\Records.Persons.Application.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Infra.Configuration.DependencyInjection\Records.Persons.Infra.Configuration.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Shared.Configuration\Records.Persons.Shared.Configuration.csproj" />
+      <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Application.DependencyInjection\Records.Shared.Application.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Contracts\Records.Shared.Contracts.csproj" />
       <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Mediator.DependencyInjection\Records.Shared.Mediator.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Infra.Http.DependencyInjection\Records.Shared.Infra.Http.DependencyInjection.csproj" />

@@ -10,4 +10,8 @@
     <PackageReference Include="Scrutor" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Records.Shared.Application\Records.Shared.Application.csproj" />
+  </ItemGroup>
+
 </Project>

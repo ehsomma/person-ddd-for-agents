@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Records.Shared.Mediator.Abstractions\Records.Shared.Mediator.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Shared\Records.Shared.Application\Records.Shared.Application.csproj" />
     <ProjectReference Include="..\Records.Persons.Dtos\Records.Persons.Dtos.csproj" />
   </ItemGroup>
 

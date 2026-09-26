@@ -7,7 +7,7 @@ namespace Records.Shared.Mediator.Abstractions;
 /// </summary>
 /// <remarks>
 /// Inherit from <see cref="RequestHandler{TRequest, TResponse}"/> (or from
-/// <see cref="CommandHandler{TCommand, TResponse}"/>/<see cref="QueryHandler{TQuery, TResponse}"/>)
+/// <c>CommandHandler&lt;TCommand, TResponse&gt;</c>/<c>QueryHandler&lt;TQuery, TResponse&gt;</c> in Records.Shared.Application)
 /// instead of implementing this interface directly, so the non-generic
 /// <see cref="IRequestHandlerBase{TResponse}"/> is implemented for you.
 /// </remarks>
@@ -31,7 +31,7 @@ public interface IRequestHandler<in TRequest, TResponse> : IRequestHandlerBase<T
 /// handler must be registered per <typeparamref name="TRequest"/>.
 /// </summary>
 /// <remarks>
-/// Inherit from <see cref="RequestHandler{TRequest}"/> (or from <see cref="CommandHandler{TCommand}"/>)
+/// Inherit from <see cref="RequestHandler{TRequest}"/> (or from <c>CommandHandler&lt;TCommand&gt;</c>)
 /// instead of implementing this interface directly, so the non-generic
 /// <see cref="IRequestHandlerBase"/> is implemented for you.
 /// </remarks>

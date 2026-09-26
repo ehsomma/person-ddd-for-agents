@@ -12,7 +12,7 @@ public interface IPublisher
     /// <remarks>
     /// Handlers are resolved by the notification's runtime type (<c>notification.GetType()</c>), not by
     /// the static type of the argument, so notifications can be published from an
-    /// <c>IEnumerable&lt;IDomainEvent&gt;</c> without casting. Handlers run sequentially, in
+    /// <c>IEnumerable&lt;INotification&gt;</c> without casting. Handlers run sequentially, in
     /// registration order; if none is registered the call completes without doing anything. The first
     /// handler that throws stops the remaining ones and its exception is propagated.
     /// </remarks>

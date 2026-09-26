@@ -5,8 +5,8 @@ namespace Records.Shared.Mediator.Abstractions;
 /// to every <see cref="INotificationHandler{TNotification}"/> registered for it (zero or more).
 /// </summary>
 /// <remarks>
-/// Do not implement it directly in application/domain code: use <see cref="IDomainEvent"/>, which
-/// expresses the DDD intent.
+/// Domain events do not implement it (the domain knows nothing about the mediator): the application
+/// layer wraps them in <c>DomainMessage&lt;TEvent&gt;</c> (Records.Shared.Application), which does.
 /// </remarks>
 public interface INotification
 {

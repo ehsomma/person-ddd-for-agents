@@ -7,8 +7,8 @@ namespace Records.Shared.Mediator.Abstractions;
 /// <see cref="IRequestHandler{TRequest, TResponse}"/> registered for the request's runtime type.
 /// </summary>
 /// <remarks>
-/// Do not implement it directly in application code: use <see cref="ICommand{TResponse}"/> or
-/// <see cref="IQuery{TResponse}"/>, which express the CQRS intent.
+/// Do not implement it directly in application code: use the CQRS markers <c>ICommand&lt;TResponse&gt;</c>
+/// or <c>IQuery&lt;TResponse&gt;</c> (Records.Shared.Application), which express the intent.
 /// </remarks>
 /// <typeparam name="TResponse">Result type produced by handling the request.</typeparam>
 public interface IRequest<out TResponse>
@@ -21,8 +21,8 @@ public interface IRequest<out TResponse>
 /// <see cref="IRequestHandler{TRequest}"/> registered for the request's runtime type.
 /// </summary>
 /// <remarks>
-/// Do not implement it directly in application code: use <see cref="ICommand"/>, which expresses the
-/// CQRS intent.
+/// Do not implement it directly in application code: use the CQRS marker <c>ICommand</c>
+/// (Records.Shared.Application), which expresses the intent.
 /// </remarks>
 public interface IRequest
 {

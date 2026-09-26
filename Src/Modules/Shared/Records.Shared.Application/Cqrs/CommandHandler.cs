@@ -1,4 +1,6 @@
-namespace Records.Shared.Mediator.Abstractions;
+using Records.Shared.Mediator.Abstractions;
+
+namespace Records.Shared.Application.Cqrs;
 
 /// <summary>
 /// Base class for handlers of a <see cref="ICommand{TResponse}"/>. Exactly one handler must exist per
