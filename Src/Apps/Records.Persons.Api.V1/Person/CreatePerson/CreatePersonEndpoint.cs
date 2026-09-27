@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Records.Persons.Application.Person.Commands.CreatePerson;
-using Records.Shared.Infra.Http;
-using Records.Shared.Mediator.Abstractions;
+using Shared.Infra.Http;
+using Shared.Mediator.Abstractions;
 using Dto = Records.Persons.Dtos.Person;
 
 namespace Records.Persons.Api.V1.Person.CreatePerson;

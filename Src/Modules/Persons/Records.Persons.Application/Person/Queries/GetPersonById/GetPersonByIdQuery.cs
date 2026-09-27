@@ -1,4 +1,4 @@
-using Records.Shared.Application.Cqrs;
+using Shared.Application.Cqrs;
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
 namespace Records.Persons.Application.Person.Queries.GetPersonById;

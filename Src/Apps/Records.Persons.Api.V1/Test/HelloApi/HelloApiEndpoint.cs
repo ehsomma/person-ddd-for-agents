@@ -1,4 +1,4 @@
-using Records.Shared.Infra.Http;
+using Shared.Infra.Http;
 
 namespace Records.Persons.Api.V1.Test.HelloApi;
 

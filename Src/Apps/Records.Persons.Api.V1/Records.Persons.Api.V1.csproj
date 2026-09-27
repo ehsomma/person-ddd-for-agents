@@ -9,13 +9,13 @@
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Application\Records.Persons.Application.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Infra.Configuration.DependencyInjection\Records.Persons.Infra.Configuration.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Shared.Configuration\Records.Persons.Shared.Configuration.csproj" />
-      <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Application.DependencyInjection\Records.Shared.Application.DependencyInjection.csproj" />
-      <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Contracts\Records.Shared.Contracts.csproj" />
-      <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Mediator.DependencyInjection\Records.Shared.Mediator.DependencyInjection.csproj" />
-      <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Infra.Http.DependencyInjection\Records.Shared.Infra.Http.DependencyInjection.csproj" />
-      <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Infra.Http\Records.Shared.Infra.Http.csproj" />
-      <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Infra.OpenApi.DependencyInjection\Records.Shared.Infra.OpenApi.DependencyInjection.csproj" />
-      <ProjectReference Include="..\..\Modules\Shared\Records.Shared.Infra.Serilog.DependencyInjection\Records.Shared.Infra.Serilog.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\Modules\Shared\Shared.Application.DependencyInjection\Shared.Application.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\Modules\Shared\Shared.Contracts\Shared.Contracts.csproj" />
+      <ProjectReference Include="..\..\Modules\Shared\Shared.Mediator.DependencyInjection\Shared.Mediator.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\Modules\Shared\Shared.Infra.Http.DependencyInjection\Shared.Infra.Http.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\Modules\Shared\Shared.Infra.Http\Shared.Infra.Http.csproj" />
+      <ProjectReference Include="..\..\Modules\Shared\Shared.Infra.OpenApi.DependencyInjection\Shared.Infra.OpenApi.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\Modules\Shared\Shared.Infra.Serilog.DependencyInjection\Shared.Infra.Serilog.DependencyInjection.csproj" />
     </ItemGroup>
 
 </Project>
