@@ -10,7 +10,7 @@ namespace Records.Shared.Domain.Events;
 public interface IDomainEvent
 {
     /// <summary>When the event occurred (UTC).</summary>
-    public DateTime EventOccurredAtUtc { get; }
+    DateTime EventOccurredAtUtc { get; }
 
     /// <summary>The id of the aggregate that raised the event.</summary>
     /// <remarks>
@@ -19,5 +19,5 @@ public interface IDomainEvent
     /// NOTE: the aggregate id could be a string, Guid, int, etc., so it is exposed as a string and
     /// each event must convert its id to string.
     /// </remarks>
-    public string AggregateId { get; }
+    string AggregateId { get; }
 }

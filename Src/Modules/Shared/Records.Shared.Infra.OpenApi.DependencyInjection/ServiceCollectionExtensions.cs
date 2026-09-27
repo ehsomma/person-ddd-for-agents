@@ -84,29 +84,38 @@ public static class ServiceCollectionExtensions
                 continue;
             }
 
-            if (concrete.Example is not JsonValue value)
+            // NOTE: El generador de comentarios XML deja el <example> en Examples (Example está obsoleto).
+            if (concrete.Examples is null)
             {
                 continue;
             }
 
-            if (!value.TryGetValue(out string? text))
+            for (int i = 0; i < concrete.Examples.Count; i++)
             {
-                continue; // solo si quedó como string
-            }
+                if (concrete.Examples[i] is not JsonValue value)
+                {
+                    continue;
+                }
 
-            // El tipo del schema lo puso el generador antes que nosotros.
+                if (!value.TryGetValue(out string? text))
+                {
+                    continue; // solo si quedó como string
+                }
+
+                // El tipo del schema lo puso el generador antes que nosotros.
 #pragma warning disable IDE0072 // Add missing cases
-            concrete.Example = concrete.Type switch
-            {
-                JsonSchemaType.Boolean when bool.TryParse(text, out bool b)
-                    => JsonValue.Create(b),
-                JsonSchemaType.Integer when long.TryParse(text, out long l)
-                    => JsonValue.Create(l),
-                JsonSchemaType.Number when decimal.TryParse(text, System.Globalization.CultureInfo.InvariantCulture, out decimal d)
-                    => JsonValue.Create(d),
-                _ => concrete.Example, // string, guid, fecha: se quedan como están
-            };
+                concrete.Examples[i] = concrete.Type switch
+                {
+                    JsonSchemaType.Boolean when bool.TryParse(text, out bool b)
+                        => JsonValue.Create(b),
+                    JsonSchemaType.Integer when long.TryParse(text, out long l)
+                        => JsonValue.Create(l),
+                    JsonSchemaType.Number when decimal.TryParse(text, System.Globalization.CultureInfo.InvariantCulture, out decimal d)
+                        => JsonValue.Create(d),
+                    _ => value, // string, guid, fecha: se quedan como están
+                };
 #pragma warning restore IDE0072 // Add missing cases
+            }
         }
     }
 

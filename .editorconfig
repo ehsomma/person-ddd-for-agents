@@ -96,7 +96,7 @@ csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
 csharp_style_pattern_matching_over_as_with_null_check = false:suggestion
 csharp_style_prefer_switch_expression = true:suggestion
 csharp_style_prefer_pattern_matching = true:silent
-csharp_style_prefer_not_pattern = true:suggestion
+csharp_style_prefer_not_pattern = true:silent
 
 # Null-checking preferences (IDE0016/IDE0031)
 csharp_style_throw_expression = true:suggestion
@@ -249,7 +249,7 @@ dotnet_diagnostic.SA1309.severity = none
 dotnet_diagnostic.SA1101.severity = none
 
 # SA1512: Single-line comments should not be followed by blank line
-dotnet_diagnostic.SA1512.severity = suggestion
+dotnet_diagnostic.SA1512.severity = silent
 
 # SA1208: SystemUsingDirectivesMustBePlacedBeforeOtherUsingDirectives
 dotnet_diagnostic.SA1208.severity = suggestion
@@ -288,8 +288,16 @@ dotnet_diagnostic.IDE0058.severity = none
 dotnet_diagnostic.IDE0290.severity = silent
 # IDE0066: Use switch expression.
 dotnet_diagnostic.IDE0066.severity = suggestion
+# IDE0001: Simplify name (ej. System.String -> String)
 dotnet_diagnostic.IDE0001.severity = suggestion
+# IDE0305: Use collection expression for fluent (ej. items.ToList() -> [.. items])
 dotnet_diagnostic.IDE0305.severity = suggestion
+# IDE0306: Use collection expression for new (ej. new List<T>(items) -> [.. items])
+dotnet_diagnostic.IDE0306.severity = silent
+# IDE0078: Use pattern matching (ej. !(obj is T x) -> obj is not T x)
+dotnet_diagnostic.IDE0078.severity = silent
+# IDE0270: Null check can be simplified (ej. if (x is null) throw ... -> x ?? throw ...)
+dotnet_diagnostic.IDE0270.severity = suggestion
 
 
 #### Overrides por patrón de archivo ####
@@ -300,11 +308,23 @@ dotnet_diagnostic.IDE0038.severity = suggestion
 # IDE0045: Convert to conditional expression
 dotnet_diagnostic.IDE0045.severity = suggestion
 
-
+# CA1040: Avoid empty interfaces (interfaces marcadoras, ej. IDomainService)
 dotnet_diagnostic.CA1040.severity = none
 
-
+# IDE0028: Use collection initializers (ej. new List<T>() + Add(...) -> new List<T> { ... })
 dotnet_diagnostic.IDE0028.severity = silent
+
+# IDE0046: Convert to conditional expression en returns (ej. if/else con return -> return c ? a : b)
+dotnet_diagnostic.IDE0046.severity = silent
+
+# IDE0074: Use compound assignment con ??= (ej. if (x is null) x = y -> x ??= y)
+dotnet_diagnostic.IDE0074.severity = silent
+
+# IDE0083: Use pattern matching con 'not' (ej. !(x is T) -> x is not T)
+dotnet_diagnostic.IDE0083.severity = silent
+
+# IDE0200: Remove unnecessary lambda expression (ej. x => Foo(x) -> Foo)
+dotnet_diagnostic.IDE0200.severity = silent
 
 [*EventHandler.cs]
 # CA1711: "EventHandler" es un sufijo reservado para delegados; acá es el contrato/handler de eventos de dominio.
