@@ -8,7 +8,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Application\Records.Persons.Application.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Infra.Configuration.DependencyInjection\Records.Persons.Infra.Configuration.DependencyInjection.csproj" />
-      <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Shared.Configuration\Records.Persons.Shared.Configuration.csproj" />
+      <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Configuration\Records.Persons.Configuration.csproj" />
       <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Application.DependencyInjection\BuildingBlocks.Application.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Contracts\BuildingBlocks.Contracts.csproj" />
       <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Mediator.DependencyInjection\BuildingBlocks.Mediator.DependencyInjection.csproj" />

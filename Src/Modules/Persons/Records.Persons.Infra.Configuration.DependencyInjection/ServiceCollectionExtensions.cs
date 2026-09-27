@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Records.Persons.Shared.Configuration;
+using Records.Persons.Configuration;
 
 #endregion
 

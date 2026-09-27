@@ -9,7 +9,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\Records.Persons.Shared.Configuration\Records.Persons.Shared.Configuration.csproj" />
+        <ProjectReference Include="..\Records.Persons.Configuration\Records.Persons.Configuration.csproj" />
     </ItemGroup>
 
 </Project>

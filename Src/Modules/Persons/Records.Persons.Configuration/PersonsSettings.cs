@@ -1,10 +1,6 @@
-﻿#region  Usings
-
 using System.ComponentModel.DataAnnotations;
 
-#endregion
-
-namespace Records.Persons.Shared.Configuration;
+namespace Records.Persons.Configuration;
 
 /// <summary>
 /// Represents the settings that will be mapped from the Persons key in the appsettings.json file.
