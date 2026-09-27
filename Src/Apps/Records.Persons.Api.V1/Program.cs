@@ -1,13 +1,13 @@
 using System.Reflection;
+using BuildingBlocks.Application.DependencyInjection;
+using BuildingBlocks.Infra.Http;
+using BuildingBlocks.Infra.Http.DependencyInjection;
+using BuildingBlocks.Infra.OpenApi.DependencyInjection;
+using BuildingBlocks.Infra.Serilog.DependencyInjection;
+using BuildingBlocks.Mediator.DependencyInjection;
 using Records.Persons.Application;
 using Records.Persons.Infra.Configuration.DependencyInjection;
 using Scalar.AspNetCore;
-using Shared.Application.DependencyInjection;
-using Shared.Infra.Http;
-using Shared.Infra.Http.DependencyInjection;
-using Shared.Infra.OpenApi.DependencyInjection;
-using Shared.Infra.Serilog.DependencyInjection;
-using Shared.Mediator.DependencyInjection;
 
 namespace Records.Persons.Api.V1;
 

@@ -1,5 +1,5 @@
+using BuildingBlocks.Infra.Http;
 using My.Exceptions;
-using Shared.Infra.Http;
 
 namespace Records.Persons.Api.V1.Test.ThrowException2;
 

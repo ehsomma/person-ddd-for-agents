@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{C0B5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persons", "Persons", "{C7D34EA1-5F52-4C78-A0BC-085A53B4D9A2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{A80515DE-53D5-4A23-A6A4-44AE89830F4B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{A80515DE-53D5-4A23-A6A4-44AE89830F4B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{8F5EE7EB-BD5F-4D53-89AB-2CEA908A1B20}"
 EndProject
@@ -23,11 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My.System.Extensions", "Src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My.Data.InterceptableDbConnection", "Src\Core\My.Data.InterceptableDbConnection\My.Data.InterceptableDbConnection.csproj", "{AE4B1CF9-0D71-41F6-AAB2-A1F2585A6B3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Contracts", "Src\Modules\Shared\Shared.Contracts\Shared.Contracts.csproj", "{99243116-ED1B-4965-92CD-A10AFAD583DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Contracts", "Src\BuildingBlocks\BuildingBlocks.Contracts\BuildingBlocks.Contracts.csproj", "{99243116-ED1B-4965-92CD-A10AFAD583DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infra.Http", "Src\Modules\Shared\Shared.Infra.Http\Shared.Infra.Http.csproj", "{9CED4C99-3C87-4E5A-B213-9DE8340B2976}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Http", "Src\BuildingBlocks\BuildingBlocks.Infra.Http\BuildingBlocks.Infra.Http.csproj", "{9CED4C99-3C87-4E5A-B213-9DE8340B2976}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Configuration", "Src\Modules\Shared\Shared.Configuration\Shared.Configuration.csproj", "{1D1616EA-C9EF-46A4-9301-36C08D0BE50C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Configuration", "Src\BuildingBlocks\BuildingBlocks.Configuration\BuildingBlocks.Configuration.csproj", "{1D1616EA-C9EF-46A4-9301-36C08D0BE50C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Shared.Configuration", "Src\Modules\Persons\Records.Persons.Shared.Configuration\Records.Persons.Shared.Configuration.csproj", "{01AA80E0-17A8-4437-9F64-41E46912B751}"
 EndProject
@@ -37,9 +37,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{44576F95
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Infra.Configuration.DependencyInjection", "Src\Modules\Persons\Records.Persons.Infra.Configuration.DependencyInjection\Records.Persons.Infra.Configuration.DependencyInjection.csproj", "{E71479E8-04D7-409A-A13D-F86488734658}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infra.OpenApi.DependencyInjection", "Src\Modules\Shared\Shared.Infra.OpenApi.DependencyInjection\Shared.Infra.OpenApi.DependencyInjection.csproj", "{02ACBE6C-77A0-47BF-84DB-B634D929CC8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.OpenApi.DependencyInjection", "Src\BuildingBlocks\BuildingBlocks.Infra.OpenApi.DependencyInjection\BuildingBlocks.Infra.OpenApi.DependencyInjection.csproj", "{02ACBE6C-77A0-47BF-84DB-B634D929CC8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infra.Serilog.DependencyInjection", "Src\Modules\Shared\Shared.Infra.Serilog.DependencyInjection\Shared.Infra.Serilog.DependencyInjection.csproj", "{13F2E6BD-6318-4A0B-8544-18C1FAE7E48B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Serilog.DependencyInjection", "Src\BuildingBlocks\BuildingBlocks.Infra.Serilog.DependencyInjection\BuildingBlocks.Infra.Serilog.DependencyInjection.csproj", "{13F2E6BD-6318-4A0B-8544-18C1FAE7E48B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{14F135E3-6009-4CE2-AEA0-F5F7FF2CF6EE}"
 	ProjectSection(SolutionItems) = preProject
@@ -49,7 +49,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infra.Http.DependencyInjection", "Src\Modules\Shared\Shared.Infra.Http.DependencyInjection\Shared.Infra.Http.DependencyInjection.csproj", "{5E16EEC9-0E7E-4A05-AEB6-28CC0FB1EA95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Http.DependencyInjection", "Src\BuildingBlocks\BuildingBlocks.Infra.Http.DependencyInjection\BuildingBlocks.Infra.Http.DependencyInjection.csproj", "{5E16EEC9-0E7E-4A05-AEB6-28CC0FB1EA95}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Api.V1", "Src\Apps\Records.Persons.Api.V1\Records.Persons.Api.V1.csproj", "{51E210BA-697C-74C9-4589-A5E2BA63BBD4}"
 EndProject
@@ -57,27 +57,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Application
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Dtos", "Src\Modules\Persons\Records.Persons.Dtos\Records.Persons.Dtos.csproj", "{BAFB8C68-DE84-4481-93C8-252205C3F0B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Application.DependencyInjection", "Src\Modules\Shared\Shared.Application.DependencyInjection\Shared.Application.DependencyInjection.csproj", "{4831429B-19D1-4F79-A5B7-CB60933AEAC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Application.DependencyInjection", "Src\BuildingBlocks\BuildingBlocks.Application.DependencyInjection\BuildingBlocks.Application.DependencyInjection.csproj", "{4831429B-19D1-4F79-A5B7-CB60933AEAC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Mediator.Abstractions", "Src\Modules\Shared\Shared.Mediator.Abstractions\Shared.Mediator.Abstractions.csproj", "{9F25044C-757C-4FEF-B34A-AD2316A985DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Mediator.Abstractions", "Src\BuildingBlocks\BuildingBlocks.Mediator.Abstractions\BuildingBlocks.Mediator.Abstractions.csproj", "{9F25044C-757C-4FEF-B34A-AD2316A985DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Mediator", "Src\Modules\Shared\Shared.Mediator\Shared.Mediator.csproj", "{ACFD739C-52E9-497C-98B5-2D23AAA7872E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Mediator", "Src\BuildingBlocks\BuildingBlocks.Mediator\BuildingBlocks.Mediator.csproj", "{ACFD739C-52E9-497C-98B5-2D23AAA7872E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Mediator.DependencyInjection", "Src\Modules\Shared\Shared.Mediator.DependencyInjection\Shared.Mediator.DependencyInjection.csproj", "{29D2F944-52E4-4635-8AFF-322F78BD6949}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Mediator.DependencyInjection", "Src\BuildingBlocks\BuildingBlocks.Mediator.DependencyInjection\BuildingBlocks.Mediator.DependencyInjection.csproj", "{29D2F944-52E4-4635-8AFF-322F78BD6949}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Domain", "Src\Modules\Shared\Shared.Domain\Shared.Domain.csproj", "{ACA23A20-AFF6-470F-8196-2B62A3EE320A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Domain", "Src\BuildingBlocks\BuildingBlocks.Domain\BuildingBlocks.Domain.csproj", "{ACA23A20-AFF6-470F-8196-2B62A3EE320A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Messaging", "Src\Modules\Shared\Shared.Messaging\Shared.Messaging.csproj", "{865F06DD-D441-4483-B723-81BCD3E78CEF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Messaging", "Src\BuildingBlocks\BuildingBlocks.Messaging\BuildingBlocks.Messaging.csproj", "{865F06DD-D441-4483-B723-81BCD3E78CEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Application", "Src\Modules\Shared\Shared.Application\Shared.Application.csproj", "{FCD0BF90-0E9D-4779-9D0A-D5CDB4EA5470}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Application", "Src\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj", "{FCD0BF90-0E9D-4779-9D0A-D5CDB4EA5470}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infra.Persistence", "Src\Modules\Shared\Shared.Infra.Persistence\Shared.Infra.Persistence.csproj", "{B7525457-507E-47EC-B54E-B633827E2084}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Persistence", "Src\BuildingBlocks\BuildingBlocks.Infra.Persistence\BuildingBlocks.Infra.Persistence.csproj", "{B7525457-507E-47EC-B54E-B633827E2084}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infra.Persistence.Abstractions", "Src\Modules\Shared\Shared.Infra.Persistence.Abstractions\Shared.Infra.Persistence.Abstractions.csproj", "{E45B364C-55C6-46BC-89BD-2D5F31CBE22A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Persistence.Abstractions", "Src\BuildingBlocks\BuildingBlocks.Infra.Persistence.Abstractions\BuildingBlocks.Infra.Persistence.Abstractions.csproj", "{E45B364C-55C6-46BC-89BD-2D5F31CBE22A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infra.Persistence.DependencyInjection", "Src\Modules\Shared\Shared.Infra.Persistence.DependencyInjection\Shared.Infra.Persistence.DependencyInjection.csproj", "{27F1B3B5-7757-4942-B440-DFB748D992FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Persistence.DependencyInjection", "Src\BuildingBlocks\BuildingBlocks.Infra.Persistence.DependencyInjection\BuildingBlocks.Infra.Persistence.DependencyInjection.csproj", "{27F1B3B5-7757-4942-B440-DFB748D992FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infra.Persistence.Mappings.Abstractions", "Src\Modules\Shared\Shared.Infra.Persistence.Mappings.Abstractions\Shared.Infra.Persistence.Mappings.Abstractions.csproj", "{51CCB65A-E041-4A7E-9E70-E4F9AFAA8D89}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Persistence.Mappings.Abstractions", "Src\BuildingBlocks\BuildingBlocks.Infra.Persistence.Mappings.Abstractions\BuildingBlocks.Infra.Persistence.Mappings.Abstractions.csproj", "{51CCB65A-E041-4A7E-9E70-E4F9AFAA8D89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -194,7 +194,7 @@ Global
 		{5B36C092-D2B3-470E-B5C4-F9258B61393C} = {F4B7F0A7-E0EA-4A9E-8041-5EA057250C7F}
 		{C0B5A42E-5F7B-4927-9F2E-C9757687D9A6} = {F4B7F0A7-E0EA-4A9E-8041-5EA057250C7F}
 		{C7D34EA1-5F52-4C78-A0BC-085A53B4D9A2} = {C0B5A42E-5F7B-4927-9F2E-C9757687D9A6}
-		{A80515DE-53D5-4A23-A6A4-44AE89830F4B} = {C0B5A42E-5F7B-4927-9F2E-C9757687D9A6}
+		{A80515DE-53D5-4A23-A6A4-44AE89830F4B} = {F4B7F0A7-E0EA-4A9E-8041-5EA057250C7F}
 		{8F5EE7EB-BD5F-4D53-89AB-2CEA908A1B20} = {A80515DE-53D5-4A23-A6A4-44AE89830F4B}
 		{00BE2FA3-A45F-40AC-A300-66B939421399} = {5B36C092-D2B3-470E-B5C4-F9258B61393C}
 		{5EB99CC1-9AA7-4E10-92B0-A9276CFB51AD} = {5B36C092-D2B3-470E-B5C4-F9258B61393C}

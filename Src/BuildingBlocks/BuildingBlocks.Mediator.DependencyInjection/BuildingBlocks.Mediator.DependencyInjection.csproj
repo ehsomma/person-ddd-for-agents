@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Scrutor" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BuildingBlocks.Mediator.Abstractions\BuildingBlocks.Mediator.Abstractions.csproj" />
+    <ProjectReference Include="..\BuildingBlocks.Mediator\BuildingBlocks.Mediator.csproj" />
+  </ItemGroup>
+
+</Project>

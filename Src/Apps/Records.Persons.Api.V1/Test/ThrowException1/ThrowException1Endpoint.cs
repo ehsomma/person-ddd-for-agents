@@ -1,4 +1,4 @@
-using Shared.Infra.Http;
+using BuildingBlocks.Infra.Http;
 
 namespace Records.Persons.Api.V1.Test.ThrowException1;
 

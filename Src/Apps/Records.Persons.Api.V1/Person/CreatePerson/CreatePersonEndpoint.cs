@@ -1,7 +1,7 @@
+using BuildingBlocks.Infra.Http;
+using BuildingBlocks.Mediator.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Records.Persons.Application.Person.Commands.CreatePerson;
-using Shared.Infra.Http;
-using Shared.Mediator.Abstractions;
 using Dto = Records.Persons.Dtos.Person;
 
 namespace Records.Persons.Api.V1.Person.CreatePerson;

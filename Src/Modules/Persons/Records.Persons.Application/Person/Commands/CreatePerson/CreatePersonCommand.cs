@@ -1,4 +1,4 @@
-using Shared.Application.Cqrs;
+using BuildingBlocks.Application.Cqrs;
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
 namespace Records.Persons.Application.Person.Commands.CreatePerson;

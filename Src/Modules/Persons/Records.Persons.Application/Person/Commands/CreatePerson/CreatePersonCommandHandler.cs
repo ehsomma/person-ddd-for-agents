@@ -1,4 +1,4 @@
-using Shared.Application.Cqrs;
+using BuildingBlocks.Application.Cqrs;
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
 namespace Records.Persons.Application.Person.Commands.CreatePerson;
@@ -13,7 +13,7 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
     /// <inheritdoc />
     public override Task<Dto.Person> Handle(CreatePersonCommand command, CancellationToken cancellationToken = default)
     {
-        // TODO: Crear clase base Shared.Application.CammandHandler (tomar ejemplo del proyecto DDD).
+        // TODO: Crear clase base BuildingBlocks.Application.CammandHandler (tomar ejemplo del proyecto DDD).
         return Task.FromResult(command.Person);
     }
 
