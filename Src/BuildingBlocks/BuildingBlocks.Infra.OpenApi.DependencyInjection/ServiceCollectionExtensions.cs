@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
@@ -66,8 +67,9 @@ public static class ServiceCollectionExtensions
     #region Private methods
 
     /// <summary>
-    /// Fix para que en los ejemplos de entidades (los que se ven en Scalar) no ponga "True"
-    /// (con comillas) en lugar de `true` sin comillas.
+    /// Fix para que los ejemplos de entidades (los que se ven en Scalar) respeten el tipo de la propiedad:
+    /// que no ponga "True" (con comillas) en lugar de `true` en un bool, ni 1150011234 (sin comillas)
+    /// en lugar de "1150011234" en un string.
     /// </summary>
     /// <param name="schema">The Schema Object allows the definition of input and output data types.</param>
     private static void FixTypedExamples(OpenApiSchema schema)
@@ -85,7 +87,8 @@ public static class ServiceCollectionExtensions
             }
 
             // NOTE: El generador de comentarios XML deja el <example> en Examples (Example está obsoleto).
-            if (concrete.Examples is null)
+            // El tipo del schema lo puso el generador antes que nosotros.
+            if (concrete.Examples is null || concrete.Type is not { } type)
             {
                 continue;
             }
@@ -97,26 +100,47 @@ public static class ServiceCollectionExtensions
                     continue;
                 }
 
-                if (!value.TryGetValue(out string? text))
-                {
-                    continue; // solo si quedó como string
-                }
-
-                // El tipo del schema lo puso el generador antes que nosotros.
-#pragma warning disable IDE0072 // Add missing cases
-                concrete.Examples[i] = concrete.Type switch
-                {
-                    JsonSchemaType.Boolean when bool.TryParse(text, out bool b)
-                        => JsonValue.Create(b),
-                    JsonSchemaType.Integer when long.TryParse(text, out long l)
-                        => JsonValue.Create(l),
-                    JsonSchemaType.Number when decimal.TryParse(text, System.Globalization.CultureInfo.InvariantCulture, out decimal d)
-                        => JsonValue.Create(d),
-                    _ => value, // string, guid, fecha: se quedan como están
-                };
-#pragma warning restore IDE0072 // Add missing cases
+                concrete.Examples[i] = ToTypedExample(value, type);
             }
         }
+    }
+
+    /// <summary>
+    /// Converts the example to the type of the property schema.
+    /// </summary>
+    /// <param name="value">The example as it was parsed by the XML comments generator.</param>
+    /// <param name="type">The type of the property schema (it can include <see cref="JsonSchemaType.Null"/>).</param>
+    /// <returns>The example with the type of the property, or the same example if it can not be converted.</returns>
+    /// <remarks>
+    /// NOTE: El generador parsea el &lt;example&gt; como JSON, así que un texto que es JSON válido
+    /// (ej. 1150011234 o true) queda como número o bool aunque la propiedad sea string, y un texto que no
+    /// es JSON válido (ej. True) queda como string aunque la propiedad sea bool.
+    /// </remarks>
+    private static JsonNode ToTypedExample(JsonValue value, JsonSchemaType type)
+    {
+        JsonNode typedExample = value;
+
+        if (value.TryGetValue(out string? text))
+        {
+            if (type.HasFlag(JsonSchemaType.Boolean) && bool.TryParse(text, out bool b))
+            {
+                typedExample = JsonValue.Create(b);
+            }
+            else if (type.HasFlag(JsonSchemaType.Integer) && long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out long l))
+            {
+                typedExample = JsonValue.Create(l);
+            }
+            else if (type.HasFlag(JsonSchemaType.Number) && decimal.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal d))
+            {
+                typedExample = JsonValue.Create(d);
+            }
+        }
+        else if (type.HasFlag(JsonSchemaType.String))
+        {
+            typedExample = JsonValue.Create(value.ToJsonString());
+        }
+
+        return typedExample;
     }
 
     #endregion
