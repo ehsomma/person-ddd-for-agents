@@ -120,7 +120,7 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>, IComp
     /// <returns>The enumeration instance that matches the specified <paramref name="name"/>.</returns>
     public static TEnum FromName(string? name)
     {
-        TEnum? enumeration = List.SingleOrDefault(s => s.Name == name); // name.ToLowerInvariant()
+        TEnum? enumeration = List.SingleOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
 
         if (enumeration is null)
         {
