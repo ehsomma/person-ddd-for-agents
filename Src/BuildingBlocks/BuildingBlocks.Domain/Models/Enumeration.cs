@@ -1,9 +1,5 @@
-#region Usings
-
 using System.Reflection;
 using BuildingBlocks.Domain.Exceptions;
-
-#endregion
 
 namespace BuildingBlocks.Domain.Models;
 

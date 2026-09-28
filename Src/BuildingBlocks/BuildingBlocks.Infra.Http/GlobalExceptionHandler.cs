@@ -1,5 +1,3 @@
-#region Usings
-
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using BuildingBlocks.Contracts;
@@ -7,8 +5,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using My.Exceptions;
-
-#endregion
 
 namespace BuildingBlocks.Infra.Http;
 

@@ -1,5 +1,3 @@
-#region Usings
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -7,8 +5,6 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
-
-#endregion
 
 namespace BuildingBlocks.Infra.Serilog.DependencyInjection;
 

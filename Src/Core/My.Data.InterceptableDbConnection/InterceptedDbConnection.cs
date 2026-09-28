@@ -1,11 +1,7 @@
-#region Usings
-
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Transactions;
-
-#endregion
 
 namespace My.Data.InterceptableDbConnection;
 

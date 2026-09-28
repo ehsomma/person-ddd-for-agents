@@ -1,10 +1,6 @@
-﻿#region Usings
-
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Records.Persons.Configuration;
-
-#endregion
 
 namespace Records.Persons.Infra.Configuration.DependencyInjection;
 

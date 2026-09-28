@@ -1,11 +1,7 @@
-#region Usings
-
 using System.Globalization;
 using BuildingBlocks.Domain.Exceptions;
 using BuildingBlocks.Domain.Models;
 using Throw;
-
-#endregion
 
 namespace BuildingBlocks.Domain.ValueObjects;
 

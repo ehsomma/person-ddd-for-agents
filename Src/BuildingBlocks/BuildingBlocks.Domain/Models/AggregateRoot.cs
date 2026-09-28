@@ -1,9 +1,5 @@
-#region Usings
-
 using System.Diagnostics.CodeAnalysis;
 using BuildingBlocks.Domain.Events;
-
-#endregion
 
 namespace BuildingBlocks.Domain.Models;
 
