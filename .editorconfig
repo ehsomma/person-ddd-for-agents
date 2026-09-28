@@ -332,6 +332,11 @@ dotnet_diagnostic.CA1711.severity = none
 # CA1812: los EventHandler se instancian por reflection (services.Scan en AddMediator), nunca con "new".
 dotnet_diagnostic.CA1812.severity = none
 
+[*Event.cs]
+# CA1062: los eventos de dominio los crea el aggregate con datos ya validados; NRT cubre el null en compilación
+# y un guard solo agregaría ruido (si llegara un null, el constructor explota igual al usar el parámetro).
+dotnet_diagnostic.CA1062.severity = none
+
 [*Endpoint.cs]
 # CA1812: Si es internal y no se instancia, borrar la clase (es un endpoint, por eso no se instancia).
 dotnet_diagnostic.CA1812.severity = none

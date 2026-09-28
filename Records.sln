@@ -77,6 +77,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Persis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Persistence.Mappings.Abstractions", "Src\BuildingBlocks\BuildingBlocks.Infra.Persistence.Mappings.Abstractions\BuildingBlocks.Infra.Persistence.Mappings.Abstractions.csproj", "{51CCB65A-E041-4A7E-9E70-E4F9AFAA8D89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records.Persons.Domain", "Src\Modules\Persons\Records.Persons.Domain\Records.Persons.Domain.csproj", "{B1800DB1-AA79-4101-9248-BC83F171FE2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -183,6 +185,10 @@ Global
 		{51CCB65A-E041-4A7E-9E70-E4F9AFAA8D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51CCB65A-E041-4A7E-9E70-E4F9AFAA8D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51CCB65A-E041-4A7E-9E70-E4F9AFAA8D89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1800DB1-AA79-4101-9248-BC83F171FE2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1800DB1-AA79-4101-9248-BC83F171FE2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1800DB1-AA79-4101-9248-BC83F171FE2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1800DB1-AA79-4101-9248-BC83F171FE2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,6 +226,7 @@ Global
 		{E45B364C-55C6-46BC-89BD-2D5F31CBE22A} = {8F5EE7EB-BD5F-4D53-89AB-2CEA908A1B20}
 		{27F1B3B5-7757-4942-B440-DFB748D992FB} = {8F5EE7EB-BD5F-4D53-89AB-2CEA908A1B20}
 		{51CCB65A-E041-4A7E-9E70-E4F9AFAA8D89} = {8F5EE7EB-BD5F-4D53-89AB-2CEA908A1B20}
+		{B1800DB1-AA79-4101-9248-BC83F171FE2A} = {C7D34EA1-5F52-4C78-A0BC-085A53B4D9A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47DB1962-6AC0-4FA1-900E-9251AAECDAC0}
