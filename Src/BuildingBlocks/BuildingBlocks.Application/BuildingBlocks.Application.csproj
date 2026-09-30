@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BuildingBlocks.Domain\BuildingBlocks.Domain.csproj" />
+    <ProjectReference Include="..\BuildingBlocks.Infra.Persistence.Abstractions\BuildingBlocks.Infra.Persistence.Abstractions.csproj" />
     <ProjectReference Include="..\BuildingBlocks.Mediator.Abstractions\BuildingBlocks.Mediator.Abstractions.csproj" />
     <ProjectReference Include="..\BuildingBlocks.Messaging\BuildingBlocks.Messaging.csproj" />
   </ItemGroup>
