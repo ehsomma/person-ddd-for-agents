@@ -13,7 +13,7 @@ public interface IPersonService : IDomainService
     /// Gets the <see cref="Person"/> corresponding to the specified <paramref name="id"/>.
     /// </summary>
     /// <param name="id">The person ID to search for.</param>
-    /// <returns>A <see cref="Person"/> or null.</returns>
+    /// <returns>The <see cref="Person"/> found (never <see langword="null"/>).</returns>
     /// <exception cref="DomainException">When the <see cref="Person"/> is not found.</exception>
-    Task<Person?> GetByIdAsync(Guid id);
+    Task<Person> GetByIdAsync(Guid id);
 }

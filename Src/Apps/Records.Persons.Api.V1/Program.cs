@@ -3,9 +3,11 @@ using BuildingBlocks.Application.DependencyInjection;
 using BuildingBlocks.Infra.Http;
 using BuildingBlocks.Infra.Http.DependencyInjection;
 using BuildingBlocks.Infra.OpenApi.DependencyInjection;
+using BuildingBlocks.Infra.Persistence.DependencyInjection;
 using BuildingBlocks.Infra.Serilog.DependencyInjection;
 using BuildingBlocks.Mediator.DependencyInjection;
 using Records.Persons.Application;
+using Records.Persons.Domain.PersonAggregate.Services;
 using Records.Persons.Infra.Configuration.DependencyInjection;
 using Scalar.AspNetCore;
 
@@ -43,8 +45,13 @@ internal sealed class Program
         // Registers the necessary services for the mediator (commands and queries) with the DI framework.
         services.AddMediator(typeof(AssemblyReference).Assembly);
 
-        // Registers the shared application services (e.g. IDomainEventPublisher) with the DI framework.
-        services.AddApplication();
+        // Registers the shared application services with the DI framework.
+        services.AddApplication(typeof(PersonService).Assembly);
+
+        // Registers the persistence services (IUnitOfWork, IDbSession and repositories) with the DI framework.
+        // TODO: Pasar el ensamblado con las implementaciones de los repositorios (p.ej. IPersonRepository)
+        // cuando exista el proyecto de persistencia de Persons; hoy no hay ninguno para escanear.
+        services.AddPersistence();
 
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 
