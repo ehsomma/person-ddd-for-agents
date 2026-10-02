@@ -30,7 +30,7 @@ public sealed class UnitOfWork : IUnitOfWork
     /// <inheritdoc />
     public void BeginTransaction()
     {
-        _session.Transaction = _session.Connection?.BeginTransaction();
+        _session.Transaction = _session.Connection.BeginTransaction();
     }
 
     /// <inheritdoc />

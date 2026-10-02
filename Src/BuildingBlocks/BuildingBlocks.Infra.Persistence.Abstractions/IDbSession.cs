@@ -10,7 +10,7 @@ public interface IDbSession : IDisposable
     #region Properties
 
     /// <inheritdoc cref="IDbConnection"/>
-    IDbConnection? Connection { get; }
+    IDbConnection Connection { get; }
 
     /// <inheritdoc cref="IDbTransaction"/>
     IDbTransaction? Transaction { get; set; }

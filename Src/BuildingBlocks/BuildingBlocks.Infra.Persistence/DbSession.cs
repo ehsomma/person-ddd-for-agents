@@ -53,7 +53,7 @@ public sealed class DbSession : IDbSession
     #region Prpperties
 
     /// <inheritdoc />
-    public IDbConnection? Connection { get; }
+    public IDbConnection Connection { get; }
 
     /// <inheritdoc />
     public IDbTransaction? Transaction { get; set; }
@@ -65,7 +65,7 @@ public sealed class DbSession : IDbSession
     /// <inheritdoc />
     public void Dispose()
     {
-        Connection?.Dispose();
+        Connection.Dispose();
     }
 
     #endregion
