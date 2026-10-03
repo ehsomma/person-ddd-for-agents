@@ -9,6 +9,7 @@ using BuildingBlocks.Mediator.DependencyInjection;
 using Records.Persons.Application;
 using Records.Persons.Domain.PersonAggregate.Services;
 using Records.Persons.Infra.Configuration.DependencyInjection;
+using Records.Persons.Infra.Persistence.Sql;
 using Scalar.AspNetCore;
 
 namespace Records.Persons.Api.V1;
@@ -49,9 +50,7 @@ internal sealed class Program
         services.AddApplication(typeof(PersonService).Assembly);
 
         // Registers the persistence services (IUnitOfWork, IDbSession and repositories) with the DI framework.
-        // TODO: Pasar el ensamblado con las implementaciones de los repositorios (p.ej. IPersonRepository)
-        // cuando exista el proyecto de persistencia de Persons; hoy no hay ninguno para escanear.
-        services.AddPersistence();
+        services.AddPersistence(typeof(PersonRepository).Assembly);
 
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 

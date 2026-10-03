@@ -36,6 +36,40 @@ public class PersonRepository : Repository, IPersonRepository
     {
         ArgumentNullException.ThrowIfNull(person);
 
+        await InsertPersonAsync(person);
+        await InsertAddressAsync(person.Id, person.Address);
+        await InsertPersonalAssetsAsync(person.Id, person.PersonalAssets);
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateAsync(DomainModel.Person person)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public async Task DeleteAsync(DomainModel.Person person)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public async Task<DomainModel.Person?> GetByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion
+
+    #region Private methods
+
+    /// <summary>
+    /// Inserts the <see cref="DomainModel.Person"/> (without its address and personal assets).
+    /// </summary>
+    /// <param name="person">The <see cref="DomainModel.Person"/> to insert.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task InsertPersonAsync(DomainModel.Person person)
+    {
         const string sql = """
                            INSERT INTO [dbo].[Persons]
                                ([Id]
@@ -62,10 +96,10 @@ public class PersonRepository : Repository, IPersonRepository
             new
             {
                 id = person.Id,
-                fullName = person.FullName,
-                email = person.Email,
-                phone = person.Phone,
-                gender = person.Gender,
+                fullName = person.FullName.Value,
+                email = person.Email.Value,
+                phone = person.Phone?.Value,
+                gender = person.Gender.Name,
                 birthdate = person.Birthdate,
                 createdOnUtc = person.CreatedOnUtc,
                 updatedOnUtc = person.UpdatedOnUtc,
@@ -73,22 +107,80 @@ public class PersonRepository : Repository, IPersonRepository
             _dbSession.Transaction);
     }
 
-    /// <inheritdoc />
-    public async Task UpdateAsync(DomainModel.Person person)
+    /// <summary>
+    /// Inserts the <see cref="DomainModel.Address"/> of a <see cref="DomainModel.Person"/>.
+    /// </summary>
+    /// <param name="personId">The ID of the <see cref="DomainModel.Person"/> that the address belongs.</param>
+    /// <param name="address">The <see cref="DomainModel.Address"/> to insert.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task InsertAddressAsync(Guid personId, DomainModel.Address address)
     {
-        throw new NotImplementedException();
+        const string sql = """
+                           INSERT INTO [dbo].[Addresses]
+                               ([PersonId]
+                               ,[StreetLine1]
+                               ,[StreetLine2]
+                               ,[City]
+                               ,[State]
+                               ,[Country]
+                               ,[Lat]
+                               ,[Lng])
+                           VALUES
+                               (@personId
+                               ,@streetLine1
+                               ,@streetLine2
+                               ,@city
+                               ,@state
+                               ,@country
+                               ,@lat
+                               ,@lng)
+                           """;
+
+        await _dbSession.Connection.ExecuteAsync(
+            sql,
+            new
+            {
+                personId,
+                streetLine1 = address.StreetLine1.Value,
+                streetLine2 = address.StreetLine2?.Value,
+                city = address.City?.Value,
+                state = address.State?.Value,
+                country = address.Country?.Value,
+                lat = address.LatLng?.Lat,
+                lng = address.LatLng?.Lng,
+            },
+            _dbSession.Transaction);
     }
 
-    /// <inheritdoc />
-    public async Task DeleteAsync(DomainModel.Person person)
+    /// <summary>
+    /// Inserts the <see cref="DomainModel.PersonalAsset"/> list of a <see cref="DomainModel.Person"/>.
+    /// </summary>
+    /// <param name="personId">The ID of the <see cref="DomainModel.Person"/> that the personal assets belongs.</param>
+    /// <param name="personalAssets">The <see cref="DomainModel.PersonalAsset"/> list to insert.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private async Task InsertPersonalAssetsAsync(Guid personId, IReadOnlyCollection<DomainModel.PersonalAsset> personalAssets)
     {
-        throw new NotImplementedException();
-    }
+        const string sql = """
+                           INSERT INTO [dbo].[PersonalAssets]
+                               ([PersonId]
+                               ,[Description]
+                               ,[Value])
+                           VALUES
+                               (@personId
+                               ,@description
+                               ,@value)
+                           """;
 
-    /// <inheritdoc />
-    public async Task<DomainModel.Person?> GetByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
+        // Dapper executes the command once per item (and nothing if the list is empty).
+        await _dbSession.Connection.ExecuteAsync(
+            sql,
+            personalAssets.Select(personalAsset => new
+            {
+                personId,
+                description = personalAsset.Description.Value,
+                value = personalAsset.Value.Value,
+            }),
+            _dbSession.Transaction);
     }
 
     #endregion
