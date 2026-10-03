@@ -20,7 +20,8 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
 {
     #region Declarations
 
-    private readonly PersonsSettings _settings;
+    // ReSharper disable once NotAccessedField.Local
+    private readonly PersonsSettings _settings; // NOTE: No se usa pero se deja como ejemplo de como inyectar settings en un handler.
 
     private readonly IPersonRepository _personRepository;
 
