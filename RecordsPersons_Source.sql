@@ -163,6 +163,11 @@ REFERENCES [dbo].[Persons] ([Id])
 GO
 ALTER TABLE [dbo].[Addresses] CHECK CONSTRAINT [FK_Addresses_Persons]
 GO
+-- Lat and Lng go together: both NULL (no coordinates) or both with value.
+ALTER TABLE [dbo].[Addresses]  WITH CHECK ADD  CONSTRAINT [CK_Addresses_LatLng] CHECK  ((([Lat] IS NULL AND [Lng] IS NULL) OR ([Lat] IS NOT NULL AND [Lng] IS NOT NULL)))
+GO
+ALTER TABLE [dbo].[Addresses] CHECK CONSTRAINT [CK_Addresses_LatLng]
+GO
 ALTER TABLE [dbo].[PersonalAssets]  WITH CHECK ADD  CONSTRAINT [FK_PersonalAssets_Persons] FOREIGN KEY([PersonId])
 REFERENCES [dbo].[Persons] ([Id])
 GO

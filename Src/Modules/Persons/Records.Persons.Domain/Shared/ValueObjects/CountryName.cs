@@ -5,7 +5,7 @@ namespace Records.Persons.Domain.Shared.ValueObjects;
 /// <summary>
 /// Represents the CountryName value object.
 /// </summary>
-public sealed class CountryName : StringValueObject
+public sealed class CountryName : StringValueObjectNullable
 {
     #region Constructor
 

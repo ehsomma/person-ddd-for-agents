@@ -1,11 +1,11 @@
-﻿using BuildingBlocks.Domain.ValueObjects;
+using BuildingBlocks.Domain.ValueObjects;
 
 namespace Records.Persons.Domain.PersonAggregate.ValueObjects;
 
 /// <summary>
 /// Represents the State value object.
 /// </summary>
-public sealed class State : StringValueObject
+public sealed class State : StringValueObjectNullable
 {
     #region Constructor
 

@@ -1,11 +1,11 @@
-﻿using BuildingBlocks.Domain.ValueObjects;
+using BuildingBlocks.Domain.ValueObjects;
 
 namespace Records.Persons.Domain.PersonAggregate.ValueObjects;
 
 /// <summary>
 /// Represents the City value object.
 /// </summary>
-public sealed class City : StringValueObject
+public sealed class City : StringValueObjectNullable
 {
     #region Constructor
 
