@@ -145,3 +145,37 @@ public class PersonService
     #endregion
 }
 ```
+
+## Nombres cuando conviven la misma entidad de distintas capas
+
+Cuando en un mismo archivo o método interactúan dos tipos con el mismo nombre de distintas capas (p.ej. el `Person` del dominio y el `Person` del modelo de datos o un DTO), se aplican dos reglas:
+
+1. **Tipos:** se referencian con using aliases que nombran la capa (`DomainModel`, `DataModel`, `Dto`, etc.), y cada using alias termina con el comentario `// Using aliases.`.
+2. **Variables y parámetros:** el del dominio va **sin prefijo** (`person`) y el de la otra capa lleva el prefijo de su capa (`dataPerson`, `personDto`).
+
+**Excepción:** en los mappers, que traducen entre las dos representaciones y ninguna es "la principal", las dos llevan prefijo (`domainPerson` y `dataPerson`), igual que los parámetros `domainModel` / `dataModel` de `IPersistanceMapper`.
+
+**Por qué:** el alias con el nombre de la capa hace explícito en cada uso de qué capa es el tipo, sin escribir el namespace completo y sin ambigüedades entre tipos homónimos. Para las variables, el dominio es el idioma por defecto del proyecto: los contratos (p.ej. `IPersonRepository`) se definen en el dominio sin prefijo, así que la implementación usa el mismo nombre de parámetro (lo exige CA1725) y el prefijo distingue a la representación que no es del dominio.
+
+✗ Incorrecto:
+```csharp
+using Records.Persons.Infra.Persistence.Sql.PersonAggregate.Models;
+
+public async Task InsertAsync(Records.Persons.Domain.PersonAggregate.Models.Person domainPerson)
+{
+    Person person = _personMapper.FromDomainToDataModel(domainPerson);
+    await _dbSession.Connection.InsertAsync(person, _dbSession.Transaction);
+}
+```
+
+✓ Correcto:
+```csharp
+using DataModel = Records.Persons.Infra.Persistence.Sql.PersonAggregate.Models; // Using aliases.
+using DomainModel = Records.Persons.Domain.PersonAggregate.Models; // Using aliases.
+
+public async Task InsertAsync(DomainModel.Person person)
+{
+    DataModel.Person dataPerson = _personMapper.FromDomainToDataModel(person);
+    await _dbSession.Connection.InsertAsync(dataPerson, _dbSession.Transaction);
+}
+```
