@@ -9,12 +9,13 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.89" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
-    <PackageReference Include="Mapster" Version="10.0.13" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infra.Persistence.Abstractions\BuildingBlocks.Infra.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infra.Persistence.Mappings.Abstractions\BuildingBlocks.Infra.Persistence.Mappings.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infra.Persistence\BuildingBlocks.Infra.Persistence.csproj" />
+    <ProjectReference Include="..\..\..\Core\My.System.Extensions\My.System.Extensions.csproj" />
     <ProjectReference Include="..\Records.Persons.Domain\Records.Persons.Domain.csproj" />
   </ItemGroup>
 

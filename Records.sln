@@ -86,6 +86,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DatabaseScripts", "Database
 		RecordsPersons_Source.sql = RecordsPersons_Source.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Mappings.DependencyInjection", "Src\BuildingBlocks\BuildingBlocks.Infra.Mappings.DependencyInjection\BuildingBlocks.Infra.Mappings.DependencyInjection.csproj", "{0AF52B92-E52B-410F-9B48-70E684C151C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -200,6 +202,10 @@ Global
 		{0A052063-6588-42D5-A29C-DD0470DDD879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A052063-6588-42D5-A29C-DD0470DDD879}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A052063-6588-42D5-A29C-DD0470DDD879}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AF52B92-E52B-410F-9B48-70E684C151C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AF52B92-E52B-410F-9B48-70E684C151C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AF52B92-E52B-410F-9B48-70E684C151C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AF52B92-E52B-410F-9B48-70E684C151C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -240,6 +246,7 @@ Global
 		{B1800DB1-AA79-4101-9248-BC83F171FE2A} = {C7D34EA1-5F52-4C78-A0BC-085A53B4D9A2}
 		{0A052063-6588-42D5-A29C-DD0470DDD879} = {44576F95-D848-4440-8F06-ACFBF5FC2032}
 		{577222F4-293D-4E63-83EF-DB2EF2E6F7A3} = {44576F95-D848-4440-8F06-ACFBF5FC2032}
+		{0AF52B92-E52B-410F-9B48-70E684C151C1} = {8F5EE7EB-BD5F-4D53-89AB-2CEA908A1B20}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47DB1962-6AC0-4FA1-900E-9251AAECDAC0}

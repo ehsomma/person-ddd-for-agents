@@ -6,6 +6,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Infra.Mappings.DependencyInjection\BuildingBlocks.Infra.Mappings.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Application\Records.Persons.Application.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Infra.Configuration.DependencyInjection\Records.Persons.Infra.Configuration.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Configuration\Records.Persons.Configuration.csproj" />

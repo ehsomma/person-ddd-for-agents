@@ -2,6 +2,7 @@ using System.Reflection;
 using BuildingBlocks.Application.DependencyInjection;
 using BuildingBlocks.Infra.Http;
 using BuildingBlocks.Infra.Http.DependencyInjection;
+using BuildingBlocks.Infra.Mappings.DependencyInjection;
 using BuildingBlocks.Infra.OpenApi.DependencyInjection;
 using BuildingBlocks.Infra.Persistence.DependencyInjection;
 using BuildingBlocks.Infra.Serilog.DependencyInjection;
@@ -9,7 +10,8 @@ using BuildingBlocks.Mediator.DependencyInjection;
 using Records.Persons.Application;
 using Records.Persons.Domain.PersonAggregate.Services;
 using Records.Persons.Infra.Configuration.DependencyInjection;
-using Records.Persons.Infra.Persistence.Sql;
+using Records.Persons.Infra.Persistence.Sql.PersonAggregate.Mappers;
+using Records.Persons.Infra.Persistence.Sql.PersonAggregate.Repository;
 using Scalar.AspNetCore;
 
 namespace Records.Persons.Api.V1;
@@ -48,6 +50,11 @@ internal sealed class Program
 
         // Registers the shared application services with the DI framework.
         services.AddApplication(typeof(PersonService).Assembly);
+
+        // Registers the persistence mappers (e.g. IPersistanceMapper<,>) with the DI framework.
+        services.AddMappers(
+            Assembly.GetExecutingAssembly(),
+            typeof(PersonMapper).Assembly);
 
         // Registers the persistence services (IUnitOfWork, IDbSession and repositories) with the DI framework.
         services.AddPersistence(typeof(PersonRepository).Assembly);
