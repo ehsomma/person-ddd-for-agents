@@ -51,6 +51,9 @@ public sealed class UnitOfWork : IUnitOfWork
     public void Dispose()
     {
         _session.Transaction?.Dispose();
+
+        // So the repositories used after the commit/rollback don't receive an already disposed transaction.
+        _session.Transaction = null;
     }
 
     #endregion

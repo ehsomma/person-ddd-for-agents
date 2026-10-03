@@ -54,6 +54,32 @@ public abstract class CommandHandler<TCommand, TResponse> : RequestHandler<TComm
     #region Protected methods
 
     /// <summary>
+    /// Executes the specified <paramref name="operation"/> inside a database transaction: commits if it
+    /// succeeds, and rolls back and rethrows the exception if it fails.
+    /// </summary>
+    /// <remarks>
+    /// Publish the domain events after this call, so the handlers only react to changes that are already persisted.
+    /// </remarks>
+    /// <param name="operation">The persistence operation to execute (e.g. <c>() => _repository.InsertAsync(entity)</c>).</param>
+    /// <returns>A task that represents the transactional operation.</returns>
+    protected async Task ExecuteInTransaction(Func<Task> operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+
+        _unitOfWork.BeginTransaction();
+        try
+        {
+            await operation();
+            _unitOfWork.Commit();
+        }
+        catch
+        {
+            _unitOfWork.Rollback();
+            throw;
+        }
+    }
+
+    /// <summary>
     /// Publishes the specified domain events, one after the other and in order (see
     /// <see cref="IDomainEventPublisher.Publish(IEnumerable{IDomainEvent}, CancellationToken)"/>).
     /// </summary>
@@ -120,6 +146,24 @@ public abstract class CommandHandler<TCommand> : RequestHandler<TCommand>
     #endregion
 
     #region Protected methods
+
+    /// <inheritdoc cref="CommandHandler{TCommand, TResponse}.ExecuteInTransaction(Func{Task})"/>
+    protected async Task ExecuteInTransaction(Func<Task> operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+
+        _unitOfWork.BeginTransaction();
+        try
+        {
+            await operation();
+            _unitOfWork.Commit();
+        }
+        catch
+        {
+            _unitOfWork.Rollback();
+            throw;
+        }
+    }
 
     /// <inheritdoc cref="CommandHandler{TCommand, TResponse}.PublishDomainEvents(IEnumerable{IDomainEvent}, CancellationToken)"/>
     protected Task PublishDomainEvents(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)

@@ -63,9 +63,10 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
 
         DomainModel.Person person = CreatePerson(command);
 
-        _unitOfWork.BeginTransaction();
-        await _personRepository.InsertAsync(person);
-        _unitOfWork.Commit();
+        // Ejecuta la `operación` especificada dentro de una transacción de base de datos, hace commit
+        // de los cambios si tiene éxito o rollback y relanza la excepción si falla.
+        await ExecuteInTransaction(() =>
+            _personRepository.InsertAsync(person));
 
         // Publica los eventos de dominio del agregado (p.ej. PersonCreated) recien despues del Commit,
         // para que los handlers solo reaccionen a cambios ya persistidos.
