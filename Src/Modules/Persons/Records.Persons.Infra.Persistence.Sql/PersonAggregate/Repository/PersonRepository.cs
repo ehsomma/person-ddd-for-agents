@@ -1,5 +1,6 @@
 using BuildingBlocks.Infra.Persistence.Abstractions;
 using BuildingBlocks.Infra.Persistence.Mappings.Abstractions.Mappers;
+using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Configuration;
 using Records.Persons.Domain.PersonAggregate.Repositories;
@@ -76,7 +77,57 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
     /// <inheritdoc />
     public async Task<DomainModel.Person?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        // The person, its address and its personal assets in a single round trip to the database.
+        const string sql = """
+                           SELECT [Id]
+                               ,[FullName]
+                               ,[Email]
+                               ,[Phone]
+                               ,[Gender]
+                               ,[Birthdate]
+                               ,[CreatedOnUtc]
+                               ,[UpdatedOnUtc]
+                           FROM [dbo].[Persons]
+                           WHERE [Id] = @id;
+
+                           SELECT [Id]
+                               ,[PersonId]
+                               ,[StreetLine1]
+                               ,[StreetLine2]
+                               ,[City]
+                               ,[State]
+                               ,[Country]
+                               ,[Lat]
+                               ,[Lng]
+                           FROM [dbo].[Addresses]
+                           WHERE [PersonId] = @id;
+
+                           SELECT [Id]
+                               ,[PersonId]
+                               ,[Description]
+                               ,[Value]
+                           FROM [dbo].[PersonalAssets]
+                           WHERE [PersonId] = @id;
+                           """;
+
+        await using SqlMapper.GridReader reader = await _dbSession.Connection.QueryMultipleAsync(
+            sql,
+            new { id },
+            _dbSession.Transaction);
+
+        DataModel.Person? dataPerson = await reader.ReadSingleOrDefaultAsync<DataModel.Person>();
+
+        // Not found: the caller decides what to do (e.g. PersonService throws DomainErrors.Person.NotFound).
+        if (dataPerson == null)
+        {
+            return null;
+        }
+
+        dataPerson.Address = await reader.ReadSingleOrDefaultAsync<DataModel.Address>();
+        dataPerson.PersonalAssets = (await reader.ReadAsync<DataModel.PersonalAsset>()).ToList();
+
+        DomainModel.Person? person = _personMapper.FromDataModelToDomain(dataPerson);
+        return person;
     }
 
     #endregion
