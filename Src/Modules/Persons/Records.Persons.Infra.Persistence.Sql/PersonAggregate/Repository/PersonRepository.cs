@@ -65,7 +65,21 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
     /// <inheritdoc />
     public async Task UpdateAsync(DomainModel.Person person)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(person);
+
+        DataModel.Person dataPerson = _personMapper.FromDomainToDataModel(person);
+
+        // Dapper.Contrib (by [ExplicitKey]/[Key], the IDs come from the loaded person).
+        await _dbSession.Connection.UpdateAsync(dataPerson, _dbSession.Transaction);
+        await _dbSession.Connection.UpdateAsync(dataPerson.Address, _dbSession.Transaction);
+
+        // The domain doesn't update or remove the existing personal assets (Person.Update doesn't touch
+        // them), it only adds new ones with Person.AddPersonalAsset(): those are the ones without ID yet.
+        // NOTE: Sequential (not Task.WhenAll), see InsertAsync.
+        foreach (DataModel.PersonalAsset personalAsset in dataPerson.PersonalAssets.NotNull().Where(personalAsset => personalAsset.Id == 0))
+        {
+            await _dbSession.Connection.InsertAsync(personalAsset, _dbSession.Transaction);
+        }
     }
 
     /// <inheritdoc />
