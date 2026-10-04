@@ -85,7 +85,20 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
     /// <inheritdoc />
     public async Task DeleteAsync(DomainModel.Person person)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(person);
+
+        // Physical delete of the whole aggregate in a single round trip. The children go first because the
+        // FKs (FK_PersonalAssets_Persons, FK_Addresses_Persons) don't have ON DELETE CASCADE.
+        const string sql = """
+                           DELETE FROM [dbo].[PersonalAssets] WHERE [PersonId] = @id;
+                           DELETE FROM [dbo].[Addresses] WHERE [PersonId] = @id;
+                           DELETE FROM [dbo].[Persons] WHERE [Id] = @id;
+                           """;
+
+        await _dbSession.Connection.ExecuteAsync(
+            sql,
+            new { id = person.Id },
+            _dbSession.Transaction);
     }
 
     /// <inheritdoc />
