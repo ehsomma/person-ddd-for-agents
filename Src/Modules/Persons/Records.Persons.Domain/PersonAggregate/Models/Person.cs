@@ -189,6 +189,13 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
 
         RegisterDomainEvent(new PersonUpdatedEvent(this));
 
+        // Only adds the new personal assets (without ID, see PersonalAsset.Create()): the existing ones
+        // are neither updated nor removed from here.
+        foreach (PersonalAsset personalAsset in updatedData.PersonalAssets.Where(personalAsset => personalAsset.Id == 0))
+        {
+            AddPersonalAsset(personalAsset);
+        }
+
         ////_personalAssets = ... // TODO: Update personalAssets separately by its own Update, not from here.
     }
 

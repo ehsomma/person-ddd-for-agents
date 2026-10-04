@@ -3,8 +3,6 @@ using BuildingBlocks.Application.DomainEvents;
 using BuildingBlocks.Application.Mappings.Abstractions.Mappers;
 using BuildingBlocks.Domain.ValueObjects;
 using BuildingBlocks.Infra.Persistence.Abstractions;
-using Microsoft.Extensions.Options;
-using Records.Persons.Configuration;
 using Records.Persons.Domain.PersonAggregate.Enumerators;
 using Records.Persons.Domain.PersonAggregate.Repositories;
 using Records.Persons.Domain.PersonAggregate.Services;
@@ -13,17 +11,14 @@ using Records.Persons.Domain.Shared.ValueObjects;
 using DomainModel = Records.Persons.Domain.PersonAggregate.Models; // Using aliases.
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
-namespace Records.Persons.Application.Person.Commands.CreatePerson;
+namespace Records.Persons.Application.Person.Commands.UpdatePerson;
 
 /// <summary>
-/// Represents a command handler for creating a new person.
+/// Represents a command handler for updating an existing person.
 /// </summary>
-internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCommand, Dto.Person>
+internal sealed class UpdatePersonCommandHandler : CommandHandler<UpdatePersonCommand, Dto.Person>
 {
     #region Declarations
-
-    // ReSharper disable once NotAccessedField.Local
-    private readonly PersonsSettings _settings; // NOTE: No se usa pero se deja como ejemplo de como inyectar settings en un handler.
 
     private readonly IPersonRepository _personRepository;
 
@@ -36,27 +31,22 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
     #region Contructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreatePersonCommandHandler"/> class.
+    /// Initializes a new instance of the <see cref="UpdatePersonCommandHandler"/> class.
     /// </summary>
     /// <param name="domainEventPublisher">Publishes the domain events raised by the <see cref="DomainModel.Person"/> aggregate.</param>
     /// <param name="unitOfWork">Manage a <see cref="IDbSession"/> to encapsulate a business transaction which can affect the database.</param>
-    /// <param name="settings">Represents the settings that will be mapped from the Persons key in the appsettings.</param>
-    /// <param name="personRepository">Represents the repository for <see cref="DomainModel.Person"/>.</param>
     /// <param name="personService">Represents the service for <see cref="DomainModel.Person"/>.</param>
+    /// <param name="personRepository">Represents the repository for <see cref="DomainModel.Person"/>.</param>
     /// <param name="personMapper">Defines a mapper to map a <see cref="DomainModel.Person"/> to a <see cref="Dto.Person"/>.</param>
     /// <exception cref="ArgumentNullException">When some argument for the constructor parameters is null.</exception>
-    public CreatePersonCommandHandler(
+    public UpdatePersonCommandHandler(
         IDomainEventPublisher domainEventPublisher,
         IUnitOfWork unitOfWork,
-        IOptionsSnapshot<PersonsSettings> settings,
-        IPersonRepository personRepository,
         IPersonService personService,
+        IPersonRepository personRepository,
         IDomainMapper<DomainModel.Person, Dto.Person> personMapper)
         : base(domainEventPublisher, unitOfWork)
     {
-        ArgumentNullException.ThrowIfNull(settings);
-
-        _settings = settings.Value;
         _personRepository = personRepository ?? throw new ArgumentNullException(nameof(personRepository));
         _personService = personService ?? throw new ArgumentNullException(nameof(personService));
         _personMapper = personMapper ?? throw new ArgumentNullException(nameof(personMapper));
@@ -67,31 +57,35 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
     #region Public methods
 
     /// <inheritdoc />
-    public override async Task<Dto.Person> Handle(CreatePersonCommand command, CancellationToken cancellationToken = default)
+    public override async Task<Dto.Person> Handle(UpdatePersonCommand command, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(command);
 
-        // NOTE: Just if we need some Persons settings.
-        ////string setting1 = _settings.Setting1;
+        // Loads a DomainModel.Person with the edited data coming from the command (FromCommandToDomain).
+        DomainModel.Person editedPerson = LoadPerson(command);
 
-        DomainModel.Person person = CreatePerson(command);
+        // Gets the current DomainModel.Person.
+        DomainModel.Person currentPerson = await _personService.GetByIdAsync(editedPerson.Id);
+
+        // Updates the currentPerson with editedPerson data.
+        currentPerson.Update(editedPerson);
 
         // Ejecuta la `operación` especificada dentro de una transacción de base de datos, hace commit
         // de los cambios si tiene éxito o rollback y relanza la excepción si falla.
         await ExecuteInTransaction(() =>
-            _personRepository.InsertAsync(person));
+            _personRepository.UpdateAsync(currentPerson));
 
-        // Publica los eventos de dominio del agregado (p.ej. PersonCreated) recien despues del Commit,
+        // Publica los eventos de dominio del agregado (p.ej. PersonUpdated) recien despues del Commit,
         // para que los handlers solo reaccionen a cambios ya persistidos.
-        await PublishDomainEvents(person.PullDomainEvents(), cancellationToken);
+        await PublishDomainEvents(currentPerson.PullDomainEvents(), cancellationToken);
 
         // Reads the person again to return what was actually persisted (e.g. the IDs generated for
-        // the address and the personal assets, which the domain model doesn't receive from the insert).
-        DomainModel.Person createdPerson = await _personService.GetByIdAsync(person.Id);
+        // the new personal assets, which the domain model doesn't receive from the insert).
+        DomainModel.Person updatedPerson = await _personService.GetByIdAsync(currentPerson.Id);
 
-        Dto.Person createdPersonDto = _personMapper.FromDomainToDto(createdPerson);
+        Dto.Person updatedPersonDto = _personMapper.FromDomainToDto(updatedPerson);
 
-        return createdPersonDto;
+        return updatedPersonDto;
     }
 
     #endregion
@@ -99,14 +93,12 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
     #region Private methods
 
     /// <summary>
-    /// Crea un nuevo <see cref="DomainModel.Person"/> con los datos del `command` especificado.
+    /// Carga un <see cref="DomainModel.Person"/> con los datos editados del `command` especificado.
     /// </summary>
-    /// <param name="command">El comando que contiene los datos para crear el <see cref="DomainModel.Person"/>.</param>
+    /// <param name="command">El comando que contiene los datos editados del <see cref="DomainModel.Person"/>.</param>
     /// <returns>Un <see cref="DomainModel.Person"/>.</returns>
-    private DomainModel.Person CreatePerson(CreatePersonCommand command)
+    private DomainModel.Person LoadPerson(UpdatePersonCommand command)
     {
-        ////ArgumentNullException.ThrowIfNull(command);
-
         Dto.Person personDto = command.Person;
         Dto.Address? personAddressDto = command.Person.Address;
 
@@ -119,7 +111,8 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
                 domainLatLng = LatLng.Build(personAddressDto.LatLng.Lat, personAddressDto.LatLng.Lng);
             }
 
-            domainAddress = DomainModel.Address.Create(
+            domainAddress = DomainModel.Address.Load(
+                personAddressDto.Id,
                 StreetLine.Build(personAddressDto.StreetLine1),
                 StreetLine2.Build(personAddressDto.StreetLine2),
                 City.Build(personAddressDto.City),
@@ -132,7 +125,7 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
         Email email = Email.Build(personDto.Email);
         PhoneNumber phoneNumber = PhoneNumber.Build(personDto.Phone);
 
-        DomainModel.Person person = DomainModel.Person.Create(
+        DomainModel.Person person = DomainModel.Person.Load(
             personDto.Id,
             domainAddress,
             fullName,
@@ -142,14 +135,16 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
             null,
             personDto.Birthdate);
 
+        // Loaded as they come (the new ones without ID): Person.Update decides which ones to add.
         if (personDto.PersonalAssets != null)
         {
             foreach (Dto.PersonalAsset personalAssetDto in personDto.PersonalAssets)
             {
-                DomainModel.PersonalAsset domainPersonalAsset = DomainModel.PersonalAsset.Create(
+                DomainModel.PersonalAsset personalAsset = DomainModel.PersonalAsset.Load(
+                    personalAssetDto.Id,
                     PersonalAssetDescription.Build(personalAssetDto.Description),
                     Money.Build(personalAssetDto.Value));
-                person.AddPersonalAsset(domainPersonalAsset);
+                person.LoadPersonalAsset(personalAsset);
             }
         }
 

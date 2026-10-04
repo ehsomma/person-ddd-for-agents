@@ -21,10 +21,12 @@ public static class ServiceCollectionExtensions
         services.Scan(selector =>
         {
             selector.FromAssemblies(assemblies)
-                .AddClasses(classes =>
-                {
-                    classes.Where(type => type.Name.EndsWith("Mapper", StringComparison.Ordinal));
-                })
+                .AddClasses(
+                    classes =>
+                    {
+                        classes.Where(type => type.Name.EndsWith("Mapper", StringComparison.Ordinal));
+                    },
+                    publicOnly: false) // Also the internal mappers (e.g. the ones of the application layer).
                 .AsImplementedInterfaces()
                 .WithTransientLifetime();
         });

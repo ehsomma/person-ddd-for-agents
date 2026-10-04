@@ -88,12 +88,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DatabaseScripts", "Database
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Mappings.DependencyInjection", "Src\BuildingBlocks\BuildingBlocks.Infra.Mappings.DependencyInjection\BuildingBlocks.Infra.Mappings.DependencyInjection.csproj", "{0AF52B92-E52B-410F-9B48-70E684C151C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Application.Mappings.Abstractions", "Src\BuildingBlocks\BuildingBlocks.Application.Mappings.Abstractions\BuildingBlocks.Application.Mappings.Abstractions.csproj", "{0DC9EA6D-8FE0-4925-AAFF-7E909A0FFE89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DC9EA6D-8FE0-4925-AAFF-7E909A0FFE89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DC9EA6D-8FE0-4925-AAFF-7E909A0FFE89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DC9EA6D-8FE0-4925-AAFF-7E909A0FFE89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DC9EA6D-8FE0-4925-AAFF-7E909A0FFE89}.Release|Any CPU.Build.0 = Release|Any CPU
 		{00BE2FA3-A45F-40AC-A300-66B939421399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{00BE2FA3-A45F-40AC-A300-66B939421399}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00BE2FA3-A45F-40AC-A300-66B939421399}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -211,6 +217,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{0DC9EA6D-8FE0-4925-AAFF-7E909A0FFE89} = {A80515DE-53D5-4A23-A6A4-44AE89830F4B}
 		{9FCEAFE3-ADB8-4A23-A91B-B7387D8B6F1B} = {F4B7F0A7-E0EA-4A9E-8041-5EA057250C7F}
 		{5B36C092-D2B3-470E-B5C4-F9258B61393C} = {F4B7F0A7-E0EA-4A9E-8041-5EA057250C7F}
 		{C0B5A42E-5F7B-4927-9F2E-C9757687D9A6} = {F4B7F0A7-E0EA-4A9E-8041-5EA057250C7F}

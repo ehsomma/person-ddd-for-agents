@@ -15,6 +15,7 @@
     <ProjectReference Include="..\Records.Persons.Configuration\Records.Persons.Configuration.csproj" />
     <ProjectReference Include="..\Records.Persons.Domain\Records.Persons.Domain.csproj" />
     <ProjectReference Include="..\Records.Persons.Dtos\Records.Persons.Dtos.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application.Mappings.Abstractions\BuildingBlocks.Application.Mappings.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

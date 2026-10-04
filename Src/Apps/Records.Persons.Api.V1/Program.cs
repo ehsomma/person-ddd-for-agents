@@ -51,9 +51,11 @@ internal sealed class Program
         // Registers the shared application services with the DI framework.
         services.AddApplication(typeof(PersonService).Assembly);
 
-        // Registers the persistence mappers (e.g. IPersistanceMapper<,>) with the DI framework.
+        // Registers the mappers (IDomainMapper<,> of the application and IPersistanceMapper<,> of the
+        // persistence) with the DI framework.
         services.AddMappers(
             Assembly.GetExecutingAssembly(),
+            typeof(AssemblyReference).Assembly,
             typeof(PersonMapper).Assembly);
 
         // Registers the persistence services (IUnitOfWork, IDbSession and repositories) with the DI framework.

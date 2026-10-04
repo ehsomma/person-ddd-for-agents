@@ -356,3 +356,7 @@ dotnet_diagnostic.CA1812.severity = none
 [*QueryHandler.cs]
 # CA1812: los QueryHandler se instancian por reflection (services.Scan en AddMediator), nunca con "new".
 dotnet_diagnostic.CA1812.severity = none
+
+[*Mapper.cs]
+# CA1812: los Mapper se instancian por reflection (services.Scan en AddMappers), nunca con "new".
+dotnet_diagnostic.CA1812.severity = none
