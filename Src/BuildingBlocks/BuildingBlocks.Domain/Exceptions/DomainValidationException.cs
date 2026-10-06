@@ -5,6 +5,9 @@ namespace BuildingBlocks.Domain.Exceptions;
 /// <summary>
 /// Base exception to represent validations domain errors.
 /// </summary>
+/// <remarks>
+/// The <see cref="ExDataKey.ErrorCode"/> and <see cref="ExDataKey.ErrorType"/> are set in the base class.
+/// </remarks>
 [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design",
     "CA1032:Implement standard exception constructors",
@@ -20,7 +23,6 @@ public class DomainValidationException : ValidationException
     public DomainValidationException(string message)
         : base(message)
     {
-        SetDefaultErrorGroup();
     }
 
     /// <summary>
@@ -31,20 +33,6 @@ public class DomainValidationException : ValidationException
     public DomainValidationException(string message, Exception innerException)
         : base(message, innerException)
     {
-        SetDefaultErrorGroup();
-    }
-
-    #endregion
-
-    #region Methods
-
-    /// <summary>
-    /// Set the erroGroup for validations.
-    /// </summary>
-    private void SetDefaultErrorGroup()
-    {
-        // The ExDataKey.ErrorCode is set in the base class.
-        Data[ExDataKey.ErrorGroup] = "DomainValidation";
     }
 
     #endregion

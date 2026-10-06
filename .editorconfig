@@ -287,7 +287,7 @@ dotnet_diagnostic.IDE0058.severity = none
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = silent
 # IDE0066: Use switch expression.
-dotnet_diagnostic.IDE0066.severity = suggestion
+dotnet_diagnostic.IDE0066.severity = silent
 # IDE0001: Simplify name (ej. System.String -> String)
 dotnet_diagnostic.IDE0001.severity = suggestion
 # IDE0300: Use collection expression for array (ej. new[] { a, b } -> [a, b])
@@ -333,6 +333,9 @@ dotnet_diagnostic.IDE0083.severity = silent
 
 # IDE0200: Remove unnecessary lambda expression (ej. x => Foo(x) -> Foo)
 dotnet_diagnostic.IDE0200.severity = silent
+
+# CA1008: Los enums deben tener un valor cero; ErrorType arranca en 1 a propósito (no hay un tipo "None" válido).
+dotnet_diagnostic.CA1008.severity = none
 
 [*EventHandler.cs]
 # CA1711: "EventHandler" es un sufijo reservado para delegados; acá es el contrato/handler de eventos de dominio.

@@ -4,7 +4,8 @@ using My.Exceptions;
 namespace BuildingBlocks.Domain.Exceptions;
 
 /// <summary>
-/// Represents an exception that occurs in the domain and contains information about the domain <see cref="BuildingBlocks.Domain.Models.Error"/>.
+/// Represents an exception that occurs in the domain and contains information about the domain
+/// <see cref="BuildingBlocks.Domain.Models.Error"/> like Message, Code, and Type.
 /// </summary>
 [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design",
@@ -25,7 +26,7 @@ public sealed class DomainException : Exception
         Error = error;
 
         Data[ExDataKey.ErrorCode] = error.Code;
-        Data[ExDataKey.ErrorGroup] = error.Group;
+        Data[ExDataKey.ErrorType] = error.Type;
     }
 
     #endregion

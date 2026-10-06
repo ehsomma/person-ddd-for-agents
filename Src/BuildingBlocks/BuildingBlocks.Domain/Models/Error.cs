@@ -1,4 +1,6 @@
-﻿namespace BuildingBlocks.Domain.Models;
+﻿using My.Exceptions;
+
+namespace BuildingBlocks.Domain.Models;
 
 /// <summary>
 /// Represents a concrete domain error.
@@ -12,16 +14,16 @@ public sealed class Error
     /// </summary>
     /// <param name="code">The error code.</param>
     /// <param name="message">The error message.</param>
-    /// <param name="group">The group of the message (helps to resolve the HttpStatusCode) in http requests.</param>
+    /// <param name="type">The type of the error (helps to resolve the HttpStatusCode in http requests).</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="code"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="code"/> is empty or consists only of white-space characters.</exception>
-    public Error(string code, string message = "", string group = "")
+    public Error(string code, string message, ErrorType type)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(code);
 
         Code = code;
         Message = message;
-        Group = group;
+        Type = type;
     }
 
     #endregion
@@ -34,8 +36,8 @@ public sealed class Error
     /// <summary>Gets the error message.</summary>
     public string Message { get; }
 
-    /// <summary>Gets the group of the message (helps to resolve the HttpStatusCode) in http requests.</summary>
-    public string Group { get; }
+    /// <summary>Gets the type of the error (helps to resolve the HttpStatusCode in http requests).</summary>
+    public ErrorType Type { get; }
 
     #endregion
 

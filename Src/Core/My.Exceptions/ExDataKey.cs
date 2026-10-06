@@ -16,8 +16,8 @@ public static class ExDataKey
     /// <summary>Key that identifies the internal error code assigned from the business so that developers can make decisions according to this code.</summary>
     public const string ErrorCode = "ErrorCode";
 
-    /// <summary>Key that identifies the error group (allows it to be associated with an http status code).</summary>
-    public const string ErrorGroup = "ErrorGroup";
+    /// <summary>Key that identifies the error type (allows it to be associated with an http status code).</summary>
+    public const string ErrorType = "ErrorType";
 
     /// <summary>Key that identifies the timeStamp.</summary>
     public const string ErrorTimeStamp = "ErrorTimeStamp";

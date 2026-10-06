@@ -24,7 +24,7 @@ public class ValidationException : Exception
     public ValidationException(string message)
         : base(message ?? DefaultMessage)
     {
-        SetDefaultErrorCode();
+        SetDefaultErrorData();
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public class ValidationException : Exception
     public ValidationException(IReadOnlyCollection<ValidationError> validationErros)
         : base(DefaultMessage)
     {
-        SetDefaultErrorCode();
+        SetDefaultErrorData();
         ValidationErrors = validationErros;
     }
 
@@ -46,7 +46,7 @@ public class ValidationException : Exception
     public ValidationException(string message, Exception innerException)
         : base(message ?? DefaultMessage, innerException)
     {
-        SetDefaultErrorCode();
+        SetDefaultErrorData();
     }
 
     #endregion
@@ -61,12 +61,12 @@ public class ValidationException : Exception
     #region Private methods
 
     /// <summary>
-    /// Sets the default error code for validations.
+    /// Sets the default error code and error type for validations.
     /// </summary>
-    private void SetDefaultErrorCode()
+    private void SetDefaultErrorData()
     {
         Data[ExDataKey.ErrorCode] = ExErrorCodeCore.ErrValidation;
-        Data[ExDataKey.ErrorGroup] = string.Empty;
+        Data[ExDataKey.ErrorType] = ErrorType.Validation;
     }
 
     #endregion

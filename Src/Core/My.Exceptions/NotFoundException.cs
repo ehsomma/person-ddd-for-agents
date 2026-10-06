@@ -23,7 +23,7 @@ public class NotFoundException : Exception
     public NotFoundException()
         : base(DefaultMessage)
     {
-        SetDefaultErrorCode();
+        SetDefaultErrorData();
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ public class NotFoundException : Exception
     public NotFoundException(string message)
         : base(message ?? DefaultMessage)
     {
-        SetDefaultErrorCode();
+        SetDefaultErrorData();
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public class NotFoundException : Exception
     public NotFoundException(string message, Exception innerException)
         : base(message ?? DefaultMessage, innerException)
     {
-        SetDefaultErrorCode();
+        SetDefaultErrorData();
     }
 
     #endregion
@@ -52,11 +52,12 @@ public class NotFoundException : Exception
     #region Private methods
 
     /// <summary>
-    /// Sets the default error code for not-found errors.
+    /// Sets the default error code and error type for not-found errors.
     /// </summary>
-    private void SetDefaultErrorCode()
+    private void SetDefaultErrorData()
     {
         Data[ExDataKey.ErrorCode] = ExErrorCodeCore.ErrNotFound;
+        Data[ExDataKey.ErrorType] = ErrorType.NotFound;
     }
 
     #endregion

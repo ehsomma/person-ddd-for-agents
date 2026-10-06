@@ -1,4 +1,5 @@
 using BuildingBlocks.Domain.Models;
+using My.Exceptions;
 
 namespace Records.Persons.Domain.PersonAggregate.Errors;
 
@@ -19,11 +20,12 @@ public static class DomainErrors
         #region Errors
 
         /// <summary>When a Person not found.</summary>
-        public static Error NotFound => new Error("ERR.PERSON.NOTFOUND", "Person not found.", "Domain");
+        public static Error NotFound =>
+            new Error("ERR.PERSON.NOTFOUND", "Person not found.", ErrorType.NotFound);
 
         /// <summary>When a person address have an invalid country.</summary>
         public static Error InvalidCountry =>
-            new Error("ERR.PERSON.INVALIDCOUNTRY", "Country not found, invalid.", "Domain");
+            new Error("ERR.PERSON.INVALIDCOUNTRY", "Country not found, invalid.", ErrorType.Forbidden);
 
         #endregion
     }

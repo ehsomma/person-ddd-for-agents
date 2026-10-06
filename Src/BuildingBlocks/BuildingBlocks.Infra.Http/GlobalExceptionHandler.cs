@@ -31,10 +31,10 @@ public sealed class GlobalExceptionHandler(
         ArgumentNullException.ThrowIfNull(ex);
 
         string errorCode = ex.GetDataValue(ExDataKey.ErrorCode) ?? "ERR";
-        string errorGroup = ex.GetDataValue(ExDataKey.ErrorGroup) ?? string.Empty;
+        ErrorType? errorType = ex.Data[ExDataKey.ErrorType] as ErrorType?;
         string errorMessage = ex.Message;
         ////HttpStatusCode httpStatusCode = ResolveHttpStatusCode(ex); // Sin DDD.
-        HttpStatusCode httpStatusCode = ResolveHttpStatusCode(errorCode, errorGroup); // Con DDD.
+        HttpStatusCode httpStatusCode = ResolveHttpStatusCode(errorType); // Con DDD.
 
         string? errorLogId = null;
         ex.SetTimeStamp(); // Solo la agrega si no tiene previamente.
@@ -149,54 +149,22 @@ public sealed class GlobalExceptionHandler(
     }
 
     /// <summary>
-    /// Resolves the <see cref="HttpStatusCode"/> from the <paramref name="errorCode"/> or
-    /// <paramref name="errorGroup"/> specified.
+    /// Resolves the <see cref="HttpStatusCode"/> from the <paramref name="errorType"/> specified.
     /// </summary>
-    /// <param name="errorCode">The custom errorCode (got from the exception).</param>
-    /// <param name="errorGroup">The custom errorGroup (got from the exception).</param>
+    /// <param name="errorType">The <see cref="ErrorType"/> (got from the exception), or <see langword="null"/> if the exception has none.</param>
     /// <returns>The resolved <see cref="HttpStatusCode"/>.</returns>
-    [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Kept intentionally as DDD reference, see summary.")]
-    private HttpStatusCode ResolveHttpStatusCode(string errorCode, string errorGroup)
+    private HttpStatusCode ResolveHttpStatusCode(ErrorType? errorType)
     {
-        HttpStatusCode ret;
-
-        if (string.IsNullOrWhiteSpace(errorCode))
+        HttpStatusCode ret = errorType switch
         {
-            ret = HttpStatusCode.InternalServerError; // 500.
-        }
-        else
-        {
-            if (string.IsNullOrWhiteSpace(errorGroup))
-            {
-                errorGroup = string.Empty;
-            }
-
-            if (errorCode == ExErrorCodeCore.ErrValidation
-                || errorCode.Contains(".VAL.", StringComparison.InvariantCultureIgnoreCase)
-                || errorCode.Contains(".VALIDATION", StringComparison.CurrentCultureIgnoreCase)
-                || errorGroup == "Validation"
-                || errorGroup == "DomainValidation")
-            {
-                ret = HttpStatusCode.BadRequest; // 400.
-            }
-            else if (errorCode.Contains(".AUTH.", StringComparison.InvariantCultureIgnoreCase)
-                     || errorGroup == "Auth")
-            {
-                ret = HttpStatusCode.Unauthorized; // 401.
-            }
-            else if (errorCode.Contains(".FORB.", StringComparison.InvariantCultureIgnoreCase)
-                || errorCode.Contains(".DOM.", StringComparison.InvariantCultureIgnoreCase)
-                || errorCode.Contains(".BNS.", StringComparison.InvariantCultureIgnoreCase)
-                || errorGroup == "Domain"
-                || errorGroup == "Business")
-            {
-                ret = HttpStatusCode.Forbidden; // 403.
-            }
-            else
-            {
-                ret = HttpStatusCode.InternalServerError; // 500.
-            }
-        }
+            ErrorType.Validation => HttpStatusCode.BadRequest, // 400.
+            ErrorType.Unauthorized => HttpStatusCode.Unauthorized, // 401.
+            ErrorType.Forbidden => HttpStatusCode.Forbidden, // 403.
+            ErrorType.NotFound => HttpStatusCode.NotFound, // 404.
+            ErrorType.Conflict => HttpStatusCode.Conflict, // 409.
+            ErrorType.Failure => HttpStatusCode.InternalServerError, // 500.
+            _ => HttpStatusCode.InternalServerError, // 500 (exceptions without type).
+        };
 
         return ret;
     }

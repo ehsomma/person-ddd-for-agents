@@ -24,7 +24,7 @@ public class ForbiddenException : Exception
     public ForbiddenException()
         : base(DefaultMessage)
     {
-        SetDefaultErrorCode();
+        SetDefaultErrorData();
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public class ForbiddenException : Exception
     public ForbiddenException(string message)
         : base(message ?? DefaultMessage)
     {
-        SetDefaultErrorCode();
+        SetDefaultErrorData();
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class ForbiddenException : Exception
     public ForbiddenException(string message, Exception innerException)
         : base(message ?? DefaultMessage, innerException)
     {
-        SetDefaultErrorCode();
+        SetDefaultErrorData();
     }
 
     #endregion
@@ -53,11 +53,12 @@ public class ForbiddenException : Exception
     #region Private methods
 
     /// <summary>
-    /// Sets the default error code for forbidden errors.
+    /// Sets the default error code and error type for forbidden errors.
     /// </summary>
-    private void SetDefaultErrorCode()
+    private void SetDefaultErrorData()
     {
         Data[ExDataKey.ErrorCode] = ExErrorCodeCore.ErrForbidden;
+        Data[ExDataKey.ErrorType] = ErrorType.Forbidden;
     }
 
     #endregion
