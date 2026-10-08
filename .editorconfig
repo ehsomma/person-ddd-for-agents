@@ -337,6 +337,9 @@ dotnet_diagnostic.IDE0200.severity = silent
 # CA1008: Los enums deben tener un valor cero; ErrorType arranca en 1 a propósito (no hay un tipo "None" válido).
 dotnet_diagnostic.CA1008.severity = none
 
+# CA1873: Avisa que los argumentos del log se evalúan (p.ej. boxing de Guid) aunque el nivel esté deshabilitado; silenciada para no exigir el guard IsEnabled en cada log.
+dotnet_diagnostic.CA1873.severity = silent
+
 [*EventHandler.cs]
 # CA1711: "EventHandler" es un sufijo reservado para delegados; acá es el contrato/handler de eventos de dominio.
 dotnet_diagnostic.CA1711.severity = none
