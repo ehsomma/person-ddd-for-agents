@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Records.Persons.Configuration;
 
@@ -6,6 +6,8 @@ namespace Records.Persons.Infra.Configuration.DependencyInjection;
 
 /// <summary>
 /// Extensions methods for dependency injection.
+/// Registra la configuración y bindea la sección especificada con el tipo correspondiente para luego
+/// poder inyectarlo en los servicios que lo necesiten.
 /// </summary>
 public static class ServiceCollectionExtensions
 {
