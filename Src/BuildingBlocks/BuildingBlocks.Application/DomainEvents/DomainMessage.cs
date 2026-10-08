@@ -15,7 +15,7 @@ y las dos están en el mismo archivo (por eso el #pragma warning disable SA1402)
 - DomainMessage (static) es solo una factory, con Create(metadata, domainEvent).
 
 La factory hace falta porque person.PullDomainEvents() devuelve los eventos tipados como IDomainEvent.
-Pero los handlers están registrados para el tipo concreto (INotificationHandler<DomainMessage<PersonCreatedEvent>>). 
+Pero los handlers están registrados para el tipo concreto (INotificationHandler<DomainMessage<PersonCreatedEvent>>).
 Si hicieras new DomainMessage<IDomainEvent>(...), ningún handler lo encontraría. Como el tipo real
 se conoce recién en runtime y C# no permite escribir new DomainMessage<domainEvent.GetType()>, la
 factory arma el tipo con MakeGenericType y lo instancia con Activator.CreateInstance. DomainEventPublisher
@@ -26,7 +26,7 @@ Analogía
 ========
 
 Analogía: La carta
-En el código: PersonCreatedEvent: el contenido, lo que 
+En el código: PersonCreatedEvent: el contenido, lo que
 pasó en el negocio.
 ────────────────────────────────────────
 Analogía: El sobre
@@ -61,13 +61,6 @@ Algunos matices que la hacen más precisa:
    ese tipo de carta, que pueden ser 0, 1 o N handlers. Si no hay ninguno, no se devuelve al remitente:
    simplemente nadie la lee. Esa es la diferencia con un IRequest, que es una carta certificada con un
    único destinatario obligatorio y respuesta.
-
-4. La estampilla sirve para un solo correo. INotification vale para el correo interno (el mediator,
-   dentro del proceso). Cuando se hagan los integration events, el Message<TContent> del TODO va a
-   ir sin INotification, porque esa carta sale por otro correo: el Outbox y el broker (tipo RabbitMQ).
-   Sería como un sobre de correo internacional, con otro franqueo y otro transporte. Y ahí la metadata
-   cobra todo su sentido: la carta nueva lleva "en respuesta a" (causation) el MessageId del sobre
-   de dominio y mantiene el mismo número de trámite (correlation).
 */
 
 /// <summary>
