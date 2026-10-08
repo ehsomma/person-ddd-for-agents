@@ -5,7 +5,7 @@ using Records.Persons.Domain.PersonAggregate.Events;
 namespace Records.Persons.Application.Person.Events.PersonCreated;
 
 /// <summary>
-/// The <see cref="PersonCreatedEvent"/>. handler.
+/// The <see cref="PersonCreatedEvent"/> handler.
 /// </summary>
 internal sealed class PersonCreatedEventHandler : DomainEventHandler<PersonCreatedEvent>
 {
@@ -36,15 +36,19 @@ internal sealed class PersonCreatedEventHandler : DomainEventHandler<PersonCreat
     {
         ArgumentNullException.ThrowIfNull(notification);
 
-        // El IsEnabled evita boxear los argumentos (CA1873) cuando el nivel Information esta deshabilitado.
-        if (_logger.IsEnabled(LogLevel.Information))
-        {
-            _logger.LogInformation(
-                "PersonCreated handled. PersonId: {PersonId}, MessageId: {MessageId}, CorrelationId: {CorrelationId}",
-                notification.DomainEvent.Person.Id,
-                notification.Metadata.MessageId,
-                notification.Metadata.CorrelationId);
-        }
+        // From here (event handler) you can:
+        // • Publish integration events or save to the Outbox.
+        // • Execute atomic logic (UOW/Transaction) idem command handlers.
+        // • Create and send other commands.
+
+        // From here (event handler) you can not:
+        // • Execute other atomic logic of another aggregate.
+
+        _logger.LogInformation(
+            "PersonCreated handled. PersonId: {PersonId}, MessageId: {MessageId}, CorrelationId: {CorrelationId}",
+            notification.Content.Person.Id,
+            notification.Metadata.MessageId,
+            notification.Metadata.CorrelationId);
 
         return Task.CompletedTask;
     }

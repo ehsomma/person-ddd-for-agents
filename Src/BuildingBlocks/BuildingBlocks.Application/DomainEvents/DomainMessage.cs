@@ -11,7 +11,7 @@ Son dos tipos distintos que comparten nombre. C# lo permite porque uno es genér
 (DomainMessage ≠ DomainMessage<T>). Es el mismo patrón que Tuple / Tuple<T> o Nullable / Nullable<T>,
 y las dos están en el mismo archivo (por eso el #pragma warning disable SA1402).
 
-- DomainMessage<TEvent> es el mensaje en sí, con Metadata y DomainEvent.
+- DomainMessage<TEvent> es el mensaje en sí, con Metadata y Content (heredados de Message<TEvent>).
 - DomainMessage (static) es solo una factory, con Create(metadata, domainEvent).
 
 La factory hace falta porque person.PullDomainEvents() devuelve los eventos tipados como IDomainEvent.
@@ -29,8 +29,13 @@ Analogía: La carta
 En el código: PersonCreatedEvent: el contenido, lo que
 pasó en el negocio.
 ────────────────────────────────────────
-Analogía: El sobre
-En el código: DomainMessage<TEvent>: envuelve la carta
+Analogía: El sobre (genérico)
+En el código: Message<TContent> (BuildingBlocks.Messaging): envuelve la carta, sin importar por qué
+correo va a viajar
+────────────────────────────────────────
+Analogía: El sobre del correo interno
+En el código: DomainMessage<TEvent>: un Message<TEvent> con la estampilla (INotification) del correo
+interno (el mediator)
 ────────────────────────────────────────
 Analogía: Lo escrito en el sobre
 En el código: MessageMetadata: número de seguimiento
@@ -101,13 +106,13 @@ public static class DomainMessage
 }
 
 /// <summary>
-/// Wraps a domain event together with its <see cref="MessageMetadata"/> so it can be published with
-/// <see cref="IPublisher"/>. The domain event itself knows nothing about the mediator: this wrapper is
-/// the <see cref="INotification"/>.
+/// A <see cref="Message{TContent}"/> whose content is a domain event and that also implements
+/// <see cref="INotification"/>, so it can be published with <see cref="IPublisher"/>. The domain event
+/// itself knows nothing about the mediator: this wrapper is the <see cref="INotification"/>.
 /// </summary>
 /// <typeparam name="TEvent">The type of the wrapped domain event.</typeparam>
 #pragma warning disable SA1402
-public class DomainMessage<TEvent> : INotification
+public class DomainMessage<TEvent> : Message<TEvent>, INotification
     where TEvent : IDomainEvent
 {
     #region Constructor
@@ -115,27 +120,13 @@ public class DomainMessage<TEvent> : INotification
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainMessage{TEvent}"/> class.
     /// </summary>
-    /// <param name="metadata"><inheritdoc cref="Metadata" path="/summary"/></param>
-    /// <param name="domainEvent"><inheritdoc cref="DomainEvent" path="/summary"/></param>
+    /// <param name="metadata">The metadata of the message.</param>
+    /// <param name="domainEvent">The domain event to wrap (the <see cref="Message{TContent}.Content"/>).</param>
     /// <exception cref="ArgumentNullException"><paramref name="metadata"/> or <paramref name="domainEvent"/> is <see langword="null"/>.</exception>
     public DomainMessage(MessageMetadata metadata, TEvent domainEvent)
+        : base(metadata, domainEvent)
     {
-        ArgumentNullException.ThrowIfNull(metadata);
-        ArgumentNullException.ThrowIfNull(domainEvent);
-
-        Metadata = metadata;
-        DomainEvent = domainEvent;
     }
-
-    #endregion
-
-    #region Properties
-
-    /// <summary>The metadata of the message.</summary>
-    public MessageMetadata Metadata { get; }
-
-    /// <summary>The wrapped domain event.</summary>
-    public TEvent DomainEvent { get; }
 
     #endregion
 }
