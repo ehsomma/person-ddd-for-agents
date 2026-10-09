@@ -56,7 +56,7 @@ internal sealed class UpdatePersonEndpoint : IEndpoint
             return badRequest;
         }
 
-        UpdatePersonCommand command = new(appKey, person);
+        UpdatePersonCommand command = new UpdatePersonCommand(appKey, person);
 
         Dto.Person updatedPerson = await sender.Send(command, cancellationToken);
 

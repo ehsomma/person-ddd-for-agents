@@ -47,7 +47,7 @@ public sealed class Money : ValueObject
     /// <returns>The value object.</returns>
     public static Money Build(decimal amount)
     {
-        Money money = new(amount);
+        Money money = new Money(amount);
 
         return money;
     }

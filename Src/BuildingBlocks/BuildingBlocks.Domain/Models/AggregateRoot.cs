@@ -16,7 +16,7 @@ public abstract class AggregateRoot<TId> : Entity<TId>
         "SA1401:Fields should be private",
         Justification = "I prefer to use it as field just in protected fields in base classes like Repository base class.")]
     //// ReSharper disable once InconsistentNaming
-    private readonly List<IDomainEvent> _domainEvents = new();
+    private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
 
     #endregion
 

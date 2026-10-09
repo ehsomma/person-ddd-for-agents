@@ -249,7 +249,7 @@ public class InterceptedDbCommand : DbCommand
     {
         if (_command.Parameters.Count > 0)
         {
-            StringBuilder myparamsBuilder = new();
+            StringBuilder myparamsBuilder = new StringBuilder();
             foreach (DbParameter param in _command.Parameters)
             {
                 myparamsBuilder.AppendLine($"{param.ParameterName} ({param.DbType.ToString()}): {param.Value}\n");

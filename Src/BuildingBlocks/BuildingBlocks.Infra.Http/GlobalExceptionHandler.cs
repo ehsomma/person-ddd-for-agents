@@ -55,7 +55,7 @@ public sealed class GlobalExceptionHandler(
         DateTime timeStampUtc = ex.GetTimeStamp();
 
         // This is what the user will see.
-        ErrorResponse errorResponse = new(
+        ErrorResponse errorResponse = new ErrorResponse(
             errorCode,
             errorMessage,
             (int)httpStatusCode,

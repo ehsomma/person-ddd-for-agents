@@ -118,7 +118,8 @@ csharp_style_prefer_local_over_anonymous_function = true:suggestion
 csharp_style_deconstructed_variable_declaration = true:suggestion
 csharp_style_prefer_index_operator = true:suggestion
 csharp_style_prefer_range_operator = true:suggestion
-csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
+# false: preferimos el tipo explícito en el new (new Person(...) en vez de new(...)), mismo criterio que con var.
+csharp_style_implicit_object_creation_when_type_is_apparent = false:suggestion
 
 # 'using' directive preferences (IDE0065)
 # Ligado a stylecop.json > orderingRules.usingDirectivesPlacement = "outsideNamespace" (ver sección StyleCop más abajo):
@@ -280,8 +281,8 @@ dotnet_diagnostic.CA1724.severity = none
 dotnet_code_quality.CA2000.dispose_ownership_transfer_at_constructor = true
 
 # IDExxxx.
-# IDE0090: Use 'new(...)'
-dotnet_diagnostic.IDE0090.severity = suggestion
+# IDE0090: Use 'new(...)' (apagada: preferimos el tipo explícito, ver csharp_style_implicit_object_creation_when_type_is_apparent)
+dotnet_diagnostic.IDE0090.severity = none
 # IDE0058: Expression value is never used (ruido en fluent APIs, ej. minimal API .MapGet().WithName())
 dotnet_diagnostic.IDE0058.severity = none
 # IDE0290: Use primary constructor

@@ -21,7 +21,7 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>, IComp
     #region Declarations
 
     private static readonly Lazy<Dictionary<int, TEnum>> _enumerationsDictionary =
-        new(() => GetAllEnumerationOptions().ToDictionary(item => item.Value));
+        new Lazy<Dictionary<int, TEnum>>(() => GetAllEnumerationOptions().ToDictionary(item => item.Value));
 
     #endregion
 
@@ -200,7 +200,7 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>, IComp
             .GetTypes()
             .Where(type => enumType.IsAssignableFrom(type));
 
-        List<TEnum> enumerations = new();
+        List<TEnum> enumerations = new List<TEnum>();
 
         foreach (Type enumerationType in enumerationTypes)
         {

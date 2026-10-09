@@ -179,3 +179,47 @@ public async Task InsertAsync(DomainModel.Person person)
     await _dbSession.Connection.InsertAsync(dataPerson, _dbSession.Transaction);
 }
 ```
+
+## Tipo explícito en el `new`
+
+Al crear un objeto se escribe siempre el tipo en el `new` (`new Person(...)`), no el `new(...)` target-typed, aunque el tipo ya esté a la izquierda de la asignación.
+
+**Por qué:** es el mismo criterio que con `var` (se escribe el tipo explícito): se lee más fácil y no hay que mirar el otro lado de la asignación (o la firma del parámetro) para saber qué se está creando. En el `.editorconfig` está `csharp_style_implicit_object_creation_when_type_is_apparent = false` e `IDE0090` apagada, pero no existe una regla que marque el `new(...)`, así que hay que respetarlo a mano.
+
+✗ Incorrecto:
+```csharp
+GetPersonByIdQuery query = new(id);
+private readonly List<IDomainEvent> _domainEvents = new();
+InterceptedDbConnection connection = new(new SqlConnection(_connectionString));
+```
+
+✓ Correcto:
+```csharp
+GetPersonByIdQuery query = new GetPersonByIdQuery(id);
+private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+InterceptedDbConnection connection = new InterceptedDbConnection(new SqlConnection(_connectionString));
+```
+
+## `WITH (NOLOCK)` en todos los `SELECT`
+
+Toda tabla leída en un `SELECT` (incluidas las de los `JOIN`) lleva `WITH (NOLOCK)`, salvo que se especifique lo contrario para ese caso.
+
+**Excepción:** no se usa en los `SELECT` que cargan un aggregate para un command (p.ej. `PersonRepository.GetByIdAsync`, que usan Update, Delete o AddPersonalAsset). Si leyera sin bloqueo un cambio todavía no confirmado de otra transacción que después hace rollback, el command decidiría y persistiría sobre datos que nunca existieron, y ese error queda guardado (en una consulta, en cambio, solo se mostraría un dato desactualizado por un momento).
+
+**Por qué:** las lecturas no se bloquean contra las transacciones de escritura que estén abiertas (ni las bloquean). Se acepta a cambio la posibilidad de leer datos todavía no confirmados (dirty reads), que para las consultas del sistema no es un problema.
+
+✗ Incorrecto:
+```sql
+SELECT PE.[Id], AD.[City]
+FROM [dbo].[Persons] PE
+    LEFT JOIN [dbo].[Addresses] AD ON AD.[PersonId] = PE.[Id]
+WHERE PE.[Id] = @id;
+```
+
+✓ Correcto:
+```sql
+SELECT PE.[Id], AD.[City]
+FROM [dbo].[Persons] PE WITH (NOLOCK)
+    LEFT JOIN [dbo].[Addresses] AD WITH (NOLOCK) ON AD.[PersonId] = PE.[Id]
+WHERE PE.[Id] = @id;
+```

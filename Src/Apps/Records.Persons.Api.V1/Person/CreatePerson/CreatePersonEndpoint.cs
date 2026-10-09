@@ -44,7 +44,7 @@ internal sealed class CreatePersonEndpoint : IEndpoint
         ISender sender,
         CancellationToken cancellationToken)
     {
-        CreatePersonCommand command = new(appKey, person);
+        CreatePersonCommand command = new CreatePersonCommand(appKey, person);
 
         Dto.Person createdPerson = await sender.Send(command, cancellationToken);
         return createdPerson;

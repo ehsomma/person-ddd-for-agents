@@ -18,7 +18,7 @@ internal sealed class PersonMapper : IDomainMapper<DomainModel.Person, Dto.Perso
 
         DomainModel.Address domainAddress = domainPerson.Address;
 
-        Dto.Person personDto = new()
+        Dto.Person personDto = new Dto.Person()
         {
             Id = domainPerson.Id,
             FullName = domainPerson.FullName.Value,

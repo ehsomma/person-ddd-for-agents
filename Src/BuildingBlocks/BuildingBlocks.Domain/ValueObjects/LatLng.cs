@@ -37,7 +37,7 @@ public sealed class LatLng : ValueObject
     /// <returns>The value object.</returns>
     public static LatLng Build(decimal? lat, decimal? lng)
     {
-        LatLng latLng = new(lat, lng);
+        LatLng latLng = new LatLng(lat, lng);
 
         return latLng;
     }

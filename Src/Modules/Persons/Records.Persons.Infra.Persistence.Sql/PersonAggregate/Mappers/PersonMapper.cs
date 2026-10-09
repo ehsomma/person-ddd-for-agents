@@ -23,7 +23,7 @@ public class PersonMapper : IPersistanceMapper<DomainModel.Person, DataModel.Per
 
         DomainModel.Address domainAddress = domainPerson.Address;
 
-        DataModel.Person dataPerson = new()
+        DataModel.Person dataPerson = new DataModel.Person()
         {
             Id = domainPerson.Id,
             FullName = domainPerson.FullName.Value,

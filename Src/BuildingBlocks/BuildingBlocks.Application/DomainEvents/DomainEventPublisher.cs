@@ -40,7 +40,7 @@ public class DomainEventPublisher : IDomainEventPublisher
         // Dapper) que no son thread-safe.
         foreach (IDomainEvent domainEvent in domainEvents)
         {
-            MessageMetadata metadata = new(domainEvent.AggregateId);
+            MessageMetadata metadata = new MessageMetadata(domainEvent.AggregateId);
             INotification message = DomainMessage.Create(metadata, domainEvent);
 
             await _publisher.Publish(message, cancellationToken);

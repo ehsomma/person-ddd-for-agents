@@ -44,7 +44,7 @@ internal sealed class DeletePersonEndpoint : IEndpoint
         ISender sender,
         CancellationToken cancellationToken)
     {
-        DeletePersonCommand command = new(appKey, id);
+        DeletePersonCommand command = new DeletePersonCommand(appKey, id);
 
         await sender.Send(command, cancellationToken);
 

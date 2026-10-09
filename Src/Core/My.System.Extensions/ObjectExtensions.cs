@@ -13,7 +13,7 @@ public static class ObjectExtensions
     // Se instancia una sola vez y se reutiliza en toda la clase.
     // NOTE: Field con asignación inline: se inicializa directamente junto con su declaración,
     // en vez de hacerlo en un constructor.
-    private static readonly JsonSerializerOptions _serializerOptions = new()
+    private static readonly JsonSerializerOptions _serializerOptions = new JsonSerializerOptions()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };

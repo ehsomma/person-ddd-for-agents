@@ -12,7 +12,7 @@ namespace BuildingBlocks.Domain.ValueObjects;
 /// <code>
 /// public static MyValueObject Build(string? value)
 /// {
-///     MyValueObject valueObject = new(value);
+///     MyValueObject valueObject = new MyValueObject(value);
 ///
 ///     return valueObject;
 /// }
