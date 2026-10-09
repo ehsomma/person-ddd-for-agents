@@ -12,6 +12,7 @@ using Records.Persons.Domain.PersonAggregate.Services;
 using Records.Persons.Infra.Configuration.DependencyInjection;
 using Records.Persons.Infra.Persistence.Sql.PersonAggregate.Mappers;
 using Records.Persons.Infra.Persistence.Sql.PersonAggregate.Repository;
+using Records.Persons.Infra.Queries.Sql.Person.GetPersonById;
 using Scalar.AspNetCore;
 
 namespace Records.Persons.Api.V1;
@@ -58,8 +59,11 @@ internal sealed class Program
             typeof(AssemblyReference).Assembly,
             typeof(PersonMapper).Assembly);
 
-        // Registers the persistence services (IUnitOfWork, IDbSession and repositories) with the DI framework.
-        services.AddPersistence(typeof(PersonRepository).Assembly);
+        // Registers the persistence services (IUnitOfWork, IDbSession, repositories and query repositories)
+        // with the DI framework.
+        services.AddPersistence(
+            typeof(PersonRepository).Assembly,
+            typeof(GetPersonByIdRepository).Assembly);
 
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 

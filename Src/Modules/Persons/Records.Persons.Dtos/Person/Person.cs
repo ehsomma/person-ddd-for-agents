@@ -37,10 +37,14 @@ public class Person
     public DateTime? Birthdate { get; init; }
 
     /// <summary>The <see cref="Records.Persons.Dtos.Person.Address"/> of the person.</summary>
-    public Address? Address { get; init; }
+    public Address? Address { get; set; }
 
     /// <summary>The <see cref="PersonalAsset"/> list.</summary>
-    public IList<PersonalAsset>? PersonalAssets { get; init; }
+    [SuppressMessage(
+        "Usage",
+        "CA2227:Collection properties should be read only",
+        Justification = "Settable (not init) so the query repositories can compose the DTO after the Dapper multi-mapping.")]
+    public IList<PersonalAsset>? PersonalAssets { get; set; }
 
     #endregion
 }

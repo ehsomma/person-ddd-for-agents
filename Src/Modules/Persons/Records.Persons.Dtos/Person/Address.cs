@@ -37,7 +37,7 @@ public class Address
     public string? Country { get; init; }
 
     /// <summary>Represents the <see cref="Records.Persons.Dtos.Person.LatLng"/> (geographical point on Earth).</summary>
-    public LatLng? LatLng { get; init; }
+    public LatLng? LatLng { get; set; }
 
     #endregion
 }

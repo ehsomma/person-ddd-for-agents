@@ -19,6 +19,7 @@
       <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Infra.Persistence.DependencyInjection\BuildingBlocks.Infra.Persistence.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Infra.Serilog.DependencyInjection\BuildingBlocks.Infra.Serilog.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Infra.Persistence.Sql\Records.Persons.Infra.Persistence.Sql.csproj" />
+      <ProjectReference Include="..\..\Modules\Persons\Records.Persons.Infra.Queries.Sql\Records.Persons.Infra.Queries.Sql.csproj" />
     </ItemGroup>
 
 </Project>
