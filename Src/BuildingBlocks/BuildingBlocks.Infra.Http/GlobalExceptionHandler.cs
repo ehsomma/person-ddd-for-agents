@@ -36,6 +36,17 @@ public sealed class GlobalExceptionHandler(
         ////HttpStatusCode httpStatusCode = ResolveHttpStatusCode(ex); // Sin DDD.
         HttpStatusCode httpStatusCode = ResolveHttpStatusCode(errorType); // Con DDD.
 
+        // Request mal formado detectado por ASP.NET antes de llegar al endpoint (falta un parámetro requerido,
+        // un valor con formato incorrecto, un JSON inválido en el body, etc.). No trae ErrorType, trae su propio
+        // status code (400, 413...).
+        // NOTE: En Development, minimal APIs lanza esta excepción (RouteHandlerOptions.ThrowOnBadRequest) en vez
+        // de devolver el 400 directamente, y sin esto terminaba como 500.
+        if (ex is BadHttpRequestException badHttpRequestException)
+        {
+            httpStatusCode = (HttpStatusCode)badHttpRequestException.StatusCode;
+            errorCode = ExErrorCodeCore.ErrValidation;
+        }
+
         string? errorLogId = null;
         ex.SetTimeStamp(); // Solo la agrega si no tiene previamente.
 
