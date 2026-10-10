@@ -2,24 +2,24 @@ using System.Data.Common;
 using BuildingBlocks.Infra.Persistence;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using Records.Persons.Application.Person.Queries.GetPersonById;
+using Records.Persons.Application.Person.Queries.GetPersonsByGenderAndBirthdate;
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
-namespace Records.Persons.Infra.Queries.Sql.Person.GetPersonById;
+namespace Records.Persons.Infra.Queries.Sql.Person.GetPersonsByGenderAndBirthdate;
 
 /// <summary>
-/// Represents the query repository that reads the <see cref="Dto.Person"/> corresponding to the
-/// <see cref="GetPersonByIdQuery"/>. Dapper maps the result directly to the DTOs (no data model, no mappers).
+/// Represents the query repository that reads the <see cref="Dto.Person"/> list corresponding to the
+/// <see cref="GetPersonsByGenderAndBirthdateQuery"/>. Dapper maps the result directly to the DTOs (no data model, no mappers).
 /// </summary>
-public sealed class GetPersonByIdRepository : QueryRepository<GetPersonByIdQuery, Dto.Person?>
+public sealed class GetPersonsByGenderAndBirthdateRepository : QueryRepository<GetPersonsByGenderAndBirthdateQuery, IList<Dto.Person>>
 {
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GetPersonByIdRepository"/> class.
+    /// Initializes a new instance of the <see cref="GetPersonsByGenderAndBirthdateRepository"/> class.
     /// </summary>
     /// <param name="configuration">Represents a set of key/value application configuration properties.</param>
-    public GetPersonByIdRepository(IConfiguration configuration)
+    public GetPersonsByGenderAndBirthdateRepository(IConfiguration configuration)
         : base(configuration)
     {
     }
@@ -29,11 +29,13 @@ public sealed class GetPersonByIdRepository : QueryRepository<GetPersonByIdQuery
     #region Public methods
 
     /// <inheritdoc />
-    public override async Task<Dto.Person?> GetAsync(GetPersonByIdQuery query, CancellationToken cancellationToken = default)
+    public override async Task<IList<Dto.Person>> GetAsync(
+        GetPersonsByGenderAndBirthdateQuery query,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(query);
 
-        // The person, its address and its personal assets in a single round trip (one row per personal asset).
+        // The persons, their addresses and their personal assets in a single round trip (one row per personal asset).
         // NOTE: The column order is the one expected by QueryPersonsAsync (it defines the splitOn).
         const string sql = """
                            SELECT PE.[Id]
@@ -56,24 +58,28 @@ public sealed class GetPersonByIdRepository : QueryRepository<GetPersonByIdQuery
                            FROM [dbo].[Persons] PE WITH (NOLOCK)
                                LEFT JOIN [dbo].[Addresses] AD WITH (NOLOCK) ON AD.[PersonId] = PE.[Id]
                                LEFT JOIN [dbo].[PersonalAssets] PA WITH (NOLOCK) ON PA.[PersonId] = PE.[Id]
-                           WHERE PE.[Id] = @id
-                           ORDER BY PA.[Id];
+                           WHERE PE.[Gender] = @gender
+                               AND PE.[Birthdate] BETWEEN @birthdateFrom AND @birthdateTo
+                           ORDER BY PE.[FullName], PE.[Id], PA.[Id];
                            """;
 
         // CommandDefinition to be able to pass the cancellationToken.
+        // NOTE: Gender as DbString (IsAnsi) because the column is varchar: a nvarchar parameter (Dapper default
+        // for string) would convert the column and prevent the use of an index.
         CommandDefinition command = new CommandDefinition(
             sql,
-            new { id = query.Id },
+            new
+            {
+                gender = new DbString { Value = query.Gender, IsAnsi = true, Length = 10 },
+                birthdateFrom = query.BirthdateFrom,
+                birthdateTo = query.BirthdateTo,
+            },
             cancellationToken: cancellationToken);
 
         await using DbConnection connection = CreateConnection();
 
         IList<Dto.Person> persons = await connection.QueryPersonsAsync(command);
-
-        // Not found (null): the caller decides what to do (e.g. GetPersonByIdQueryHandler throws
-        // DomainErrors.Person.NotFound).
-        Dto.Person? person = persons.SingleOrDefault();
-        return person;
+        return persons;
     }
 
     #endregion
