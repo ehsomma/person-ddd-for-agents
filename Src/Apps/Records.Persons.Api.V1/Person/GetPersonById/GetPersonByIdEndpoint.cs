@@ -28,14 +28,13 @@ internal sealed class GetPersonByIdEndpoint : IEndpoint
     #region Private methods
 
     /// <summary>
-    /// GET persons/{id}.
+    /// Gets the Person corresponding to the specified <paramref name="id"/>.
     /// </summary>
-    /// <remarks>Obtiene una persona junto con su address y sus personal assets.</remarks>
-    /// <param name="id">ID de la persona a obtener.</param>
+    /// <param name="id">The id to search.</param>
     /// <param name="sender">Injects the mediator sender used to send the query to its handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
     /// <response code="200">Persona encontrada.</response>
-    /// <response code="404">La persona no existe.</response>
+    /// <response code="404">Si la persona no existe.</response>
     private async Task<Dto.Person> GetGetPersonById(
         Guid id,
         ISender sender,
