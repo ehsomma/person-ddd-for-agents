@@ -367,3 +367,7 @@ dotnet_diagnostic.CA1812.severity = none
 [*Mapper.cs]
 # CA1812: los Mapper se instancian por reflection (services.Scan en AddMappers), nunca con "new".
 dotnet_diagnostic.CA1812.severity = none
+
+[*Validator.cs]
+# CA1812: los Validator raíz se instancian por reflection (services.Scan en AddValidators), nunca con "new".
+dotnet_diagnostic.CA1812.severity = none

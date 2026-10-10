@@ -67,6 +67,9 @@ internal sealed class Program
 
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 
+        // Registers the FluentValidation validators of the requests with the DI framework.
+        services.AddValidators(Assembly.GetExecutingAssembly());
+
         // Adds services to the container.
         services.AddAuthorization();
 
