@@ -46,6 +46,11 @@ internal sealed class Program
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
+        // Hace que minimal APIs lance BadHttpRequestException ante un request mal formado (body faltante, JSON
+        // inválido, header requerido ausente, etc.) en todos los ambientes, para que el GlobalExceptionHandler
+        // devuelva el ErrorResponse. Por defecto solo lo hace en Development; en el resto devuelve un 400 vacío.
+        services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
+
         // Registers the necessary services for the mediator (commands and queries) with the DI framework.
         services.AddMediator(typeof(AssemblyReference).Assembly);
 

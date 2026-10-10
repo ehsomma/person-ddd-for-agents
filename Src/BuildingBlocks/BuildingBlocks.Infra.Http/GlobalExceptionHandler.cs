@@ -39,12 +39,18 @@ public sealed class GlobalExceptionHandler(
         // Request mal formado detectado por ASP.NET antes de llegar al endpoint (falta un parámetro requerido,
         // un valor con formato incorrecto, un JSON inválido en el body, etc.). No trae ErrorType, trae su propio
         // status code (400, 413...).
-        // NOTE: En Development, minimal APIs lanza esta excepción (RouteHandlerOptions.ThrowOnBadRequest) en vez
-        // de devolver el 400 directamente, y sin esto terminaba como 500.
+        // NOTE: Minimal APIs lanza esta excepción solo si RouteHandlerOptions.ThrowOnBadRequest está activo (por
+        // defecto solo en Development; en Program.cs se activa siempre). Sin esto terminaba como 500.
         if (ex is BadHttpRequestException badHttpRequestException)
         {
             httpStatusCode = (HttpStatusCode)badHttpRequestException.StatusCode;
             errorCode = ExErrorCodeCore.ErrValidation;
+
+            // El mensaje del framework está pensado para el programador (p.ej. "Implicit body inferred for
+            // parameter... Did you mean to use a Service instead?") y expone nombres de parámetros internos: al
+            // cliente se le devuelve uno genérico y el original queda en el log.
+            logger.LogWarning("Bad request: {Message}", ex.Message);
+            errorMessage = "The request is malformed or incomplete.";
         }
 
         string? errorLogId = null;
