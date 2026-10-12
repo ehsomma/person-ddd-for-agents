@@ -84,10 +84,13 @@ internal sealed class Program
         // compartida porque el source generator que lee los comentarios XML de los DTOs (<summary>,
         // <example>, etc.) resuelve esos comentarios según las ProjectReference del proyecto donde
         // está el call site. Ver el comentario en ConfigureOpenApiCustom para más detalle.
-        const string description = "Proyecto modelo base aplicando estándares de estructura, " +
-                                    "codificación, reglas y documentación de código.";
+        const string description =
+            "Proyecto modelo base desarrollado en C# sobre .NET 10, " +
+            "implementado bajo el enfoque de Domain - Driven Design(DDD) y el patrón CQRS, " +
+            "estructurado mediante Clean Architecture y aplicando estándares de codificación, naming, " +
+            "arquitectura de directorios y documentación de código.";
         services.AddOpenApi("v1", options => options.ConfigureOpenApiCustom(
-            title: "Demo proyecto Persons",
+            title: "Persons - Proyecto modelo",
             version: "v1",
             description: description));
 
@@ -103,8 +106,14 @@ internal sealed class Program
         // Configure the HTTP request pipeline.
         app.MapOpenApi();
 
-        // UI en /scalar/v1.
-        app.MapScalarApiReference();
+        // Exposes the OpenAPI JSON document in a UI.
+        // NOTE: Para que al ejecutar el api abra directamente la UI de Scalar, agregar lo siguiente
+        // en el archivo launchSettings.json:
+        //
+        // "launchBrowser": true,
+        // "launchUrl": "v1/docs",
+        ////app.MapScalarApiReference(); // https://localhost:xxxx/scalar/v1
+        app.MapScalarApiReference("/v1/docs"); // https://localhost:xxxx/docs
 
         app.UseHttpsRedirection();
 

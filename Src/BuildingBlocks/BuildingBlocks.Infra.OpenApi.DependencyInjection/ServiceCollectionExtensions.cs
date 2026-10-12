@@ -61,6 +61,11 @@ public static class ServiceCollectionExtensions
             return Task.CompletedTask;
         });
 
+        // Corrige la documentación de los parámetros de los endpoints que deja mal el source generator
+        // (ver el bug descripto en XmlParamCommentsOperationTransformer). Corre después del transformer
+        // del generator porque este lo registra antes de ejecutar estas options.
+        options.AddOperationTransformer(new XmlParamCommentsOperationTransformer());
+
         return options;
     }
 

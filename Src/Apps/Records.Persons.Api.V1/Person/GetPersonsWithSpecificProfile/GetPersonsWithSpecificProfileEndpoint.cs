@@ -24,25 +24,25 @@ internal sealed class GetPersonsWithSpecificProfileEndpoint : IEndpoint
             .WithName("PostGetPersonsWithSpecificProfile");
     }
 
-    #endregion
-
-    #region Private methods
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
+    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
+    // los muestra.
 
     /// <summary>
-    /// POST persons/with-specific-profile.
+    /// Buscar personas por perfil.
     /// </summary>
     /// <remarks>
-    /// Obtiene las personas del género especificado, con la edad mínima especificada y que viven en la ciudad
-    /// especificada. Es una query (no modifica nada): usa POST solo para poder recibir el filtro en el body.
+    /// Devuelve las personas del género especificado, con la edad mínima especificada y que viven en la ciudad
+    /// especificada, junto con su address y sus personal assets. Es una consulta (no modifica nada): usa POST solo para poder recibir el filtro en el body.
     /// </remarks>
-    /// <param name="query">Filtro de la búsqueda (la query se recibe directamente como body).</param>
+    /// <param name="query">Filtro de la búsqueda.</param>
     /// <param name="sender">Injects the mediator sender used to send the query to its handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
+    /// <returns>La lista de personas encontradas.</returns>
     /// <response code="200">Lista de personas (vacía si no hay ninguna).</response>
-    /// <response code="400">Request inválido.</response>
-    private async Task<IList<Dto.Person>> PostGetPersonsWithSpecificProfile(
+    public async Task<IList<Dto.Person>> PostGetPersonsWithSpecificProfile(
         [FromBody] GetPersonsWithSpecificProfileQuery query,
-        ISender sender,
+        [FromServices] ISender sender,
         CancellationToken cancellationToken)
     {
         IList<Dto.Person> persons = await sender.Send(query, cancellationToken);

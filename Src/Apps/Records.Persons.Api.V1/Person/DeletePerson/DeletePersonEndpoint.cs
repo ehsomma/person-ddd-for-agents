@@ -1,3 +1,4 @@
+using BuildingBlocks.Contracts;
 using BuildingBlocks.Infra.Http;
 using BuildingBlocks.Mediator.Abstractions;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -21,27 +22,29 @@ internal sealed class DeletePersonEndpoint : IEndpoint
         RouteGroupBuilder routeGroup = app.MapGroup("/persons").WithTags("Persons");
 
         routeGroup.MapDelete("/{id:guid}", DeleteDeletePerson)
-            .WithName("DeleteDeletePerson");
+            .WithName("DeleteDeletePerson")
+            .Produces<ErrorResponse>(StatusCodes.Status404NotFound);
     }
 
-    #endregion
-
-    #region Private methods
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
+    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
+    // los muestra.
 
     /// <summary>
-    /// DELETE persons/{id}.
+    /// Eliminar persona.
     /// </summary>
     /// <remarks>Elimina una persona existente junto con su address y sus personal assets.</remarks>
+    /// <param name="appKey" example="MobileAppKey">Clave que identifica a la aplicación que origina el request.</param>
     /// <param name="id">ID de la persona a eliminar.</param>
-    /// <param name="appKey" example="MyAppKey">Clave de la aplicación que origina el pedido.</param>
     /// <param name="sender">Injects the mediator sender used to send the command to its handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
+    /// <returns>Una respuesta sin contenido.</returns>
     /// <response code="204">Persona eliminada.</response>
     /// <response code="404">La persona no existe.</response>
-    private async Task<NoContent> DeleteDeletePerson(
-        Guid id,
+    public async Task<NoContent> DeleteDeletePerson(
         [FromHeader(Name = "X-App-Key")] string appKey,
-        ISender sender,
+        [FromRoute] Guid id,
+        [FromServices] ISender sender,
         CancellationToken cancellationToken)
     {
         DeletePersonCommand command = new DeletePersonCommand(appKey, id);

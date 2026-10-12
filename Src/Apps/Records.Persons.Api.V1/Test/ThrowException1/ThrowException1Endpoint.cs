@@ -7,6 +7,8 @@ namespace Records.Persons.Api.V1.Test.ThrowException1;
 /// </summary>
 internal sealed class ThrowException1Endpoint : IEndpoint
 {
+    #region Public methods
+
     /// <inheritdoc/>
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -18,12 +20,21 @@ internal sealed class ThrowException1Endpoint : IEndpoint
             .WithName("ThrowException1");
     }
 
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
+    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
+    // los muestra.
+
     /// <summary>
-    /// GET test/helloapi/{id}.
+    /// Probar un error inesperado.
     /// </summary>
-    /// <remarks>Endpoint de prueba para verificar funcionamiento de Api.</remarks>
+    /// <remarks>
+    /// Endpoint de prueba: lanza una excepción no controlada, para probar el manejo de errores inesperados del
+    /// API.
+    /// </remarks>
     /// <param name="context">HTTP-specific information about an individual HTTP request.</param>
-    private IResult ThrowException1(HttpContext context)
+    /// <returns>Nunca devuelve nada: siempre lanza la excepción.</returns>
+    /// <response code="500">Error inesperado (el esperado en esta prueba), con el `logId` para buscarlo en el log.</response>
+    public IResult ThrowException1(HttpContext context)
     {
 #pragma warning disable CA2201
         Exception ex = new Exception("Excepción de prueba 1");
@@ -31,4 +42,6 @@ internal sealed class ThrowException1Endpoint : IEndpoint
         ex.Data.Add("TraceIdentifier", context.TraceIdentifier);
         throw ex;
     }
+
+    #endregion
 }

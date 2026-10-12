@@ -1,5 +1,7 @@
+using BuildingBlocks.Contracts;
 using BuildingBlocks.Infra.Http;
 using BuildingBlocks.Mediator.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using Records.Persons.Application.Person.Queries.GetPersonById;
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
@@ -20,29 +22,33 @@ internal sealed class GetPersonByIdEndpoint : IEndpoint
         RouteGroupBuilder routeGroup = app.MapGroup("/persons").WithTags("Persons");
 
         routeGroup.MapGet("/{id:guid}", GetGetPersonById)
-            .WithName("GetGetPersonById");
+            .WithName("GetGetPersonById")
+            .Produces<ErrorResponse>(StatusCodes.Status404NotFound);
     }
 
-    #endregion
-
-    #region Private methods
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
+    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
+    // los muestra.
 
     /// <summary>
-    /// Gets the Person corresponding to the specified <paramref name="id"/>.
+    /// Obtener persona por ID.
     /// </summary>
-    /// <param name="id">The id to search.</param>
+    /// <remarks>Devuelve la persona con el ID especificado junto con su address y sus personal assets.</remarks>
+    /// <param name="id">ID de la persona a buscar.</param>
     /// <param name="sender">Injects the mediator sender used to send the query to its handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
+    /// <returns>La persona encontrada.</returns>
     /// <response code="200">Persona encontrada.</response>
-    /// <response code="404">Si la persona no existe.</response>
-    private async Task<Dto.Person> GetGetPersonById(
-        Guid id,
-        ISender sender,
+    /// <response code="404">La persona no existe.</response>
+    public async Task<Dto.Person> GetGetPersonById(
+        [FromRoute] Guid id,
+        [FromServices] ISender sender,
         CancellationToken cancellationToken)
     {
         GetPersonByIdQuery query = new GetPersonByIdQuery(id);
 
         Dto.Person person = await sender.Send(query, cancellationToken);
+
         return person;
     }
 

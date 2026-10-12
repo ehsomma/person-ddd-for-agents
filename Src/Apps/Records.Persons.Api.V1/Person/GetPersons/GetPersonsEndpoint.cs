@@ -1,5 +1,6 @@
 using BuildingBlocks.Infra.Http;
 using BuildingBlocks.Mediator.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using Records.Persons.Application.Person.Queries.GetPersons;
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
@@ -23,19 +24,20 @@ internal sealed class GetPersonsEndpoint : IEndpoint
             .WithName("GetGetPersons");
     }
 
-    #endregion
-
-    #region Private methods
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
+    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
+    // los muestra.
 
     /// <summary>
-    /// GET persons.
+    /// Listar personas.
     /// </summary>
-    /// <remarks>Obtiene la lista completa de personas junto con su address y sus personal assets.</remarks>
+    /// <remarks>Devuelve todas las personas junto con su address y sus personal assets, sin filtros ni paginado.</remarks>
     /// <param name="sender">Injects the mediator sender used to send the query to its handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
+    /// <returns>La lista de personas.</returns>
     /// <response code="200">Lista de personas (vacía si no hay ninguna).</response>
-    private async Task<IList<Dto.Person>> GetGetPersons(
-        ISender sender,
+    public async Task<IList<Dto.Person>> GetGetPersons(
+        [FromServices] ISender sender,
         CancellationToken cancellationToken)
     {
         GetPersonsQuery query = new GetPersonsQuery();

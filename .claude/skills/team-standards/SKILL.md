@@ -265,3 +265,67 @@ FROM [dbo].[Persons] PE WITH (NOLOCK)
     LEFT JOIN [dbo].[Addresses] AD WITH (NOLOCK) ON AD.[PersonId] = PE.[Id]
 WHERE PE.[Id] = @id;
 ```
+
+## Endpoints de minimal APIs
+
+Los endpoints (las clases `*Endpoint : IEndpoint`) siguen estas reglas:
+
+1. **Orden de los parámetros:** primero los headers (`appKey`), después los de ruta y query, después el body, después los servicios inyectados y el `CancellationToken` siempre último. Los `<param>` van en el mismo orden (lo exige SA1612).
+2. **Atributo explícito en todos los parámetros:** `[FromHeader]`, `[FromRoute]`, `[FromQuery]`, `[FromBody]` o `[FromServices]`, aunque minimal APIs los pueda inferir. Solo `CancellationToken` y `HttpContext` van sin atributo (no existe uno para ellos: ASP.NET Core los resuelve solo) y van al final.
+3. **El método del endpoint es `public`** (en la region `Public methods`, con el `NOTE` que explica por qué), aunque la clase sea `internal`.
+4. **Documentación XML:** el `<summary>` es un título corto en infinitivo (`Crear persona.`, `Obtener persona por ID.`), porque es lo que Scalar muestra en el menú. El `<remarks>` explica solo **qué hace** el endpoint: nada de validaciones, códigos de error ni casos borde (eso lo documentan las `<response>`).
+5. **Respuestas:** el 500 (en todos los endpoints) y el 400 (en los que reciben body) se agregan solos en `MapEndpoints` (ver `AddCommonErrorResponses`): no se declaran en el endpoint. Los códigos propios del endpoint (p.ej. un 404, o un 400 en un endpoint sin body) se declaran con `.Produces<ErrorResponse>(...)` y con su `<response code="...">`.
+
+**Por qué:**
+
+1. y 2. Con el mismo orden y los atributos explícitos, al leer la firma se ve de dónde sale cada dato del request sin conocer las reglas de inferencia de minimal APIs, y todos los endpoints se leen igual. El código compila igual sin los atributos, así que ningún analyzer lo marca.
+3. El source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios XML de los métodos públicos: si es privado, Scalar no muestra el summary, el remarks ni las responses (sin error ni warning).
+4. El `<summary>` es el título de la operación en el menú de Scalar: tiene que distinguir de un vistazo endpoints con la misma ruta (`GET`/`PUT`/`DELETE /persons/{id}`), y la ruta ya se ve en el detalle. En el `<remarks>` no se repiten validaciones ni errores porque, si algún día cambian, es fácil olvidarse de actualizar ese texto.
+5. Las respuestas comunes las devuelve el `GlobalExceptionHandler`, no el endpoint, así que se documentan en un solo lugar. Las propias del endpoint no se pueden inferir: si no se declaran con `.Produces(...)`, OpenAPI no sabe que existen y su `<response>` no se muestra.
+
+✗ Incorrecto:
+```csharp
+routeGroup.MapPut("/{id:guid}", PutUpdatePerson)
+    .WithName("PutUpdatePerson")
+    .Produces<ErrorResponse>(StatusCodes.Status400BadRequest)
+    .Produces<ErrorResponse>(StatusCodes.Status500InternalServerError);
+
+/// <summary>
+/// PUT persons/{id}.
+/// </summary>
+/// <remarks>
+/// Actualiza una persona. Si el ID no coincide con el del body o los datos no son válidos, devuelve un 400.
+/// Si la persona no existe, devuelve un 404.
+/// </remarks>
+/// <response code="404">La persona no existe.</response>
+private async Task<Dto.Person> PutUpdatePerson(
+    Guid id,
+    Dto.Person person,
+    [FromHeader(Name = "X-App-Key")] string appKey,
+    CancellationToken cancellationToken,
+    ISender sender)
+```
+
+✓ Correcto:
+```csharp
+routeGroup.MapPut("/{id:guid}", PutUpdatePerson)
+    .WithName("PutUpdatePerson")
+    .Produces<ErrorResponse>(StatusCodes.Status404NotFound);
+
+/// <summary>
+/// Actualizar persona.
+/// </summary>
+/// <remarks>
+/// Actualiza los datos de una persona existente, le agrega los personal assets nuevos que vengan en el body
+/// y devuelve la persona tal como quedó guardada.
+/// </remarks>
+/// <response code="200">Persona actualizada.</response>
+/// <response code="404">La persona no existe.</response>
+public async Task<Dto.Person> PutUpdatePerson(
+    [FromHeader(Name = "X-App-Key")] string appKey,
+    [FromRoute] Guid id,
+    [FromBody] Dto.Person person,
+    [FromServices] ISender sender,
+    [FromServices] IValidator<Dto.Person> personValidator,
+    CancellationToken cancellationToken)
+```

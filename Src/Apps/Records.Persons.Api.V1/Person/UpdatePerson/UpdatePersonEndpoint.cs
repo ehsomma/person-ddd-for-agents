@@ -1,3 +1,4 @@
+using BuildingBlocks.Contracts;
 using BuildingBlocks.Infra.Http;
 using BuildingBlocks.Mediator.Abstractions;
 using FluentValidation;
@@ -23,31 +24,36 @@ internal sealed class UpdatePersonEndpoint : IEndpoint
         RouteGroupBuilder routeGroup = app.MapGroup("/persons").WithTags("Persons");
 
         routeGroup.MapPut("/{id:guid}", PutUpdatePerson)
-            .WithName("PutUpdatePerson");
+            .WithName("PutUpdatePerson")
+            .Produces<ErrorResponse>(StatusCodes.Status404NotFound);
     }
 
-    #endregion
-
-    #region Private methods
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
+    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
+    // los muestra.
 
     /// <summary>
-    /// PUT persons/{id}.
+    /// Actualizar persona.
     /// </summary>
-    /// <remarks>Actualiza una persona existente y agrega sus personal assets nuevos.</remarks>
-    /// <param name="id">ID de la persona a actualizar (tiene que coincidir con el `Id` del body).</param>
+    /// <remarks>
+    /// Actualiza los datos de una persona existente, le agrega los personal assets nuevos que vengan en el body
+    /// y devuelve la persona tal como quedó guardada.
+    /// </remarks>
+    /// <param name="appKey" example="MobileAppKey">Clave que identifica a la aplicación que origina el request.</param>
+    /// <param name="id">ID de la persona a actualizar.</param>
     /// <param name="person">Datos de la persona a actualizar.</param>
-    /// <param name="appKey" example="MyAppKey">Clave de la aplicación que origina el pedido.</param>
     /// <param name="sender">Injects the mediator sender used to send the command to its handler.</param>
     /// <param name="personValidator">Injects the validator of the request body.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
+    /// <returns>La persona actualizada.</returns>
     /// <response code="200">Persona actualizada.</response>
-    /// <response code="400">Request inválido.</response>
-    private async Task<Dto.Person> PutUpdatePerson(
-        Guid id,
-        Dto.Person person,
+    /// <response code="404">La persona no existe.</response>
+    public async Task<Dto.Person> PutUpdatePerson(
         [FromHeader(Name = "X-App-Key")] string appKey,
-        ISender sender,
-        IValidator<Dto.Person> personValidator,
+        [FromRoute] Guid id,
+        [FromBody] Dto.Person person,
+        [FromServices] ISender sender,
+        [FromServices] IValidator<Dto.Person> personValidator,
         CancellationToken cancellationToken)
     {
         // El ID de la ruta identifica el recurso: si el del body no coincide, el request es ambiguo. Se lanza

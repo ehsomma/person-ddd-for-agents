@@ -1,7 +1,12 @@
 using System.Globalization;
 using System.Reflection;
+using BuildingBlocks.Contracts;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Metadata;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Infra.Http.DependencyInjection;
@@ -11,6 +16,8 @@ namespace BuildingBlocks.Infra.Http.DependencyInjection;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
+    #region Public methods
+
     /// <summary>
     /// Registers the necessary configurations with the DI framework.
     /// </summary>
@@ -65,13 +72,74 @@ public static class ServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(app);
 
+        // Agrega documentación de errores comunes en todos los endpoints.
+        RouteGroupBuilder rootGroup = app.MapGroup(string.Empty);
+        AddCommonErrorResponses(rootGroup);
+
         IEnumerable<IEndpoint> endpoints = app.Services.GetServices<IEndpoint>();
 
         foreach (IEndpoint endpoint in endpoints)
         {
-            endpoint.MapEndpoint(app);
+            endpoint.MapEndpoint(rootGroup);
         }
 
         return app;
     }
+
+    #endregion
+
+    #region Private methods
+
+    /// <summary>
+    /// Documenta en OpenAPI (y por lo tanto en Scalar) las respuestas de error que son iguales en
+    /// todos los endpoints de la API (como el 400 y 500), para no tener que declararlas una por una
+    /// en cada endpoint.
+    /// </summary>
+    /// <param name="rootGroup">Grupo dentro del que se mapean todos los endpoints de la API.</param>
+    /// <remarks>
+    /// <para>
+    /// Estos errores no los devuelve el código de cada endpoint sino el GlobalExceptionHandler, siempre
+    /// con un <see cref="ErrorResponse"/>, así que son los mismos para toda la API:
+    /// </para>
+    /// <list type="bullet">
+    /// <item><b>500</b> en todos los endpoints: cualquier error inesperado.</item>
+    /// <item><b>400</b> solo en los endpoints que reciben un body (los POST, PUT, etc. con <c>[FromBody]</c>):
+    /// el body no pasó las validaciones o está mal formado.</item>
+    /// </list>
+    /// <para>
+    /// Si un endpoint necesita otra descripción, alcanza con poner su <c>&lt;response code="..."&gt;</c> en el
+    /// comentario XML del método. Si declara su propio 400 (con <c>.Produces(400)</c>), no se agrega el común.
+    /// </para>
+    /// </remarks>
+    private static void AddCommonErrorResponses(RouteGroupBuilder rootGroup)
+    {
+        rootGroup.WithMetadata(new ProducesResponseTypeAttribute<ErrorResponse>(StatusCodes.Status500InternalServerError)
+        {
+            Description = "Error inesperado. La respuesta incluye el `logId` para buscar el error en el log.",
+        });
+
+        // NOTE: El 400 se agrega en Finally porque recién ahí se sabe si el endpoint recibe un body (minimal APIs
+        // lo marca con un IAcceptsMetadata cuando tiene un parámetro [FromBody], después de aplicar el resto de la
+        // configuración del grupo). Finally es un default interface method de IEndpointConventionBuilder, por eso
+        // se llama a través de la interfaz.
+        IEndpointConventionBuilder rootConventions = rootGroup;
+        rootConventions.Finally(endpointBuilder =>
+        {
+            bool hasBody = endpointBuilder.Metadata.OfType<IAcceptsMetadata>().Any();
+            bool declaresBadRequest = endpointBuilder.Metadata
+                .OfType<IProducesResponseTypeMetadata>()
+                .Any(metadata => metadata.StatusCode == StatusCodes.Status400BadRequest);
+
+            if (hasBody && !declaresBadRequest)
+            {
+                endpointBuilder.Metadata.Add(new ProducesResponseTypeAttribute<ErrorResponse>(StatusCodes.Status400BadRequest)
+                {
+                    Description = "Request inválido: el body no pasó las validaciones o está mal formado. " +
+                                  "Los errores de validación vienen en `validationErrors`.",
+                });
+            }
+        });
+    }
+
+    #endregion
 }

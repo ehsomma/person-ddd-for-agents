@@ -1,4 +1,5 @@
 using BuildingBlocks.Infra.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Records.Persons.Api.V1.Test.HelloApi;
 
@@ -7,6 +8,8 @@ namespace Records.Persons.Api.V1.Test.HelloApi;
 /// </summary>
 internal sealed class HelloApiEndpoint : IEndpoint
 {
+    #region Public methods
+
     /// <inheritdoc/>
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -18,22 +21,31 @@ internal sealed class HelloApiEndpoint : IEndpoint
             .WithName("GetTestHelloApi");
     }
 
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
+    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
+    // los muestra.
+
     /// <summary>
-    /// GET test/helloapi/{id}.
+    /// Probar el funcionamiento del API.
     /// </summary>
-    /// <remarks>Endpoint de prueba para verificar funcionamiento de Api.</remarks>
-    /// <param name="id" example="Abc123">ID único del elemento a recuperar.</param>
-    /// <param name="httpContext">Datos del contexto HTTP.</param>
+    /// <remarks>
+    /// Endpoint de prueba: devuelve un mensaje con el ID recibido, para verificar que el API está levantado y
+    /// responde. También escribe un warning en el log.
+    /// </remarks>
+    /// <param name="id" example="Abc123">Texto cualquiera que se devuelve en el mensaje.</param>
     /// <param name="logger">Logger injection.</param>
-    /// <response code="200">Mensaje de funcionamiento ok del Api.</response>
-    /// <response code="400">Request inválido.</response>
-    private string GetTestHelloApi(
-        string id,
-        HttpContext httpContext,
-        ILogger<Program> logger)
+    /// <param name="httpContext">Datos del contexto HTTP.</param>
+    /// <returns>El mensaje de funcionamiento del API.</returns>
+    /// <response code="200">Mensaje de funcionamiento ok del API.</response>
+    public string GetTestHelloApi(
+        [FromRoute] string id,
+        [FromServices] ILogger<Program> logger,
+        HttpContext httpContext)
     {
         logger.LogWarning("Warning de prueba en GetTestHelloApi() para id {Id}", id);
 
         return $"Hello Api (check: {id})";
     }
+
+    #endregion
 }

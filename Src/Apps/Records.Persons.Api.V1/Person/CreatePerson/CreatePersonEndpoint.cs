@@ -22,29 +22,33 @@ internal sealed class CreatePersonEndpoint : IEndpoint
         RouteGroupBuilder routeGroup = app.MapGroup("/persons").WithTags("Persons");
 
         routeGroup.MapPost("/", PostCreatePerson)
-            .WithName("PostCreatePerson");
+            .WithName("PostCreatePerson")
+            .Produces<Dto.Person>(StatusCodes.Status200OK);
     }
 
-    #endregion
-
-    #region Private methods
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
+    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
+    // los muestra.
 
     /// <summary>
-    /// POST persons.
+    /// Crear persona.
     /// </summary>
-    /// <remarks>Crea una nueva persona.</remarks>
+    /// <remarks>
+    /// Crea una persona nueva junto con su address y sus personal assets, y devuelve la persona tal como quedó
+    /// guardada.
+    /// </remarks>
+    /// <param name="appKey" example="MobileAppKey">Clave que identifica a la aplicación que origina el request.</param>
     /// <param name="person">Datos de la persona a crear.</param>
-    /// <param name="appKey" example="MyAppKey">Clave de la aplicación que origina el pedido.</param>
     /// <param name="sender">Injects the mediator sender used to send the command to its handler.</param>
     /// <param name="personValidator">Injects the validator of the request body.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
+    /// <returns>La persona creada.</returns>
     /// <response code="200">Persona creada.</response>
-    /// <response code="400">Request inválido.</response>
-    private async Task<Dto.Person> PostCreatePerson(
-        Dto.Person person,
+    public async Task<Dto.Person> PostCreatePerson(
         [FromHeader(Name = "X-App-Key")] string appKey,
-        ISender sender,
-        IValidator<Dto.Person> personValidator,
+        [FromBody] Dto.Person person,
+        [FromServices] ISender sender,
+        [FromServices] IValidator<Dto.Person> personValidator,
         CancellationToken cancellationToken)
     {
         // Si no es válido lanza una ValidationException con todos los errores (el GlobalExceptionHandler

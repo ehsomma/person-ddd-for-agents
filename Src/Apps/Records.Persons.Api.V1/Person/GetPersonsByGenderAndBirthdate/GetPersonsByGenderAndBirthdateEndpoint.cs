@@ -1,3 +1,4 @@
+using BuildingBlocks.Contracts;
 using BuildingBlocks.Infra.Http;
 using BuildingBlocks.Mediator.Abstractions;
 using Microsoft.AspNetCore.Mvc;
@@ -20,30 +21,37 @@ internal sealed class GetPersonsByGenderAndBirthdateEndpoint : IEndpoint
         // comun y nombre de grupo.
         RouteGroupBuilder routeGroup = app.MapGroup("/persons").WithTags("Persons");
 
+        // El 400 se declara acá porque el común (ver MapEndpoints) solo se agrega en los endpoints con body, y
+        // este lo devuelve si falta algún parámetro del query string o tiene un formato incorrecto.
         routeGroup.MapGet("/by-gender-and-birthdate", GetGetPersonsByGenderAndBirthdate)
-            .WithName("GetGetPersonsByGenderAndBirthdate");
+            .WithName("GetGetPersonsByGenderAndBirthdate")
+            .Produces<ErrorResponse>(StatusCodes.Status400BadRequest);
     }
 
-    #endregion
-
-    #region Private methods
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
+    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
+    // los muestra.
 
     /// <summary>
-    /// GET persons/by-gender-and-birthdate?gender=...&amp;birthDateFrom=...&amp;birthDateTo=....
+    /// Buscar personas por género y fecha de nacimiento.
     /// </summary>
-    /// <remarks>Obtiene las personas del género especificado nacidas en el período especificado (inclusive).</remarks>
-    /// <param name="gender" example="Male">Género de la persona ("Male, Female, Other").</param>
+    /// <remarks>
+    /// Devuelve las personas del género especificado nacidas entre las dos fechas especificadas (ambas
+    /// inclusive), junto con su address y sus personal assets.
+    /// </remarks>
+    /// <param name="gender" example="Male">Género de la persona (Male, Female u Other).</param>
     /// <param name="birthDateFrom" example="1980-01-01">Fecha de nacimiento desde (inclusive).</param>
     /// <param name="birthDateTo" example="1999-12-31">Fecha de nacimiento hasta (inclusive).</param>
     /// <param name="sender">Injects the mediator sender used to send the query to its handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
+    /// <returns>La lista de personas encontradas.</returns>
     /// <response code="200">Lista de personas (vacía si no hay ninguna).</response>
-    /// <response code="400">Request inválido (falta algún parámetro o tiene un formato incorrecto).</response>
-    private async Task<IList<Dto.Person>> GetGetPersonsByGenderAndBirthdate(
+    /// <response code="400">Request inválido: falta algún parámetro o tiene un formato incorrecto.</response>
+    public async Task<IList<Dto.Person>> GetGetPersonsByGenderAndBirthdate(
         [FromQuery] string gender,
         [FromQuery] DateTime birthDateFrom,
         [FromQuery] DateTime birthDateTo,
-        ISender sender,
+        [FromServices] ISender sender,
         CancellationToken cancellationToken)
     {
         GetPersonsByGenderAndBirthdateQuery query = new GetPersonsByGenderAndBirthdateQuery(gender, birthDateFrom, birthDateTo);
