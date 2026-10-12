@@ -39,6 +39,7 @@ internal sealed class GetPersonsWithSpecificProfileQueryHandler : QueryHandler<G
         ArgumentNullException.ThrowIfNull(query);
 
         IList<Dto.Person> persons = await _getPersonsWithSpecificProfileRepository.GetAsync(query, cancellationToken);
+
         return persons;
     }
 

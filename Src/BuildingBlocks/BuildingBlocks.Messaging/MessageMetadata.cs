@@ -106,6 +106,7 @@ public class MessageMetadata
     private static MessageMetadata EnsureNotNull(MessageMetadata causationMetadata)
     {
         ArgumentNullException.ThrowIfNull(causationMetadata);
+
         return causationMetadata;
     }
 

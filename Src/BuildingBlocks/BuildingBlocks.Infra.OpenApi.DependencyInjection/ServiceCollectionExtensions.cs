@@ -50,12 +50,14 @@ public static class ServiceCollectionExtensions
                 Version = version,
                 Description = description,
             };
+
             return Task.CompletedTask;
         });
 
         options.AddSchemaTransformer((schema, _, _) =>
         {
             FixTypedExamples(schema);
+
             return Task.CompletedTask;
         });
 

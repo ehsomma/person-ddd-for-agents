@@ -41,6 +41,7 @@ internal sealed class GetPersonsEndpoint : IEndpoint
         GetPersonsQuery query = new GetPersonsQuery();
 
         IList<Dto.Person> persons = await sender.Send(query, cancellationToken);
+
         return persons;
     }
 

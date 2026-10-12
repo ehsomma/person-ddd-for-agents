@@ -66,6 +66,7 @@ public sealed class GetPersonsRepository : QueryRepository<GetPersonsQuery, ILis
         await using DbConnection connection = CreateConnection();
 
         IList<Dto.Person> persons = await connection.QueryPersonsAsync(command);
+
         return persons;
     }
 

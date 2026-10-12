@@ -46,6 +46,7 @@ internal sealed class GetPersonsWithSpecificProfileEndpoint : IEndpoint
         CancellationToken cancellationToken)
     {
         IList<Dto.Person> persons = await sender.Send(query, cancellationToken);
+
         return persons;
     }
 

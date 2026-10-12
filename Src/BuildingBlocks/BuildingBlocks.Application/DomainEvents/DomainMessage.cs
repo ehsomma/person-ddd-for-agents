@@ -56,6 +56,7 @@ public static class DomainMessage
         // DomainMessage<TEvent> siempre implementa INotification y el constructor publico existe, asi que
         // el cast no falla.
         INotification message = (INotification)Activator.CreateInstance(messageType, metadata, domainEvent)!;
+
         return message;
     }
 

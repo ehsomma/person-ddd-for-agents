@@ -73,6 +73,7 @@ public sealed class GetPersonByIdRepository : QueryRepository<GetPersonByIdQuery
         // Not found (null): the caller decides what to do (e.g. GetPersonByIdQueryHandler throws
         // DomainErrors.Person.NotFound).
         Dto.Person? person = persons.SingleOrDefault();
+
         return person;
     }
 

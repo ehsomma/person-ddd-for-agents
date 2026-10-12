@@ -71,6 +71,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
     public ValueObject? GetCopy()
     {
         ValueObject? copy = MemberwiseClone() as ValueObject;
+
         return copy;
     }
 

@@ -20,6 +20,7 @@ public abstract class RequestHandler<TRequest, TResponse> : IRequestHandler<TReq
     Task<TResponse> IRequestHandlerBase<TResponse>.Handle(IRequest<TResponse> request, CancellationToken cancellationToken)
     {
         Task<TResponse> handleTask = Handle((TRequest)request, cancellationToken);
+
         return handleTask;
     }
 
@@ -45,6 +46,7 @@ public abstract class RequestHandler<TRequest> : IRequestHandler<TRequest>
     Task IRequestHandlerBase.Handle(IRequest request, CancellationToken cancellationToken)
     {
         Task handleTask = Handle((TRequest)request, cancellationToken);
+
         return handleTask;
     }
 

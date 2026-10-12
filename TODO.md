@@ -1,2 +1,3 @@
 * [ ] Documentación xml de endpoints/Scalar.
-* [ ] Validación con fluentvalidation de endpoints.
+* [X] Validación con fluentvalidation de endpoints.
+* [X] Return con espacio.

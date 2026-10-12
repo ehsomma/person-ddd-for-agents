@@ -54,6 +54,7 @@ internal sealed class CreatePersonEndpoint : IEndpoint
         CreatePersonCommand command = new CreatePersonCommand(appKey, person);
 
         Dto.Person createdPerson = await sender.Send(command, cancellationToken);
+
         return createdPerson;
     }
 

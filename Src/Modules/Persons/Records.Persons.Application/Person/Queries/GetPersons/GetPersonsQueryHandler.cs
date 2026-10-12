@@ -37,6 +37,7 @@ internal sealed class GetPersonsQueryHandler : QueryHandler<GetPersonsQuery, ILi
         ArgumentNullException.ThrowIfNull(query);
 
         IList<Dto.Person> persons = await _getPersonsRepository.GetAsync(query, cancellationToken);
+
         return persons;
     }
 

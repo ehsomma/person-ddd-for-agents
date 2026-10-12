@@ -49,6 +49,7 @@ internal sealed class GetPersonsByGenderAndBirthdateEndpoint : IEndpoint
         GetPersonsByGenderAndBirthdateQuery query = new GetPersonsByGenderAndBirthdateQuery(gender, birthDateFrom, birthDateTo);
 
         IList<Dto.Person> persons = await sender.Send(query, cancellationToken);
+
         return persons;
     }
 

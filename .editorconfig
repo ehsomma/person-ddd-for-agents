@@ -163,6 +163,12 @@ csharp_space_between_method_call_parameter_list_parentheses = false
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
 
+#### ReSharper / Rider Formatting Rules ####
+
+# Solo los aplica ReSharper/Rider al reformatear o en code cleanup; no generan diagnósticos en el build.
+# 1: deja una línea en blanco antes de return/throw/break/continue (estándar "Línea en blanco antes del return" del skill team-standards).
+resharper_csharp_blank_lines_before_control_transfer_statements = 1
+
 #### Naming Styles ####
 
 # --- Constantes → PascalCase (VA ANTES de la regla de _field) ---

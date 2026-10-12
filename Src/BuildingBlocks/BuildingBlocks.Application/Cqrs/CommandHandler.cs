@@ -93,6 +93,7 @@ public abstract class CommandHandler<TCommand, TResponse> : RequestHandler<TComm
     protected Task PublishDomainEvents(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
     {
         Task publishTask = _domainEventPublisher.Publish(domainEvents, cancellationToken);
+
         return publishTask;
     }
 
@@ -169,6 +170,7 @@ public abstract class CommandHandler<TCommand> : RequestHandler<TCommand>
     protected Task PublishDomainEvents(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
     {
         Task publishTask = _domainEventPublisher.Publish(domainEvents, cancellationToken);
+
         return publishTask;
     }
 

@@ -66,6 +66,7 @@ public sealed class LatLng : ValueObject
     public override string ToString()
     {
         string ret = $"{Lat.ToString(CultureInfo.InvariantCulture)}, {Lng.ToString(CultureInfo.InvariantCulture)}";
+
         return ret;
     }
 

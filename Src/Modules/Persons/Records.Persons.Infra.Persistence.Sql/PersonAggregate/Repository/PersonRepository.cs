@@ -154,6 +154,7 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
         dataPerson.PersonalAssets = (await reader.ReadAsync<DataModel.PersonalAsset>()).ToList();
 
         DomainModel.Person? person = _personMapper.FromDataModelToDomain(dataPerson);
+
         return person;
     }
 

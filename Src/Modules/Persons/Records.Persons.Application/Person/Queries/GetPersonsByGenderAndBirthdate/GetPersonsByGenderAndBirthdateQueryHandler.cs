@@ -39,6 +39,7 @@ internal sealed class GetPersonsByGenderAndBirthdateQueryHandler : QueryHandler<
         ArgumentNullException.ThrowIfNull(query);
 
         IList<Dto.Person> persons = await _getPersonsByGenderAndBirthdateRepository.GetAsync(query, cancellationToken);
+
         return persons;
     }
 

@@ -50,6 +50,7 @@ public class Mediator : IMediator
         IRequestHandlerBase<TResponse> handler = (IRequestHandlerBase<TResponse>)_serviceProvider.GetRequiredService(handlerType);
 
         Task<TResponse> handleTask = handler.Handle(request, cancellationToken);
+
         return handleTask;
     }
 
@@ -63,6 +64,7 @@ public class Mediator : IMediator
         IRequestHandlerBase handler = (IRequestHandlerBase)_serviceProvider.GetRequiredService(handlerType);
 
         Task handleTask = handler.Handle(request, cancellationToken);
+
         return handleTask;
     }
 

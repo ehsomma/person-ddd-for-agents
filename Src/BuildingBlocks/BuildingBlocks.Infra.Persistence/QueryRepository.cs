@@ -61,6 +61,7 @@ public abstract class QueryRepository<TQuery, TResponse> : IQueryRepository<TQue
     protected DbConnection CreateConnection()
     {
         InterceptedDbConnection connection = new InterceptedDbConnection(new SqlConnection(_connectionString));
+
         return connection;
     }
 

@@ -128,6 +128,7 @@ public class InterceptedDbConnection : DbConnection
     {
         // Wrap original command under InterceptedDbCommand.
         DbCommand originalCommand = _connection.CreateCommand();
+
         return new InterceptedDbCommand(originalCommand, this);
     }
 

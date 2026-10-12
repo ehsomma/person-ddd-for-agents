@@ -49,6 +49,7 @@ internal sealed class DeletePersonEndpoint : IEndpoint
         await sender.Send(command, cancellationToken);
 
         NoContent noContent = TypedResults.NoContent();
+
         return noContent;
     }
 

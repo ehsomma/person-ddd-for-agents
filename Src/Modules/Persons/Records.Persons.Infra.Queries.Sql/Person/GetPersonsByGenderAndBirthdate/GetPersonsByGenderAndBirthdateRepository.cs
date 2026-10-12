@@ -79,6 +79,7 @@ public sealed class GetPersonsByGenderAndBirthdateRepository : QueryRepository<G
         await using DbConnection connection = CreateConnection();
 
         IList<Dto.Person> persons = await connection.QueryPersonsAsync(command);
+
         return persons;
     }
 

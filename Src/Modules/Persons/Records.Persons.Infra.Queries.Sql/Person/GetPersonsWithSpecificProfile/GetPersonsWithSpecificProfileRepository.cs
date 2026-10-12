@@ -81,6 +81,7 @@ public sealed class GetPersonsWithSpecificProfileRepository : QueryRepository<Ge
         await using DbConnection connection = CreateConnection();
 
         IList<Dto.Person> persons = await connection.QueryPersonsAsync(command);
+
         return persons;
     }
 

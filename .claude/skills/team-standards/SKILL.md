@@ -55,6 +55,43 @@ public Person GetPerson(int id)
 }
 ```
 
+## Línea en blanco antes del `return`
+
+Todo `return` lleva una línea en blanco antes, separándolo de la sentencia anterior.
+
+**Excepción:** si el `return` es la primera sentencia de su bloque (justo después de la `{` o de una etiqueta `case`), no se deja la línea en blanco (StyleCop no permite una línea en blanco después de una llave de apertura, SA1505). Si el `return` tiene comentarios justo encima, la línea en blanco va antes de los comentarios, no entre el comentario y el `return` (SA1512).
+
+**Por qué:** separa visualmente la salida del método del cuerpo que calcula el valor, y hace que los puntos de salida se encuentren de un vistazo. No existe como regla de analyzer en StyleCop ni en Roslyn (ReSharper tiene una opción de formato, pero solo se aplica al reformatear y no marca nada en el build).
+
+✗ Incorrecto:
+```csharp
+public Person GetPerson(int id)
+{
+    Person person = _repository.FindById(id);
+    return person;
+}
+```
+
+✓ Correcto:
+```csharp
+public Person GetPerson(int id)
+{
+    Person person = _repository.FindById(id);
+
+    return person;
+}
+
+public void Validate(Person? person)
+{
+    if (person is null)
+    {
+        return;
+    }
+
+    _validator.Validate(person);
+}
+```
+
 ## Agrupar los miembros de las clases en regions
 
 Dentro de una clase, los miembros se agrupan en `#region`s con estos nombres y en este orden: `Declarations` (fields y constantes), `Constructor` (constructores), `Properties` (propiedades), `Public methods` (métodos `public` e `internal`), `Protected methods` (métodos `protected`, `protected internal` y `private protected`) y `Private methods` (métodos privados). Los constructores van siempre en `Constructor`, sea cual sea su visibilidad. Las implementaciones explícitas de interfaz (p.ej. `Task IRequestHandlerBase.Handle(...)`) van en `Public methods`: aunque no llevan modificador de acceso, son API que otras clases consumen a través de la interfaz. Si la clase no tiene miembros de un tipo, esa region se omite (no se dejan regions vacías).
@@ -86,12 +123,14 @@ public class PersonService
     public Person GetPerson(int id)
     {
         Person person = _repository.FindById(id);
+
         return person;
     }
 
     private static bool IsValidName(string name)
     {
         bool isValid = name.Length <= MaxNameLength;
+
         return isValid;
     }
 }
@@ -130,6 +169,7 @@ public class PersonService
     public Person GetPerson(int id)
     {
         Person person = _repository.FindById(id);
+
         return person;
     }
 
@@ -140,6 +180,7 @@ public class PersonService
     private static bool IsValidName(string name)
     {
         bool isValid = name.Length <= MaxNameLength;
+
         return isValid;
     }
 

@@ -19,6 +19,7 @@ public abstract class NotificationHandler<TNotification> : INotificationHandler<
     Task INotificationHandlerBase.Handle(INotification notification, CancellationToken cancellationToken)
     {
         Task handleTask = Handle((TNotification)notification, cancellationToken);
+
         return handleTask;
     }
 
