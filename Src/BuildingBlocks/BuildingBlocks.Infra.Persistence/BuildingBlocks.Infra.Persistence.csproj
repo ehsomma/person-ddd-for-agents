@@ -14,6 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\My.Data.InterceptableDbConnection\My.Data.InterceptableDbConnection.csproj" />
     <ProjectReference Include="..\BuildingBlocks.Configuration\BuildingBlocks.Configuration.csproj" />
-    <ProjectReference Include="..\BuildingBlocks.Infra.Persistence.Abstractions\BuildingBlocks.Infra.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="..\BuildingBlocks.Application.Persistence.Abstractions\BuildingBlocks.Application.Persistence.Abstractions.csproj" />
   </ItemGroup>
 </Project>

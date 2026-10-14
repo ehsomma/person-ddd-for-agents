@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infra.Persistence.Abstractions\BuildingBlocks.Infra.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application.Persistence.Abstractions\BuildingBlocks.Application.Persistence.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infra.Persistence\BuildingBlocks.Infra.Persistence.csproj" />
     <ProjectReference Include="..\Records.Persons.Application\Records.Persons.Application.csproj" />
     <ProjectReference Include="..\Records.Persons.Dtos\Records.Persons.Dtos.csproj" />

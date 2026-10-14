@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.Infra.Persistence.Abstractions;
+﻿using BuildingBlocks.Application.Persistence.Abstractions;
 
 namespace BuildingBlocks.Infra.Persistence;
 

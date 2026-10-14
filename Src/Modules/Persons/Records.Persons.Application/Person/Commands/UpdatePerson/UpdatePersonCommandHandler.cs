@@ -1,8 +1,8 @@
 using BuildingBlocks.Application.Cqrs;
 using BuildingBlocks.Application.DomainEvents;
 using BuildingBlocks.Application.Mappings.Abstractions.Mappers;
+using BuildingBlocks.Application.Persistence.Abstractions;
 using BuildingBlocks.Domain.ValueObjects;
-using BuildingBlocks.Infra.Persistence.Abstractions;
 using Records.Persons.Domain.PersonAggregate.Enumerators;
 using Records.Persons.Domain.PersonAggregate.Repositories;
 using Records.Persons.Domain.PersonAggregate.Services;

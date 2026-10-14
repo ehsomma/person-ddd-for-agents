@@ -1,4 +1,4 @@
-namespace BuildingBlocks.Infra.Persistence.Abstractions;
+namespace BuildingBlocks.Application.Persistence.Abstractions;
 
 /// <summary>
 /// Defines a query repository: reads from the database the <typeparamref name="TResponse"/> that

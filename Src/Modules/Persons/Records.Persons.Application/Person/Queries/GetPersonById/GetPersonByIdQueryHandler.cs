@@ -1,6 +1,6 @@
 using BuildingBlocks.Application.Cqrs;
+using BuildingBlocks.Application.Persistence.Abstractions;
 using BuildingBlocks.Domain.Exceptions;
-using BuildingBlocks.Infra.Persistence.Abstractions;
 using Records.Persons.Domain.PersonAggregate.Errors;
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 

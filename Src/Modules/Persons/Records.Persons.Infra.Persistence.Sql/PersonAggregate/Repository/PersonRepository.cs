@@ -1,4 +1,4 @@
-using BuildingBlocks.Infra.Persistence.Abstractions;
+using BuildingBlocks.Application.Persistence.Abstractions;
 using BuildingBlocks.Infra.Persistence.Mappings.Abstractions.Mappers;
 using Dapper;
 using Dapper.Contrib.Extensions;

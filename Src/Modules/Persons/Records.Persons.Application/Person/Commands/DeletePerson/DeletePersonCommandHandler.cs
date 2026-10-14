@@ -1,6 +1,6 @@
 using BuildingBlocks.Application.Cqrs;
 using BuildingBlocks.Application.DomainEvents;
-using BuildingBlocks.Infra.Persistence.Abstractions;
+using BuildingBlocks.Application.Persistence.Abstractions;
 using Records.Persons.Domain.PersonAggregate.Repositories;
 using Records.Persons.Domain.PersonAggregate.Services;
 using DomainModel = Records.Persons.Domain.PersonAggregate.Models; // Using aliases.

@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infra.Persistence.Abstractions\BuildingBlocks.Infra.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application.Persistence.Abstractions\BuildingBlocks.Application.Persistence.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infra.Persistence.Mappings.Abstractions\BuildingBlocks.Infra.Persistence.Mappings.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Infra.Persistence\BuildingBlocks.Infra.Persistence.csproj" />
     <ProjectReference Include="..\..\..\Core\My.System.Extensions\My.System.Extensions.csproj" />

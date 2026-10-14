@@ -1,6 +1,6 @@
 using System.Data;
+using BuildingBlocks.Application.Persistence.Abstractions;
 using BuildingBlocks.Configuration;
-using BuildingBlocks.Infra.Persistence.Abstractions;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using My.Data.InterceptableDbConnection;

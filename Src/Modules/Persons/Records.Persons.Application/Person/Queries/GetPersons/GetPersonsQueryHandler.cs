@@ -1,5 +1,5 @@
 using BuildingBlocks.Application.Cqrs;
-using BuildingBlocks.Infra.Persistence.Abstractions;
+using BuildingBlocks.Application.Persistence.Abstractions;
 using Dto = Records.Persons.Dtos.Person; // Using aliases.
 
 namespace Records.Persons.Application.Person.Queries.GetPersons;

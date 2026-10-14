@@ -72,7 +72,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Persistence", "Src\BuildingBlocks\BuildingBlocks.Infra.Persistence\BuildingBlocks.Infra.Persistence.csproj", "{B7525457-507E-47EC-B54E-B633827E2084}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Persistence.Abstractions", "Src\BuildingBlocks\BuildingBlocks.Infra.Persistence.Abstractions\BuildingBlocks.Infra.Persistence.Abstractions.csproj", "{E45B364C-55C6-46BC-89BD-2D5F31CBE22A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Application.Persistence.Abstractions", "Src\BuildingBlocks\BuildingBlocks.Application.Persistence.Abstractions\BuildingBlocks.Application.Persistence.Abstractions.csproj", "{E45B364C-55C6-46BC-89BD-2D5F31CBE22A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infra.Persistence.DependencyInjection", "Src\BuildingBlocks\BuildingBlocks.Infra.Persistence.DependencyInjection\BuildingBlocks.Infra.Persistence.DependencyInjection.csproj", "{27F1B3B5-7757-4942-B440-DFB748D992FB}"
 EndProject

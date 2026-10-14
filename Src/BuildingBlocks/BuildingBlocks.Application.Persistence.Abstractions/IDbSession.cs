@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace BuildingBlocks.Infra.Persistence.Abstractions;
+namespace BuildingBlocks.Application.Persistence.Abstractions;
 
 /// <summary>
 /// Represents a session in the database/UOW that contains a connection and a transaction.

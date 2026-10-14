@@ -1,4 +1,4 @@
-﻿namespace BuildingBlocks.Infra.Persistence.Abstractions;
+﻿namespace BuildingBlocks.Application.Persistence.Abstractions;
 
 /// <summary>
 /// Represents the marker interface for auditable entities.

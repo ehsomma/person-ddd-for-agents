@@ -1,5 +1,5 @@
+using BuildingBlocks.Application.Persistence.Abstractions;
 using BuildingBlocks.Configuration;
-using BuildingBlocks.Infra.Persistence.Abstractions;
 using Microsoft.Extensions.Configuration;
 
 namespace BuildingBlocks.Infra.Persistence;

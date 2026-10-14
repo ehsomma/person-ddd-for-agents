@@ -1,5 +1,5 @@
 using System.Reflection;
-using BuildingBlocks.Infra.Persistence.Abstractions;
+using BuildingBlocks.Application.Persistence.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Infra.Persistence.DependencyInjection;

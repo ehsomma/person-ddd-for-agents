@@ -1,6 +1,6 @@
 using BuildingBlocks.Application.DomainEvents;
+using BuildingBlocks.Application.Persistence.Abstractions;
 using BuildingBlocks.Domain.Events;
-using BuildingBlocks.Infra.Persistence.Abstractions;
 using BuildingBlocks.Mediator.Abstractions;
 
 namespace BuildingBlocks.Application.Cqrs;

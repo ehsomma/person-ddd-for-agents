@@ -1,4 +1,4 @@
-﻿namespace BuildingBlocks.Infra.Persistence.Abstractions;
+﻿namespace BuildingBlocks.Application.Persistence.Abstractions;
 
 /// <summary>
 /// Manage a <see cref="IDbSession"/> to encapsulate a business transaction which can affect the database.
