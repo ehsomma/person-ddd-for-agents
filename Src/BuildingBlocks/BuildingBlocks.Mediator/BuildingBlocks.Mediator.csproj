@@ -4,6 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- Capa de arquitectura explícita: el nombre no alcanza para inferirla (ver Directory.Build.targets). -->
+    <ArchLayer>Infra</ArchLayer>
   </PropertyGroup>
 
   <ItemGroup>

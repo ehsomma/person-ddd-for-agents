@@ -1,0 +1,97 @@
+<Project>
+
+    <!--
+    Validación de arquitectura (Clean Architecture + DDD).
+    Cada proyecto pertenece a una capa y solo puede referenciar (ProjectReference) a las capas permitidas.
+    Si una referencia viola la regla, el build falla con ARCH002.
+
+    | Capa        | Proyectos (convención de nombre)                | Puede referenciar                                   |
+    |=============|=================================================|=====================================================|
+    | Core        | My.*                                            | Core                                                |
+    | Dtos        | *.Dtos                                          | Core, Dtos                                          |
+    | Shared      | *.Contracts, *.Messaging, *.Configuration       | Core, Dtos, Shared                                  |
+    | Domain      | *.Domain, *.Domain.*                            | Core, Dtos, Domain                                  |
+    | Application | *.Application, *.Application.*                  | Core, Dtos, Shared, Domain, Application             |
+    | Infra       | *.Infra.*                                       | Core, Dtos, Shared, Domain, Application, Infra      |
+    | Composition | *.DependencyInjection                           | Core, Dtos, Shared, Domain, Application, Infra      |
+    | Host        | Proyectos bajo Src/Apps/                        | Todas                                               |
+
+    • Composition (*.DependencyInjection) solo puede ser referenciada desde Host.
+    • Con cada proyecto validando sus referencias directas y las capas ordenadas, las transitivas quedan cubiertas.
+    • La capa se infiere del nombre del proyecto; si no alcanza, el csproj la declara con <ArchLayer>...</ArchLayer>
+      (ej.: BuildingBlocks.Mediator.Abstractions, o un futuro proyecto de tests con <ArchLayer>Host</ArchLayer>).
+    • Para desactivar la validación en un proyecto: <ArchValidationEnabled>false</ArchValidationEnabled>.
+    • ArchLayer y ArchValidationEnabled NO son propiedades del SDK de .NET ni de MSBuild: son propiedades propias
+      de este repo, definidas y consumidas solo por este archivo.
+
+    Referencias (Microsoft Learn):
+    • Directory.Build.props/targets: https://learn.microsoft.com/visualstudio/msbuild/customize-by-directory
+    • Propiedades propias/custom creadas por Calude (ArchLayer, ArchValidationEnabled): https://learn.microsoft.com/visualstudio/msbuild/msbuild-properties
+    • Property functions (EndsWith, Contains...): https://learn.microsoft.com/visualstudio/msbuild/property-functions
+    • Tarea MSBuild (consulta la capa de cada referencia): https://learn.microsoft.com/visualstudio/msbuild/msbuild-task
+    • Tarea Error y ContinueOnError: https://learn.microsoft.com/visualstudio/msbuild/error-task
+    -->
+
+    <!-- Inferencia de la capa por convención (el orden importa: gana la primera que matchea). -->
+    <PropertyGroup Condition="'$(ArchLayer)' == ''">
+        <ArchLayer Condition="'$(ArchLayer)' == '' and $(MSBuildProjectDirectory.Replace('\', '/').Contains('/Src/Apps/'))">Host</ArchLayer>
+        <ArchLayer Condition="'$(ArchLayer)' == '' and $(MSBuildProjectName.EndsWith('.DependencyInjection'))">Composition</ArchLayer>
+        <ArchLayer Condition="'$(ArchLayer)' == '' and $(MSBuildProjectName.Contains('.Infra.'))">Infra</ArchLayer>
+        <ArchLayer Condition="'$(ArchLayer)' == '' and ($(MSBuildProjectName.EndsWith('.Application')) or $(MSBuildProjectName.Contains('.Application.')))">Application</ArchLayer>
+        <ArchLayer Condition="'$(ArchLayer)' == '' and ($(MSBuildProjectName.EndsWith('.Domain')) or $(MSBuildProjectName.Contains('.Domain.')))">Domain</ArchLayer>
+        <ArchLayer Condition="'$(ArchLayer)' == '' and $(MSBuildProjectName.EndsWith('.Dtos'))">Dtos</ArchLayer>
+        <ArchLayer Condition="'$(ArchLayer)' == '' and ($(MSBuildProjectName.EndsWith('.Contracts')) or $(MSBuildProjectName.EndsWith('.Messaging')) or $(MSBuildProjectName.EndsWith('.Configuration')))">Shared</ArchLayer>
+        <ArchLayer Condition="'$(ArchLayer)' == '' and $(MSBuildProjectName.StartsWith('My.'))">Core</ArchLayer>
+    </PropertyGroup>
+
+    <!-- Capas que puede referenciar cada capa. -->
+    <PropertyGroup>
+        <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Core'">Core</_ArchAllowedLayers>
+        <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Dtos'">Core;Dtos</_ArchAllowedLayers>
+        <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Shared'">Core;Dtos;Shared</_ArchAllowedLayers>
+        <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Domain'">Core;Dtos;Domain</_ArchAllowedLayers>
+        <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Application'">Core;Dtos;Shared;Domain;Application</_ArchAllowedLayers>
+        <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Infra'">Core;Dtos;Shared;Domain;Application;Infra</_ArchAllowedLayers>
+        <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Composition'">Core;Dtos;Shared;Domain;Application;Infra</_ArchAllowedLayers>
+        <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Host'">Core;Dtos;Shared;Domain;Application;Infra;Composition;Host</_ArchAllowedLayers>
+    </PropertyGroup>
+
+    <!-- Devuelve la capa de este proyecto a quien lo referencia (Identity = capa, Project = nombre del proyecto). -->
+    <Target Name="GetArchLayer" Returns="@(_ArchLayerInfo)">
+        <ItemGroup>
+            <_ArchLayerInfo Include="$(ArchLayer)" Project="$(MSBuildProjectName)" />
+        </ItemGroup>
+    </Target>
+
+    <!-- Valida las ProjectReference contra la matriz de capas permitidas. -->
+    <Target Name="ValidateArchitecture"
+            BeforeTargets="ResolveProjectReferences"
+            Condition="'$(DesignTimeBuild)' != 'true' and '$(ArchValidationEnabled)' != 'false'">
+
+        <Error Condition="'$(ArchLayer)' == ''"
+               Code="ARCH001"
+               File="$(MSBuildProjectFullPath)"
+               Text="Arquitectura: no se pudo inferir la capa de '$(MSBuildProjectName)' por su nombre. Declarala en el csproj con &lt;ArchLayer&gt; (Core, Dtos, Shared, Domain, Application, Infra, Composition o Host)." />
+
+        <MSBuild Projects="@(ProjectReference)"
+                 Targets="GetArchLayer"
+                 BuildInParallel="$(BuildInParallel)"
+                 RemoveProperties="TargetFramework;RuntimeIdentifier;SelfContained">
+            <Output TaskParameter="TargetOutputs" ItemName="_ArchReferencedLayer" />
+        </MSBuild>
+
+        <ItemGroup>
+            <_ArchAllowedLayer Include="$(_ArchAllowedLayers)" />
+            <_ArchViolation Include="@(_ArchReferencedLayer)" />
+            <_ArchViolation Remove="@(_ArchAllowedLayer)" />
+        </ItemGroup>
+
+        <!-- ErrorAndContinue: reporta todas las violaciones del proyecto, no solo la primera. -->
+        <Error Condition="'@(_ArchViolation)' != ''"
+               ContinueOnError="ErrorAndContinue"
+               Code="ARCH002"
+               File="$(MSBuildProjectFullPath)"
+               Text="Arquitectura: '$(MSBuildProjectName)' (capa $(ArchLayer)) no puede referenciar a '%(_ArchViolation.Project)' (capa %(_ArchViolation.Identity)). Capas permitidas: $(_ArchAllowedLayers)." />
+    </Target>
+
+</Project>
