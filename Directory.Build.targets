@@ -26,7 +26,7 @@
 
     Referencias (Microsoft Learn):
     • Directory.Build.props/targets: https://learn.microsoft.com/visualstudio/msbuild/customize-by-directory
-    • Propiedades propias/custom creadas por Calude (ArchLayer, ArchValidationEnabled): https://learn.microsoft.com/visualstudio/msbuild/msbuild-properties
+    • Propiedades propias/custom creadas por Claude (ArchLayer, ArchValidationEnabled): https://learn.microsoft.com/visualstudio/msbuild/msbuild-properties
     • Property functions (EndsWith, Contains...): https://learn.microsoft.com/visualstudio/msbuild/property-functions
     • Tarea MSBuild (consulta la capa de cada referencia): https://learn.microsoft.com/visualstudio/msbuild/msbuild-task
     • Tarea Error y ContinueOnError: https://learn.microsoft.com/visualstudio/msbuild/error-task
