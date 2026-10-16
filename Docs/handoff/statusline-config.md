@@ -8,13 +8,22 @@ archivo del repo**, salvo este handoff.
 Formato final:
 
 ```
-Opus 5.5 (medium) | █░░░░░░░░░ 6% | person-ddd-for-agents (feature/mediator)
+Opus 5.5 (medium) | █░░░░░░░░░ 6% | 5h 1% (02:20) · 7d 6% (sáb 05:00)
+person-ddd-for-agents (feature/mediator)
 ```
+
+Primera línea:
 
 1. **Modelo (effort):** en naranja Claude (`#D97757`, color de 24 bits).
 2. **Contexto:** barra de 10 casilleros y el % de uso, los dos del mismo color (verde, amarillo o rojo
    según el uso).
-3. **Carpeta (rama):** solo el nombre de la carpeta actual en azul, y la rama de git en amarillo.
+3. **Límites del plan:**
+   - **`5h`:** % usado de la ventana de 5 horas y la hora local en que se renueva.
+   - **`7d`:** % usado del cupo semanal y el día y la hora local en que se renueva.
+
+Segunda línea:
+
+4. **Carpeta (rama):** solo el nombre de la carpeta actual en azul, y la rama de git en amarillo.
 
 ## Qué se hizo
 
@@ -46,6 +55,18 @@ Opus 5.5 (medium) | █░░░░░░░░░ 6% | person-ddd-for-agents (f
   - Tiene 10 casilleros, cada uno equivale al 10% y se redondea (`(pct+5)/10`).
   - La barra y el % van del mismo color: verde por debajo del 50%, amarillo por debajo del 80% y rojo
     desde el 80%. Antes el % salía en gris y el usuario pidió unificarlo.
+- **Límites del plan (plan Team):** salen de `rate_limits.five_hour` y `rate_limits.seven_day`, cada uno
+  con `used_percentage` y `resets_at`.
+  - `resets_at` es un timestamp Unix y se pasa a hora local con `date -d @<ts>`. Se verificó que la zona
+    horaria de Git Bash coincide con la de Windows (UTC-3).
+  - Los % usan los mismos colores que el contexto. Si falta algún límite, no se muestra.
+  - Los nombres de los días (`dom`…`sáb`) están en un array del script para no depender de la
+    configuración de idioma de Git Bash.
+  - Se eligió la opción B (hora y día exactos del reset). Se descartaron dos alternativas:
+    - **A, tiempo restante con `↻4h12m`:** al usuario el ícono se le superponía con el dato.
+    - **C, con mini barras:** era demasiado larga.
+- **Dos líneas:** la carpeta y la rama van en una segunda línea, a pedido del usuario. Claude Code
+  muestra cada línea que imprime el script.
 
 ## Pendiente
 
@@ -65,7 +86,6 @@ Opus 5.5 (medium) | █░░░░░░░░░ 6% | person-ddd-for-agents (f
   - **Estado de git:** `*` si hay cambios sin commitear, `↑↓` para commits sin pushear o pendientes de
     traer.
   - **Rama en otro color** si es `master`.
-  - **Uso de los límites:** `rate_limits.five_hour` / `seven_day`.
 
 ## Gotchas
 
