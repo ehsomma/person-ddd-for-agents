@@ -1,5 +1,10 @@
 # Handoff: domain-events-sin-mediatr
 
+> ⚠️ **Obsoleto.** Los proyectos `Records.Shared.Cqrs*` y `Records.Shared.DomainEvents*` que se describen acá ya no
+> existen: fueron reemplazados por el mediator propio (`BuildingBlocks.Mediator*`) y por
+> `BuildingBlocks.Application/DomainEvents`. La referencia vigente es `domain-event-handlers.md` y el código. Se
+> conserva solo como historial de la decisión.
+
 ## Objetivo
 
 Armar un mecanismo de **eventos de dominio sin MediatR**, análogo al CQRS casero de
