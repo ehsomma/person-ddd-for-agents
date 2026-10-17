@@ -41,7 +41,7 @@ public sealed class Error
 
     #endregion
 
-    #region Public methods
+    #region Operators
 
     /// <summary>
     /// Implicit operator.
@@ -53,6 +53,10 @@ public sealed class Error
 
         return error.Code;
     }
+
+    #endregion
+
+    #region Public methods
 
     /// <summary>
     /// Returns the error code.

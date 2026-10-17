@@ -78,7 +78,7 @@ public abstract class StringValueObject : ValueObject
 
     #endregion
 
-    #region Public methods
+    #region Operators
 
     /// <summary>
     /// Implicit operator that returns its value.
@@ -90,6 +90,10 @@ public abstract class StringValueObject : ValueObject
 
         return valueObject.Value;
     }
+
+    #endregion
+
+    #region Public methods
 
     /// <inheritdoc />
     public override string ToString()

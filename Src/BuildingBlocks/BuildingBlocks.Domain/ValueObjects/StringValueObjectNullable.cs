@@ -78,7 +78,7 @@ public abstract class StringValueObjectNullable : ValueObject
 
     #endregion
 
-    #region Public methods
+    #region Operators
 
     /// <summary>
     /// Implicit operator that returns its value.
@@ -88,6 +88,10 @@ public abstract class StringValueObjectNullable : ValueObject
     {
         return valueObject?.Value;
     }
+
+    #endregion
+
+    #region Public methods
 
     /// <inheritdoc />
     public override string? ToString()

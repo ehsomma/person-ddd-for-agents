@@ -43,7 +43,7 @@ public sealed class Money : ValueObject
 
     #endregion
 
-    #region Public methods
+    #region Operators
 
     /// <summary>
     /// Implicit operator that returns its value.
@@ -55,6 +55,10 @@ public sealed class Money : ValueObject
 
         return money.Value;
     }
+
+    #endregion
+
+    #region Public methods
 
     /// <summary>
     /// Rounds the current value to the specified number of decimal places.

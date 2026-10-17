@@ -60,7 +60,7 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>, IComp
 
     #endregion
 
-    #region Public methods
+    #region Operators
 
     /// <summary>
     /// Compares two enumerators.
@@ -93,6 +93,10 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>, IComp
     {
         return !(left == right);
     }
+
+    #endregion
+
+    #region Public methods
 
     /// <summary>
     /// Creates an enumeration of the specified type based on the specified <paramref name="value"/>.
