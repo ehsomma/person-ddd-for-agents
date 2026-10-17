@@ -1,4 +1,4 @@
-using System.Data;
+using System.Data.Common;
 using BuildingBlocks.Application.Persistence.Abstractions;
 using BuildingBlocks.Configuration;
 using Microsoft.Data.SqlClient;
@@ -31,22 +31,11 @@ public sealed class DbSession : IDbSession
         SqlServerSettings databaseSettings = configuration.GetSectionOrThrow<SqlServerSettings>(SqlServerSettings.SettingsKey);
 
         // Connection to the "Source" DataBase.
+        // NOTE: Created but not opened (it doesn't go to the server), so a request that fails before using the
+        // database doesn't open a connection. UnitOfWork.BeginTransactionAsync opens it, and Dapper opens and
+        // closes it by itself for the reads outside a transaction.
         ////Connection = new SqlConnection(databaseSettings.SourceConnectionString);
-        InterceptedDbConnection connection = new InterceptedDbConnection(new SqlConnection(databaseSettings.SourceConnectionString));
-
-        try
-        {
-            connection.Open(); // The running proces IP must have access to server.
-        }
-        catch
-        {
-            // If Open fails the constructor throws and nobody will call Dispose on this instance.
-            connection.Dispose();
-
-            throw;
-        }
-
-        Connection = connection;
+        Connection = new InterceptedDbConnection(new SqlConnection(databaseSettings.SourceConnectionString));
     }
 
     #endregion
@@ -54,10 +43,10 @@ public sealed class DbSession : IDbSession
     #region Properties
 
     /// <inheritdoc />
-    public IDbConnection Connection { get; }
+    public DbConnection Connection { get; }
 
     /// <inheritdoc />
-    public IDbTransaction? Transaction { get; set; }
+    public DbTransaction? Transaction { get; set; }
 
     #endregion
 

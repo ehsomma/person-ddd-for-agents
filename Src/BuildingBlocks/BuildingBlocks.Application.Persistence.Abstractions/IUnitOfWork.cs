@@ -8,19 +8,29 @@ public interface IUnitOfWork : IDisposable
     #region Private methods
 
     /// <summary>
-    /// Begins a database transaction.
+    /// Begins a database transaction, opening the connection first if it's closed.
     /// </summary>
-    void BeginTransaction();
+    /// <param name="cancellationToken">Optional cancellation token (for opening the connection and beginning the transaction).</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task BeginTransactionAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Commits the database transaction.
     /// </summary>
-    void Commit();
+    /// <remarks>
+    /// It doesn't receive a <see cref="CancellationToken"/> on purpose: a commit is never cancelled halfway.
+    /// </remarks>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task CommitAsync();
 
     /// <summary>
     /// Rolls back a transaction from a pending state.
     /// </summary>
-    void Rollback();
+    /// <remarks>
+    /// It doesn't receive a <see cref="CancellationToken"/> on purpose: a rollback is never cancelled halfway.
+    /// </remarks>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task RollbackAsync();
 
     #endregion
 }

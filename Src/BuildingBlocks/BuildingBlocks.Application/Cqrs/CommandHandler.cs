@@ -62,9 +62,10 @@ public abstract class CommandHandler<TCommand, TResponse> : RequestHandler<TComm
     /// Publish the domain events after this call, so the handlers only react to changes that are already persisted.
     /// </para>
     /// <para>
-    /// The <paramref name="cancellationToken"/> is checked before opening the transaction, and the
-    /// <paramref name="operation"/> must also receive it (e.g. inside the lambda). A cancellation during the
-    /// operation rolls back, but the commit is never cancelled: if the operation succeeds, it's always committed.
+    /// The <paramref name="cancellationToken"/> is checked before opening the transaction (it also cancels opening
+    /// the connection and beginning the transaction), and the <paramref name="operation"/> must also receive it
+    /// (e.g. inside the lambda). A cancellation during the operation rolls back, but the commit is never
+    /// cancelled: if the operation succeeds, it's always committed.
     /// </para>
     /// </remarks>
     /// <param name="operation">The persistence operation to execute (e.g. <c>() => _repository.InsertAsync(entity, cancellationToken)</c>).</param>
@@ -78,15 +79,15 @@ public abstract class CommandHandler<TCommand, TResponse> : RequestHandler<TComm
         // Before opening the transaction: if it's already cancelled, there's nothing to roll back.
         cancellationToken.ThrowIfCancellationRequested();
 
-        _unitOfWork.BeginTransaction();
+        await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
         {
             await operation();
-            _unitOfWork.Commit();
+            await _unitOfWork.CommitAsync();
         }
         catch
         {
-            _unitOfWork.Rollback();
+            await _unitOfWork.RollbackAsync();
 
             throw;
         }
@@ -171,15 +172,15 @@ public abstract class CommandHandler<TCommand> : RequestHandler<TCommand>
         // Before opening the transaction: if it's already cancelled, there's nothing to roll back.
         cancellationToken.ThrowIfCancellationRequested();
 
-        _unitOfWork.BeginTransaction();
+        await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
         {
             await operation();
-            _unitOfWork.Commit();
+            await _unitOfWork.CommitAsync();
         }
         catch
         {
-            _unitOfWork.Rollback();
+            await _unitOfWork.RollbackAsync();
 
             throw;
         }

@@ -27,6 +27,10 @@ public class InterceptedDbConnection : DbConnection
     public InterceptedDbConnection(DbConnection connection)
     {
         _connection = connection ?? throw new ArgumentNullException(nameof(connection));
+
+        // Forwards the StateChange of the wrapped connection (the one that really opens and closes), so the
+        // subscribers of this wrapper are notified too. It's unsubscribed in Dispose.
+        _connection.StateChange += StateChangeHandler;
     }
 
     #endregion
@@ -121,6 +125,16 @@ public class InterceptedDbConnection : DbConnection
     protected override DbTransaction BeginDbTransaction(System.Data.IsolationLevel isolationLevel)
     {
         return _connection.BeginTransaction(isolationLevel);
+    }
+
+    /// <inheritdoc cref="DbConnection.BeginDbTransactionAsync(System.Data.IsolationLevel, CancellationToken)"/>
+    protected override async ValueTask<DbTransaction> BeginDbTransactionAsync(System.Data.IsolationLevel isolationLevel, CancellationToken cancellationToken)
+    {
+        // NOTE: Without this override, the DbConnection's default calls the synchronous BeginDbTransaction, even
+        // if the wrapped connection implements it asynchronously.
+        DbTransaction transaction = await _connection.BeginTransactionAsync(isolationLevel, cancellationToken);
+
+        return transaction;
     }
 
     /// <inheritdoc cref="DbConnection.CreateDbCommand()"/>
