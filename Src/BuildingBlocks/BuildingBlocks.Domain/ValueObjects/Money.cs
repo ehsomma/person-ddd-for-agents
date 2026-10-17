@@ -5,6 +5,10 @@ namespace BuildingBlocks.Domain.ValueObjects;
 /// <summary>
 /// Represents the Money value object.
 /// </summary>
+[System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "StyleCop.CSharp.OrderingRules",
+    "SA1201:Elements should appear in the correct order",
+    Justification = "Prefere to have the Build() inside the constructor region.")]
 public sealed class Money : ValueObject
 {
     #region Constructor
@@ -16,6 +20,18 @@ public sealed class Money : ValueObject
     private Money(decimal amount)
     {
         Value = amount;
+    }
+
+    /// <summary>
+    /// Build a new <see cref="Money"/> instance based on the specified <paramref name="amount"/>.
+    /// </summary>
+    /// <param name="amount">The amount of money.</param>
+    /// <returns>The value object.</returns>
+    public static Money Build(decimal amount)
+    {
+        Money money = new Money(amount);
+
+        return money;
     }
 
     #endregion
@@ -38,18 +54,6 @@ public sealed class Money : ValueObject
         ArgumentNullException.ThrowIfNull(money);
 
         return money.Value;
-    }
-
-    /// <summary>
-    /// Build a new <see cref="Money"/> instance based on the specified <paramref name="amount"/>.
-    /// </summary>
-    /// <param name="amount">The amount of money.</param>
-    /// <returns>The value object.</returns>
-    public static Money Build(decimal amount)
-    {
-        Money money = new Money(amount);
-
-        return money;
     }
 
     /// <summary>
