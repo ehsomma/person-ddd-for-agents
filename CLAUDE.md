@@ -58,7 +58,10 @@ Estas son cosas que un agente suele hacer por costumbre y que **acá no se hacen
   3. `ExecuteInTransaction(...)`.
   4. `PublishDomainEvents(aggregate.PullDomainEvents())`.
 
-  Los eventos de dominio se publican **después del commit**.
+  Los eventos de dominio se publican **después del commit**, y `PublishDomainEvents` no recibe `CancellationToken`:
+  lo ya commiteado no se cancela.
+- **`CancellationToken` hasta el repositorio en los dos lados** (read y write). Dapper.Contrib no lo acepta, así que
+  se chequea con `ThrowIfCancellationRequested()` antes de cada llamada.
 
 ## Archivos de referencia
 

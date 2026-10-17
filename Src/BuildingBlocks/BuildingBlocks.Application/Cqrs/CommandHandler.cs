@@ -58,13 +58,25 @@ public abstract class CommandHandler<TCommand, TResponse> : RequestHandler<TComm
     /// succeeds, and rolls back and rethrows the exception if it fails.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// Publish the domain events after this call, so the handlers only react to changes that are already persisted.
+    /// </para>
+    /// <para>
+    /// The <paramref name="cancellationToken"/> is checked before opening the transaction, and the
+    /// <paramref name="operation"/> must also receive it (e.g. inside the lambda). A cancellation during the
+    /// operation rolls back, but the commit is never cancelled: if the operation succeeds, it's always committed.
+    /// </para>
     /// </remarks>
-    /// <param name="operation">The persistence operation to execute (e.g. <c>() => _repository.InsertAsync(entity)</c>).</param>
+    /// <param name="operation">The persistence operation to execute (e.g. <c>() => _repository.InsertAsync(entity, cancellationToken)</c>).</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>A task that represents the transactional operation.</returns>
-    protected async Task ExecuteInTransaction(Func<Task> operation)
+    /// <exception cref="OperationCanceledException">When the <paramref name="cancellationToken"/> is cancelled before the commit.</exception>
+    protected async Task ExecuteInTransaction(Func<Task> operation, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(operation);
+
+        // Before opening the transaction: if it's already cancelled, there's nothing to roll back.
+        cancellationToken.ThrowIfCancellationRequested();
 
         _unitOfWork.BeginTransaction();
         try
@@ -86,14 +98,16 @@ public abstract class CommandHandler<TCommand, TResponse> : RequestHandler<TComm
     /// </summary>
     /// <remarks>
     /// Call it after committing the changes (e.g. with the events pulled from the aggregate), so the
-    /// handlers only react to changes that are already persisted.
+    /// handlers only react to changes that are already persisted. It doesn't receive a <see cref="CancellationToken"/>
+    /// on purpose: the changes are already committed, so the events are never cancelled.
     /// </remarks>
     /// <param name="domainEvents">The domain events to publish (e.g. <c>aggregate.PullDomainEvents()</c>).</param>
-    /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>A task that represents the publish operation.</returns>
-    protected Task PublishDomainEvents(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
+    protected Task PublishDomainEvents(IEnumerable<IDomainEvent> domainEvents)
     {
-        Task publishTask = _domainEventPublisher.Publish(domainEvents, cancellationToken);
+        // NOTE: CancellationToken.None and not the request token: if the client disconnects after the commit,
+        // the events can't be left half published.
+        Task publishTask = _domainEventPublisher.Publish(domainEvents, CancellationToken.None);
 
         return publishTask;
     }
@@ -149,10 +163,13 @@ public abstract class CommandHandler<TCommand> : RequestHandler<TCommand>
 
     #region Protected methods
 
-    /// <inheritdoc cref="CommandHandler{TCommand, TResponse}.ExecuteInTransaction(Func{Task})"/>
-    protected async Task ExecuteInTransaction(Func<Task> operation)
+    /// <inheritdoc cref="CommandHandler{TCommand, TResponse}.ExecuteInTransaction(Func{Task}, CancellationToken)"/>
+    protected async Task ExecuteInTransaction(Func<Task> operation, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(operation);
+
+        // Before opening the transaction: if it's already cancelled, there's nothing to roll back.
+        cancellationToken.ThrowIfCancellationRequested();
 
         _unitOfWork.BeginTransaction();
         try
@@ -168,10 +185,12 @@ public abstract class CommandHandler<TCommand> : RequestHandler<TCommand>
         }
     }
 
-    /// <inheritdoc cref="CommandHandler{TCommand, TResponse}.PublishDomainEvents(IEnumerable{IDomainEvent}, CancellationToken)"/>
-    protected Task PublishDomainEvents(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
+    /// <inheritdoc cref="CommandHandler{TCommand, TResponse}.PublishDomainEvents(IEnumerable{IDomainEvent})"/>
+    protected Task PublishDomainEvents(IEnumerable<IDomainEvent> domainEvents)
     {
-        Task publishTask = _domainEventPublisher.Publish(domainEvents, cancellationToken);
+        // NOTE: CancellationToken.None and not the request token: if the client disconnects after the commit,
+        // the events can't be left half published.
+        Task publishTask = _domainEventPublisher.Publish(domainEvents, CancellationToken.None);
 
         return publishTask;
     }

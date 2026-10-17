@@ -11,27 +11,31 @@ public interface IPersonRepository
     /// Inserts the specified person into the repository.
     /// </summary>
     /// <param name="person">The Person to insert.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task InsertAsync(Person person);
+    Task InsertAsync(Person person, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Update the specified person in the repository.
     /// </summary>
     /// <param name="person">The Person to update.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task UpdateAsync(Person person);
+    Task UpdateAsync(Person person, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes the specified person from the repository.
     /// </summary>
     /// <param name="person">The Person to delete.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task DeleteAsync(Person person);
+    Task DeleteAsync(Person person, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get the <see cref="Person"/> corresponding to the specified <paramref name="id"/>.
     /// </summary>
     /// <param name="id">The identification to search for.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>The corresponding Person.</returns>
-    Task<Person?> GetByIdAsync(Guid id);
+    Task<Person?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 }

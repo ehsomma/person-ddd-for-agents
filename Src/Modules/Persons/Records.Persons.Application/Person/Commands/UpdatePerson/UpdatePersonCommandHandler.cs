@@ -65,23 +65,24 @@ internal sealed class UpdatePersonCommandHandler : CommandHandler<UpdatePersonCo
         DomainModel.Person editedPerson = LoadPerson(command);
 
         // Gets the current DomainModel.Person.
-        DomainModel.Person currentPerson = await _personService.GetByIdAsync(editedPerson.Id);
+        DomainModel.Person currentPerson = await _personService.GetByIdAsync(editedPerson.Id, cancellationToken);
 
         // Updates the currentPerson with editedPerson data.
         currentPerson.Update(editedPerson);
 
         // Ejecuta la `operación` especificada dentro de una transacción de base de datos, hace commit
         // de los cambios si tiene éxito o rollback y relanza la excepción si falla.
-        await ExecuteInTransaction(() =>
-            _personRepository.UpdateAsync(currentPerson));
+        await ExecuteInTransaction(
+            () => _personRepository.UpdateAsync(currentPerson, cancellationToken),
+            cancellationToken);
 
         // Publica los eventos de dominio del agregado (p.ej. PersonUpdated) recien despues del Commit,
         // para que los handlers solo reaccionen a cambios ya persistidos.
-        await PublishDomainEvents(currentPerson.PullDomainEvents(), cancellationToken);
+        await PublishDomainEvents(currentPerson.PullDomainEvents());
 
         // Reads the person again to return what was actually persisted (e.g. the IDs generated for
         // the new personal assets, which the domain model doesn't receive from the insert).
-        DomainModel.Person updatedPerson = await _personService.GetByIdAsync(currentPerson.Id);
+        DomainModel.Person updatedPerson = await _personService.GetByIdAsync(currentPerson.Id, cancellationToken);
 
         Dto.Person updatedPersonDto = _personMapper.FromDomainToDto(updatedPerson);
 

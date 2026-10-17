@@ -44,33 +44,44 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
     #region Public methods
 
     /// <inheritdoc />
-    public async Task InsertAsync(DomainModel.Person person)
+    public async Task InsertAsync(DomainModel.Person person, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(person);
 
         DataModel.Person dataPerson = _personMapper.FromDomainToDataModel(person);
 
         // Dapper.Contrib.
+        // NOTE: Dapper.Contrib (InsertAsync/UpdateAsync/DeleteAsync) doesn't accept a CancellationToken, so
+        // it's checked before each call: a cancellation stops before the next command (an ongoing one isn't
+        // interrupted) and the exception rolls back the transaction (see CommandHandler.ExecuteInTransaction).
+        cancellationToken.ThrowIfCancellationRequested();
         await _dbSession.Connection.InsertAsync(dataPerson, _dbSession.Transaction);
+
+        cancellationToken.ThrowIfCancellationRequested();
         await _dbSession.Connection.InsertAsync(dataPerson.Address, _dbSession.Transaction);
 
         // NOTE: Sequential (not Task.WhenAll): the inserts share the same connection and transaction, and
         // SqlConnection doesn't support concurrent commands (not even with MultipleActiveResultSets).
         foreach (DataModel.PersonalAsset personalAsset in dataPerson.PersonalAssets.NotNull())
         {
+            cancellationToken.ThrowIfCancellationRequested();
             await _dbSession.Connection.InsertAsync(personalAsset, _dbSession.Transaction);
         }
     }
 
     /// <inheritdoc />
-    public async Task UpdateAsync(DomainModel.Person person)
+    public async Task UpdateAsync(DomainModel.Person person, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(person);
 
         DataModel.Person dataPerson = _personMapper.FromDomainToDataModel(person);
 
         // Dapper.Contrib (by [ExplicitKey]/[Key], the IDs come from the loaded person).
+        // NOTE: Dapper.Contrib doesn't accept a CancellationToken, it's checked before each call (see InsertAsync).
+        cancellationToken.ThrowIfCancellationRequested();
         await _dbSession.Connection.UpdateAsync(dataPerson, _dbSession.Transaction);
+
+        cancellationToken.ThrowIfCancellationRequested();
         await _dbSession.Connection.UpdateAsync(dataPerson.Address, _dbSession.Transaction);
 
         // The domain doesn't update or remove the existing personal assets (Person.Update doesn't touch
@@ -78,12 +89,13 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
         // NOTE: Sequential (not Task.WhenAll), see InsertAsync.
         foreach (DataModel.PersonalAsset personalAsset in dataPerson.PersonalAssets.NotNull().Where(personalAsset => personalAsset.Id == 0))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             await _dbSession.Connection.InsertAsync(personalAsset, _dbSession.Transaction);
         }
     }
 
     /// <inheritdoc />
-    public async Task DeleteAsync(DomainModel.Person person)
+    public async Task DeleteAsync(DomainModel.Person person, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(person);
 
@@ -95,14 +107,18 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
                            DELETE FROM [dbo].[Persons] WHERE [Id] = @id;
                            """;
 
-        await _dbSession.Connection.ExecuteAsync(
+        // CommandDefinition to be able to pass the cancellationToken.
+        CommandDefinition command = new CommandDefinition(
             sql,
             new { id = person.Id },
-            _dbSession.Transaction);
+            _dbSession.Transaction,
+            cancellationToken: cancellationToken);
+
+        await _dbSession.Connection.ExecuteAsync(command);
     }
 
     /// <inheritdoc />
-    public async Task<DomainModel.Person?> GetByIdAsync(Guid id)
+    public async Task<DomainModel.Person?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         // The person, its address and its personal assets in a single round trip to the database.
         const string sql = """
@@ -137,10 +153,14 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
                            WHERE [PersonId] = @id;
                            """;
 
-        await using SqlMapper.GridReader reader = await _dbSession.Connection.QueryMultipleAsync(
+        // CommandDefinition to be able to pass the cancellationToken.
+        CommandDefinition command = new CommandDefinition(
             sql,
             new { id },
-            _dbSession.Transaction);
+            _dbSession.Transaction,
+            cancellationToken: cancellationToken);
+
+        await using SqlMapper.GridReader reader = await _dbSession.Connection.QueryMultipleAsync(command);
 
         DataModel.Person? dataPerson = await reader.ReadSingleOrDefaultAsync<DataModel.Person>();
 

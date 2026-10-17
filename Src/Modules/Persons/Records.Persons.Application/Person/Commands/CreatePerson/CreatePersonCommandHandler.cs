@@ -83,16 +83,17 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
 
         // Ejecuta la `operación` especificada dentro de una transacción de base de datos, hace commit
         // de los cambios si tiene éxito o rollback y relanza la excepción si falla.
-        await ExecuteInTransaction(() =>
-            _personRepository.InsertAsync(person));
+        await ExecuteInTransaction(
+            () => _personRepository.InsertAsync(person, cancellationToken),
+            cancellationToken);
 
         // Publica los eventos de dominio del agregado (p.ej. PersonCreated) recien despues del Commit,
         // para que los handlers solo reaccionen a cambios ya persistidos.
-        await PublishDomainEvents(person.PullDomainEvents(), cancellationToken);
+        await PublishDomainEvents(person.PullDomainEvents());
 
         // Reads the person again to return what was actually persisted (e.g. the IDs generated for
         // the address and the personal assets, which the domain model doesn't receive from the insert).
-        DomainModel.Person createdPerson = await _personService.GetByIdAsync(person.Id);
+        DomainModel.Person createdPerson = await _personService.GetByIdAsync(person.Id, cancellationToken);
 
         Dto.Person createdPersonDto = _personMapper.FromDomainToDto(createdPerson);
 

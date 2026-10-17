@@ -53,18 +53,19 @@ internal sealed class DeletePersonCommandHandler : CommandHandler<DeletePersonCo
         // Gets the whole aggregate (not just an "exists" check): if it doesn't exist the service throws
         // DomainErrors.Person.NotFound, and the aggregate is the one that decides whether it can be
         // deleted (Person.Delete applies the business rules and registers PersonDeleted).
-        DomainModel.Person person = await _personService.GetByIdAsync(command.Id);
+        DomainModel.Person person = await _personService.GetByIdAsync(command.Id, cancellationToken);
 
         person.Delete();
 
         // Ejecuta la `operación` especificada dentro de una transacción de base de datos, hace commit
         // de los cambios si tiene éxito o rollback y relanza la excepción si falla.
-        await ExecuteInTransaction(() =>
-            _personRepository.DeleteAsync(person));
+        await ExecuteInTransaction(
+            () => _personRepository.DeleteAsync(person, cancellationToken),
+            cancellationToken);
 
         // Publica los eventos de dominio del agregado (p.ej. PersonDeleted) recien despues del Commit,
         // para que los handlers solo reaccionen a cambios ya persistidos.
-        await PublishDomainEvents(person.PullDomainEvents(), cancellationToken);
+        await PublishDomainEvents(person.PullDomainEvents());
     }
 
     #endregion
