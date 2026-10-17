@@ -160,6 +160,7 @@ nombre no sigue la convención, la clase no se registra.
 | `mapeo-errores-statuscode` | El `ErrorType` como única fuente del status HTTP. |
 | `api-xml-comments` | Los XML docs de los endpoints en Scalar y las respuestas comunes. |
 | `editorconfig-vs-teamStandars` | Las reglas IDE en el build (`EnforceCodeStyleInBuild`), sin sufijos de severidad, y el skill alineado con el `.editorconfig`. |
+| `cancelationtoken-solo-hasta-commit` | El `CancellationToken` hasta el repositorio en el write side, respetado solo hasta el commit, y los eventos sin token. |
 | `domain-events-sin-mediatr` | **Obsoleto**: el diseño inicial, reemplazado por `BuildingBlocks.Mediator`. |
 
 ## Usar este repo como plantilla en otro proyecto
