@@ -11,10 +11,28 @@ namespace BuildingBlocks.Infra.Http;
 /// <summary>
 /// Represents the global exception handler that can be added to the application's request.
 /// </summary>
-/// <param name="logger">Logger injection.</param>
-public sealed class GlobalExceptionHandler(
-    ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
+public sealed class GlobalExceptionHandler : IExceptionHandler
 {
+    #region Declarations
+
+    private readonly ILogger<GlobalExceptionHandler> _logger;
+
+    #endregion
+
+    #region Constructor
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GlobalExceptionHandler"/> class.
+    /// </summary>
+    /// <param name="logger">Logger injection.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="logger"/> is <see langword="null"/>.</exception>
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    #endregion
+
     #region Public methods
 
     /// <inheritdoc/>
@@ -49,7 +67,7 @@ public sealed class GlobalExceptionHandler(
             // El mensaje del framework está pensado para el programador (p.ej. "Implicit body inferred for
             // parameter... Did you mean to use a Service instead?") y expone nombres de parámetros internos: al
             // cliente se le devuelve uno genérico y el original queda en el log.
-            logger.LogWarning("Bad request: {Message}", ex.Message);
+            _logger.LogWarning("Bad request: {Message}", ex.Message);
             errorMessage = "The request is malformed or incomplete.";
         }
 
@@ -64,7 +82,7 @@ public sealed class GlobalExceptionHandler(
             // This is what we will see in the log (logId and the full exception) if the
             // exception should be logged.
             ex.Data[ExDataKey.ErrorLogId] = errorLogId;
-            logger.LogError(ex, "An exception occurred (id: {ErrorLogId}): {Message}", errorLogId, ex.Message);
+            _logger.LogError(ex, "An exception occurred (id: {ErrorLogId}): {Message}", errorLogId, ex.Message);
 
             errorMessage = $"An exception occurred. Please, provide this error log id to technical support (logId: {errorLogId}).";
         }
@@ -99,9 +117,11 @@ public sealed class GlobalExceptionHandler(
     /// <returns>The validation erros.</returns>
     private IReadOnlyCollection<ValidationError>? GetValidationErrors(Exception ex)
     {
-        return (ex is ValidationException)
+        IReadOnlyCollection<ValidationError>? validationErrors = (ex is ValidationException)
             ? ((ValidationException)ex).ValidationErrors ?? null
             : null;
+
+        return validationErrors;
     }
 
     // Map IReadOnlyCollection<ValidationError> to

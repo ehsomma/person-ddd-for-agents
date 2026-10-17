@@ -329,3 +329,40 @@ public async Task<Dto.Person> PutUpdatePerson(
     [FromServices] IValidator<Dto.Person> personValidator,
     CancellationToken cancellationToken)
 ```
+
+## Sin primary constructors
+
+No se usan primary constructors. Las dependencias se reciben en un constructor explícito (region `Constructor`) que las guarda en campos `private readonly _xxx` (region `Declarations`), validando que no sean `null` con `?? throw new ArgumentNullException(nameof(xxx))`.
+
+**Por qué:** los parámetros de un primary constructor no son campos: no se pueden marcar `readonly`, se pueden reasignar en cualquier método y no llevan el prefijo `_`, así que dentro de la clase no se distingue una dependencia de una variable local. Además no hay dónde validar el `null`. En el `.editorconfig` está `csharp_style_prefer_primary_constructors = false`, pero eso solo evita que IDE0290 sugiera convertir: Roslyn no tiene una regla que marque los primary constructors existentes, así que hay que respetarlo a mano.
+
+✗ Incorrecto:
+```csharp
+public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
+{
+    #region Public methods
+    ...
+```
+
+✓ Correcto:
+```csharp
+public sealed class GlobalExceptionHandler : IExceptionHandler
+{
+    #region Declarations
+
+    private readonly ILogger<GlobalExceptionHandler> _logger;
+
+    #endregion
+
+    #region Constructor
+
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    #endregion
+
+    #region Public methods
+    ...
+```

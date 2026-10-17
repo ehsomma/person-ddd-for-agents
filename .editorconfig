@@ -291,8 +291,11 @@ dotnet_code_quality.CA2000.dispose_ownership_transfer_at_constructor = true
 dotnet_diagnostic.IDE0090.severity = none
 # IDE0058: Expression value is never used (ruido en fluent APIs, ej. minimal API .MapGet().WithName())
 dotnet_diagnostic.IDE0058.severity = none
-# IDE0290: Use primary constructor
-dotnet_diagnostic.IDE0290.severity = silent
+# IDE0290: Use primary constructor (no usamos primary constructors: con false el analyzer no sugiere 
+# convertir; Roslyn no tiene una regla que marque los existentes, para tratarlo, agregamos una regla 
+# al skill team-standards).
+csharp_style_prefer_primary_constructors = false
+dotnet_diagnostic.IDE0290.severity = suggestion
 # IDE0066: Use switch expression.
 dotnet_diagnostic.IDE0066.severity = silent
 # IDE0001: Simplify name (ej. System.String -> String)
