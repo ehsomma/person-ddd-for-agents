@@ -70,7 +70,9 @@ Son dos checkouts del pool en vez de uno: despreciable con pooling.
 
 ## Qué se hizo
 
-Todo en un solo commit en `feature/mediator` (incluye el fix de `StateChange`).
+Commit `4915981` (`refactor!: abre la conexión de DbSession de forma lazy y pasa el IUnitOfWork a async`) en
+`feature/mediator`, con el fix de `StateChange` y este handoff. Después, un commit `docs:` actualizó este handoff,
+`person-repository`, `cancelationtoken-solo-hasta-commit` y la tabla de handoffs del `CLAUDE.md`.
 
 | Archivo | Cambio |
 |---|---|
@@ -99,12 +101,8 @@ scoped, repositorios transient).
 ## Pendiente
 
 - **Probar contra SQL Server** (base creada con `RecordsPersons_Source.sql`).
-- **Handoff `person-repository` desactualizado** en una justificación: dice que `Connection` es no nullable porque
-  "`DbSession` siempre la asigna en el ctor (si `Open()` falla, tira)". Sigue siendo no nullable (se crea en el
-  constructor), pero ya no se abre ahí. El gotcha de no anidar `ExecuteInTransaction` sigue vigente.
-- **Handoff `cancelationtoken-solo-hasta-commit`:** su pendiente "`BeginTransaction`/`Commit`/`Rollback` async" quedó
-  resuelto con esta tarea.
-- **Fila en la tabla de handoffs del `CLAUDE.md`** para este handoff. No se agregó.
+- **Pushear `feature/mediator`.** Al cerrar esta tarea la rama estaba 6 commits adelante de `origin` (desde
+  `0f44543`), más el commit `docs:` de los handoffs.
 - **`IUnitOfWork` tiene una region `Private methods`** con métodos públicos, y la skill `team-standards` dice que las
   interfaces no llevan regions. Ya estaba así, no se tocó.
 - **Fuera de alcance, sin cambios:** si `RollbackAsync` tira en el `catch`, tapa la excepción original (ya pasaba
@@ -117,9 +115,10 @@ scoped, repositorios transient).
    - Create (con address y assets), GetById, Update (agregando un asset) y Delete.
    - Un rollback forzado (p.ej. renombrar temporalmente una columna de `Addresses` y hacer un POST): no tiene que
      quedar la fila en `Persons`.
-2. Con un `StateChange` suscripto (o un breakpoint en `StateChangeHandler`), confirmar la secuencia esperada en un
+2. Ya que se va a tener la base, ejecutar también los escenarios de cancelación que quedaron pendientes en
+   `cancelationtoken-solo-hasta-commit` (próximos pasos 1 y 2).
+3. Con un `StateChange` suscripto (o un breakpoint en `StateChangeHandler`), confirmar la secuencia esperada en un
    Update: abrir/cerrar en `GetByIdAsync`, abrir en `BeginTransactionAsync` y cerrar al liberar el scope.
-3. Actualizar `person-repository` y `cancelationtoken-solo-hasta-commit` con `/handoff` cuando se retome esa área.
 
 ## Gotchas
 

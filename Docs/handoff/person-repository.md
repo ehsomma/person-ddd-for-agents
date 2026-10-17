@@ -12,9 +12,9 @@ Todo commiteado y pusheado en `feature/mediator` (`43769c3` … `da9390f`).
 
 | Archivo / área | Cambio | Por qué |
 |---|---|---|
-| `IDbSession` / `DbSession` / `UnitOfWork` (BuildingBlocks.Infra.Persistence*) | `Connection` pasó a no nullable (`IDbConnection`); se quitaron los `?.` | `DbSession` siempre la asigna en el ctor (si `Open()` falla, tira). Era la causa del warning CS8604 en el repo |
+| `IDbSession` / `DbSession` / `UnitOfWork` (BuildingBlocks.Infra.Persistence*) | `Connection` pasó a no nullable (`IDbConnection`); se quitaron los `?.` | `DbSession` siempre la asigna en el ctor. Era la causa del warning CS8604 en el repo. **Actualizado por `connection-refactor`:** ahora es `DbConnection` y el ctor la crea sin abrirla (antes la abría con `Open()` y tiraba si fallaba) |
 | `UnitOfWork.Dispose()` | `_session.Transaction = null` después del dispose | Un repo usado después del commit/rollback recibía una transacción ya liberada |
-| `CommandHandler.cs` (BuildingBlocks.Application/Cqrs, las 2 bases) | Nuevo `protected async Task ExecuteInTransaction(Func<Task> operation)`: begin → operación → commit; `catch` → `Rollback()` + `throw` | `Rollback()` existía pero **nadie lo llamaba** (nunca, desde `beffbff`). No quedaban datos a medias solo porque el dispose de la conexión descartaba la transacción |
+| `CommandHandler.cs` (BuildingBlocks.Application/Cqrs, las 2 bases) | Nuevo `protected async Task ExecuteInTransaction(Func<Task> operation)`: begin → operación → commit; `catch` → `Rollback()` + `throw` | `Rollback()` existía pero **nadie lo llamaba** (nunca, desde `beffbff`). No quedaban datos a medias solo porque el dispose de la conexión descartaba la transacción. **Actualizado:** hoy recibe un `CancellationToken` (`cancelationtoken-solo-hasta-commit`) y usa `BeginTransactionAsync`/`CommitAsync`/`RollbackAsync` (`connection-refactor`), con el mismo flujo |
 | `CreatePersonCommandHandler` | `await ExecuteInTransaction(() => _personRepository.InsertAsync(person));` | Los domain events se publican después, solo si hubo commit |
 | `Records.Persons.Api.V1` (`.csproj` + `Program.cs`) | Referencia a `Records.Persons.Infra.Persistence.Sql`; `AddPersistence(typeof(PersonRepository).Assembly)`; `services.AddMappers(...)` | `IPersonRepository` no estaba registrado → la API **no arrancaba** en Development (`ValidateOnBuild`) |
 | `BuildingBlocks.Infra.Mappings.DependencyInjection` (nuevo, del usuario) | Solo `AddMappers` (scan de clases `*Mapper`, `StringComparison.Ordinal`) | Se eliminó `AddMapster` y los paquetes de Mapster |
@@ -35,14 +35,16 @@ Todo commiteado y pusheado en `feature/mediator` (`43769c3` … `da9390f`).
 - `dotnet build Records.sln --no-incremental`: **0 warnings, 0 errores**.
 - La API arranca en Development sin errores de DI; `/openapi/v1.json` → 200.
 - POST `/persons/` sin base: recorre endpoint → mediator → handler → UoW y falla al abrir la conexión
-  (esperado, no hay SQL Server).
+  (esperado, no hay SQL Server). En ese momento fallaba al construir `DbSession`; desde `connection-refactor` falla
+  en `UnitOfWork.BeginTransactionAsync` (o en el `GetByIdAsync` previo, en Update y Delete).
 - **Nada del repositorio se probó contra una base real** (no existe todavía).
 
 ## Pendiente
 
 - Probar contra la base creada con `RecordsPersons_Source.sql` (incluye el CHECK nuevo).
-- No hay endpoints/handlers de lectura, update ni delete: `GetByIdAsync`/`UpdateAsync`/`DeleteAsync` solo
-  se usan desde `PersonService.GetByIdAsync` (sin endpoint todavía).
+- ~~No hay endpoints/handlers de lectura, update ni delete.~~ **Resuelto:** existen `UpdatePerson`,
+  `DeletePerson`, `GetPersonById` y las demás queries (ver `usecase-delete-person` y `queries`). Falta probarlos
+  contra una base real.
 - `UpdateAsync` no controla el `bool` de Contrib (fila inexistente → no avisa). El usuario lo dejó así.
 - `CreatePersonCommandHandler`: `_settings` sin uso, mantenido a propósito como ejemplo (comentado).
 
@@ -52,14 +54,14 @@ Todo commiteado y pusheado en `feature/mediator` (`43769c3` … `da9390f`).
    verificar filas y `PersonId` en `Addresses`/`PersonalAssets`.
 2. Probar el rollback: renombrar temporalmente una columna de `Addresses`, hacer el POST y verificar que
    no quedó la fila en `Persons`.
-3. Agregar los commands/queries + endpoints de get by id, update y delete, y probar `GetByIdAsync`,
-   `UpdateAsync` (agregando un asset) y `DeleteAsync`.
+3. Probar `GetByIdAsync`, `UpdateAsync` (agregando un asset) y `DeleteAsync` desde sus endpoints (los commands,
+   queries y endpoints ya existen).
 
 ## Gotchas
 
 - **Dapper no aplica implicit operators**: en un objeto anónimo `new { fullName = person.FullName }` el
   tipo es `FullName` y Dapper tira `NotSupportedException`. Usar `.Value` (hoy se evita con el mapper).
-- **No anidar `ExecuteInTransaction`** (segundo `BeginTransaction` sobre la misma `SqlConnection` →
+- **No anidar `ExecuteInTransaction`** (segundo `BeginTransactionAsync` sobre la misma `SqlConnection` →
   `InvalidOperationException`) ni llamarlo dos veces esperando atomicidad: son dos transacciones. Para
   varias operaciones, pasar una lambda `async` con todas adentro.
 - **Nunca `Task.WhenAll` sobre `_dbSession.Connection`**: mismo motivo que en `Mediator.Publish`.

@@ -30,7 +30,9 @@ forma de reintentarlos.
    que el read side.
 2. **`ExecuteInTransaction(Func<Task> operation, CancellationToken cancellationToken = default)`:**
    - Llama a `ThrowIfCancellationRequested()` **antes** de `BeginTransaction`: si ya está cancelado, no hay
-     nada que deshacer.
+     nada que deshacer. **Actualizado por `connection-refactor`:** ahora es `BeginTransactionAsync`, que además
+     recibe el token, así que una cancelación también corta la apertura de la conexión y el inicio de la
+     transacción (fuera del `try`, sin nada que deshacer). `CommitAsync`/`RollbackAsync` no reciben token.
    - El token se pasa también dentro del lambda:
      `ExecuteInTransaction(() => _personRepository.DeleteAsync(person, cancellationToken), cancellationToken)`.
    - Una cancelación durante la operación hace rollback por el `catch` que ya existía.
@@ -61,7 +63,7 @@ forma de reintentarlos.
 ## Qué se hizo
 
 Commit `24f5adf` (`feat: propaga el CancellationToken hasta los repositorios del write side`) en
-`feature/mediator`. **No está pusheado.**
+`feature/mediator`. **No está pusheado** (sigue sin pushear al cerrar `connection-refactor`).
 
 | Archivo | Cambio |
 |---|---|
@@ -90,8 +92,8 @@ Sin cambios:
   despacharlos aparte con reintentos. El propio `PersonCreatedEventHandler` ya lo menciona en un comentario.
 - **Migrar Dapper.Contrib a Dapper puro**, para que el token interrumpa también un comando en curso y no solo
   el siguiente. Se decidió no hacerlo en esta tarea.
-- **`BeginTransaction`/`Commit`/`Rollback` async** (DbSession/UoW). Quedó explícitamente fuera de esta tarea.
-- **Fila en la tabla de handoffs del `CLAUDE.md`** para este handoff. No se agregó.
+- ~~**`BeginTransaction`/`Commit`/`Rollback` async** (DbSession/UoW).~~ **Resuelto** en `connection-refactor`.
+- ~~**Fila en la tabla de handoffs del `CLAUDE.md`** para este handoff.~~ **Resuelto:** ya está en la tabla.
 
 ## Próximos pasos
 
