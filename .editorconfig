@@ -91,7 +91,7 @@ csharp_style_expression_bodied_accessors = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
 
-# Pattern matching preferences (IDE0019/IDE0020/IDE0066/IDE0078/IDE0083)
+# Pattern matching preferences (IDE0019/IDE0020/IDE0038/IDE0066/IDE0078/IDE0083)
 csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
 csharp_style_pattern_matching_over_as_with_null_check = false:suggestion
 csharp_style_prefer_switch_expression = true:suggestion
@@ -321,7 +321,7 @@ dotnet_diagnostic.IDE0270.severity = suggestion
 #### Overrides por patrón de archivo ####
 
 # IDE0038: Use pattern matching
-dotnet_diagnostic.IDE0038.severity = suggestion
+dotnet_diagnostic.IDE0038.severity = none
 
 # IDE0045: Convert to conditional expression
 dotnet_diagnostic.IDE0045.severity = suggestion
