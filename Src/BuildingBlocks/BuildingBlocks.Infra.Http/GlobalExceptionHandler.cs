@@ -163,22 +163,27 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         {
             case ValidationException:
                 ret = HttpStatusCode.BadRequest;
+
                 break;
 
             case UnauthorizedAccessException:
                 ret = HttpStatusCode.Unauthorized;
+
                 break;
 
             case ForbiddenException:
                 ret = HttpStatusCode.Forbidden;
+
                 break;
 
             case NotFoundException:
                 ret = HttpStatusCode.NotFound;
+
                 break;
 
             default:
                 ret = HttpStatusCode.InternalServerError;
+
                 break;
         }
 

@@ -42,6 +42,7 @@ public sealed class DbSession : IDbSession
         {
             // If Open fails the constructor throws and nobody will call Dispose on this instance.
             connection.Dispose();
+
             throw;
         }
 

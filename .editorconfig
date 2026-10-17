@@ -11,16 +11,19 @@ insert_final_newline = true
 #max_line_length = 120
 
 # --- Enciende todo en warning ---
-# StyleCop (SA) + IDE (code-style) + CA (calidad) a warning por defecto
-dotnet_analyzer_diagnostic.category-StyleCop.severity = warning
+# De dónde sale el "warning" de cada familia de reglas:
+# • SA (StyleCop): es la severidad por defecto del paquete StyleCop.Analyzers. No se fuerza acá: sus categorías son
+#   StyleCop.CSharp.*Rules, así que una entrada "category-StyleCop" no matchea ninguna regla.
+# • CA (calidad): <AnalysisMode>All</AnalysisMode> en Directory.Build.props.
+# • IDE (code style): las dos líneas de abajo. "Style" y "CodeQuality" son las categorías de las reglas IDExxxx
+#   (CodeQuality incluye p.ej. IDE0051 e IDE0052). Corren también en el build por <EnforceCodeStyleInBuild>.
 dotnet_analyzer_diagnostic.category-Style.severity = warning
 dotnet_analyzer_diagnostic.category-CodeQuality.severity = warning
 
-# NOTA: como las 3 líneas de arriba fuerzan "warning" por categoría, el ":silent"/":suggestion"
-# que Visual Studio pone por defecto al lado de cada regla de abajo queda pisado (ver orden de
-# precedencia: dotnet_diagnostic.<ID> > category-XXX.severity > severidad propia de la opción).
-# Se dejan igual esos sufijos como referencia de cuál es el default "de fábrica" de cada regla,
-# y para poder aflojar puntualmente alguna con dotnet_diagnostic.IDExxxx.severity si hiciera falta.
+# NOTA: las opciones de code style de abajo van SIN sufijo de severidad (nada de "= true:silent"). VS y el build
+# resuelven el sufijo distinto: en VS gana la severidad de la categoría (warning) y en el build (SDK 9+) gana el
+# sufijo, así que con sufijo la misma regla es warning en el Error List y silent en dotnet build (verificado).
+# Para aflojar una regla puntual se usa solo dotnet_diagnostic.<ID>.severity, que gana en los dos lados.
 
 #### .NET Coding Conventions ####
 
@@ -32,103 +35,107 @@ dotnet_separate_import_directive_groups = false
 
 # this./Me. preferences (IDE0003/IDE0009)
 # # no anteponer "this." a campos
-dotnet_style_qualification_for_field = false:silent                           
-dotnet_style_qualification_for_property = false:silent
-dotnet_style_qualification_for_method = false:silent
-dotnet_style_qualification_for_event = false:silent
+dotnet_style_qualification_for_field = false
+dotnet_style_qualification_for_property = false
+dotnet_style_qualification_for_method = false
+dotnet_style_qualification_for_event = false
 
 # Language keywords vs BCL types preferences (IDE0049)
-dotnet_style_predefined_type_for_locals_parameters_members = true:silent
-dotnet_style_predefined_type_for_member_access = true:silent
+dotnet_style_predefined_type_for_locals_parameters_members = true
+dotnet_style_predefined_type_for_member_access = true
 
 # Parentheses preferences (IDE0047/IDE0048)
-dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary
 
 # Modifier preferences (IDE0040/IDE0044)
-dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
-dotnet_style_readonly_field = true:suggestion
+dotnet_style_require_accessibility_modifiers = for_non_interface_members
+dotnet_style_readonly_field = true
 
 # Expression-level preferences (IDE0017/IDE0028/IDE0032/IDE0033/IDE0037/IDE0041/IDE0042/IDE0075...)
-dotnet_style_object_initializer = true:suggestion
-dotnet_style_collection_initializer = true:suggestion
-dotnet_style_explicit_tuple_names = true:suggestion
-dotnet_style_null_propagation = true:suggestion
-dotnet_style_coalesce_expression = true:suggestion
-dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
-dotnet_style_prefer_inferred_tuple_names = true:suggestion
-dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
-dotnet_style_prefer_auto_properties = true:silent
-dotnet_style_prefer_conditional_expression_over_assignment = true:silent
-dotnet_style_prefer_conditional_expression_over_return = true:silent
-dotnet_style_prefer_compound_assignment = true:suggestion
-dotnet_style_prefer_simplified_interpolation = true:suggestion
-dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_object_initializer = true
+dotnet_style_collection_initializer = true
+# never: no usamos collection expressions ([] / [.. items]), se escribe el tipo explícito (new List<T>(), new T[] { ... }).
+# Sin esto el default las prefiere y el Code Cleanup las aplica aunque IDE0028/IDE0300-IDE0306 estén en silent.
+dotnet_style_prefer_collection_expression = never
+dotnet_style_explicit_tuple_names = true
+dotnet_style_null_propagation = true
+dotnet_style_coalesce_expression = true
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true
+dotnet_style_prefer_inferred_tuple_names = true
+dotnet_style_prefer_inferred_anonymous_type_member_names = true
+dotnet_style_prefer_auto_properties = true
+dotnet_style_prefer_conditional_expression_over_assignment = true
+# false: el return devuelve solo una variable, no un "return c ? a : b;" (estándar del skill team-standards).
+dotnet_style_prefer_conditional_expression_over_return = false
+dotnet_style_prefer_compound_assignment = true
+dotnet_style_prefer_simplified_interpolation = true
+dotnet_style_prefer_simplified_boolean_expressions = true
 
 # Parameter preferences (IDE0060)
-dotnet_code_quality_unused_parameters = all:suggestion
+dotnet_code_quality_unused_parameters = all
 
 # New line preferences
-dotnet_style_allow_multiple_blank_lines_experimental = true:silent
-dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
+dotnet_style_allow_multiple_blank_lines_experimental = true
+dotnet_style_allow_statement_immediately_after_block_experimental = true
 
 #### C# Coding Conventions ####
 
 # var preferences (IDE0007/IDE0008)
-csharp_style_var_for_built_in_types = false:silent
-csharp_style_var_when_type_is_apparent = false:silent
-csharp_style_var_elsewhere = false:silent
+csharp_style_var_for_built_in_types = false
+csharp_style_var_when_type_is_apparent = false
+csharp_style_var_elsewhere = false
 
 # Expression-bodied members (IDE0021/IDE0022/IDE0023/IDE0024/IDE0025/IDE0026/IDE0027/IDE0053...)
-csharp_style_expression_bodied_methods = false:silent
-csharp_style_expression_bodied_constructors = false:silent
-csharp_style_expression_bodied_operators = false:silent
-csharp_style_expression_bodied_properties = true:silent
-csharp_style_expression_bodied_indexers = true:silent
-csharp_style_expression_bodied_accessors = true:silent
-csharp_style_expression_bodied_lambdas = true:silent
-csharp_style_expression_bodied_local_functions = false:silent
+csharp_style_expression_bodied_methods = false
+csharp_style_expression_bodied_constructors = false
+csharp_style_expression_bodied_operators = false
+csharp_style_expression_bodied_properties = true
+csharp_style_expression_bodied_indexers = true
+csharp_style_expression_bodied_accessors = true
+csharp_style_expression_bodied_lambdas = true
+csharp_style_expression_bodied_local_functions = false
 
 # Pattern matching preferences (IDE0019/IDE0020/IDE0038/IDE0066/IDE0078/IDE0083)
-csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
-csharp_style_pattern_matching_over_as_with_null_check = false:suggestion
-csharp_style_prefer_switch_expression = true:suggestion
-csharp_style_prefer_pattern_matching = true:silent
-csharp_style_prefer_not_pattern = true:silent
+csharp_style_pattern_matching_over_is_with_cast_check = true
+csharp_style_pattern_matching_over_as_with_null_check = false
+csharp_style_prefer_switch_expression = true
+csharp_style_prefer_pattern_matching = true
+csharp_style_prefer_not_pattern = true
 
 # Null-checking preferences (IDE0016/IDE0031)
-csharp_style_throw_expression = true:suggestion
-csharp_style_conditional_delegate_call = true:suggestion
+csharp_style_throw_expression = true
+csharp_style_conditional_delegate_call = true
 
 # Modifier preferences (IDE0036/IDE0062)
-csharp_prefer_static_local_function = true:suggestion
-csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:silent
+csharp_prefer_static_local_function = true
+csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async
 
 # Code-block preferences (IDE0011/IDE0063/IDE0160/IDE0161)
-csharp_prefer_braces = true:silent
-csharp_prefer_simple_using_statement = true:suggestion
-csharp_style_namespace_declarations = file_scoped:suggestion
+csharp_prefer_braces = true
+csharp_prefer_simple_using_statement = true
+csharp_style_namespace_declarations = file_scoped
 
 # Expression-level preferences (IDE0018/IDE0034/IDE0039/IDE0042/IDE0057/IDE0056/IDE0090)
-csharp_style_inlined_variable_declaration = true:suggestion
-csharp_prefer_simple_default_expression = true:suggestion
-csharp_style_prefer_local_over_anonymous_function = true:suggestion
-csharp_style_deconstructed_variable_declaration = true:suggestion
-csharp_style_prefer_index_operator = true:suggestion
-csharp_style_prefer_range_operator = true:suggestion
+csharp_style_inlined_variable_declaration = true
+csharp_prefer_simple_default_expression = true
+csharp_style_prefer_local_over_anonymous_function = true
+csharp_style_deconstructed_variable_declaration = true
+csharp_style_prefer_index_operator = true
+csharp_style_prefer_range_operator = true
 # false: preferimos el tipo explícito en el new (new Person(...) en vez de new(...)), mismo criterio que con var.
-csharp_style_implicit_object_creation_when_type_is_apparent = false:suggestion
+csharp_style_implicit_object_creation_when_type_is_apparent = false
 
 # 'using' directive preferences (IDE0065)
 # Ligado a stylecop.json > orderingRules.usingDirectivesPlacement = "outsideNamespace" (ver sección StyleCop más abajo):
 # si estos dos quedan desalineados, el IDE sugiere una ubicación y SA1200 marca warning por la otra.
-csharp_using_directive_placement = outside_namespace:suggestion
+csharp_using_directive_placement = outside_namespace
 
 # New line preferences
-csharp_style_allow_blank_lines_between_consecutive_braces_experimental = true:silent
-csharp_style_allow_embedded_statements_on_same_line_experimental = true:silent
+csharp_style_allow_blank_lines_between_consecutive_braces_experimental = true
+csharp_style_allow_embedded_statements_on_same_line_experimental = true
 
 #### C# Formatting Rules ####
 
@@ -166,13 +173,15 @@ csharp_preserve_single_line_blocks = true
 #### ReSharper / Rider Formatting Rules ####
 
 # Solo los aplica ReSharper/Rider al reformatear o en code cleanup; no generan diagnósticos en el build.
-# 1: deja una línea en blanco antes de return/throw/break/continue (estándar "Línea en blanco antes del return" del skill team-standards).
+# 1: deja una línea en blanco antes de return/throw/break/continue (estándar "Línea en blanco antes de return, throw, break y continue" del skill team-standards).
 resharper_csharp_blank_lines_before_control_transfer_statements = 1
 
 #### Naming Styles ####
 
+# Las naming rules (IDE1006) van en warning: es su severidad real, porque category-Style las pisa (verificado en VS y en el build).
+
 # --- Constantes → PascalCase (VA ANTES de la regla de _field) ---
-dotnet_naming_rule.constants_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.constants_should_be_pascal_case.severity = warning
 dotnet_naming_rule.constants_should_be_pascal_case.symbols = constant_fields
 dotnet_naming_rule.constants_should_be_pascal_case.style = pascal_case
 
@@ -182,22 +191,22 @@ dotnet_naming_symbols.constant_fields.required_modifiers = const
 # --- fin constantes ---
 
 # Naming rules
-dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = warning
 dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
 dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
 # Interfaces con prefijo "I" (IFoo)                                          # IDE1006
 
-dotnet_naming_rule.types_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.types_should_be_pascal_case.severity = warning
 dotnet_naming_rule.types_should_be_pascal_case.symbols = types
 dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
 # Clases/structs/interfaces/enums en PascalCase                              # IDE1006
 
-dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = warning
 dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
 dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
 # Propiedades/eventos/métodos en PascalCase                                  # IDE1006
 
-dotnet_naming_rule.private_or_internal_field_should_be_begins_with_underscore.severity = suggestion
+dotnet_naming_rule.private_or_internal_field_should_be_begins_with_underscore.severity = warning
 dotnet_naming_rule.private_or_internal_field_should_be_begins_with_underscore.symbols = private_or_internal_field
 dotnet_naming_rule.private_or_internal_field_should_be_begins_with_underscore.style = begins_with_underscore
 # Campos private/internal en camelCase con prefijo "_" (_miCampo)             # IDE1006, coherente con SA1309 = none (ver abajo)
@@ -239,7 +248,7 @@ dotnet_diagnostic.SA1623.severity = none
 # SA1642: Constructor summary documentation should begin with standard text
 dotnet_diagnostic.SA1642.severity = none
 
-# SA1650:
+# SA1650: Element documentation should be spelled correctly
 dotnet_diagnostic.SA1650.severity = none
 
 # SA1633: File should have header
@@ -258,7 +267,7 @@ dotnet_diagnostic.SA1101.severity = none
 # SA1512: Single-line comments should not be followed by blank line
 dotnet_diagnostic.SA1512.severity = silent
 
-# SA1208: SystemUsingDirectivesMustBePlacedBeforeOtherUsingDirectives
+# SA1208: System using directives should be placed before other using directives
 dotnet_diagnostic.SA1208.severity = suggestion
 
 # SA1401: Field should be private.
@@ -270,11 +279,15 @@ dotnet_diagnostic.SA1208.severity = suggestion
 dotnet_diagnostic.SA1515.severity = suggestion
 
 # CAxxxx.
+# CA1848: Use the LoggerMessage delegates
 dotnet_diagnostic.CA1848.severity = none
+# CA2007: Consider calling ConfigureAwait on the awaited task
 dotnet_diagnostic.CA2007.severity = none
-# CA1822: El miembro "GetValidationErrors" no tiene acceso a los datos de la instancia y se puede marcar como static.
+# CA1822: Mark members as static (ej. el miembro "GetValidationErrors" no tiene acceso a los datos de la instancia).
 dotnet_diagnostic.CA1822.severity = none
+# CA1305: Specify IFormatProvider
 dotnet_diagnostic.CA1305.severity = suggestion
+# CA1863: Use 'CompositeFormat'
 dotnet_diagnostic.CA1863.severity = suggestion
 # CA1716: Identifiers should not match keywords ("Shared" es keyword reservada en VB.NET; no aplica, este código es solo C#)
 dotnet_diagnostic.CA1716.severity = none
@@ -318,7 +331,7 @@ dotnet_diagnostic.IDE0078.severity = silent
 dotnet_diagnostic.IDE0270.severity = suggestion
 
 
-#### Overrides por patrón de archivo ####
+#### Otros overrides (IDE y CA) ####
 
 # IDE0038: Use pattern matching
 dotnet_diagnostic.IDE0038.severity = none
@@ -344,39 +357,51 @@ dotnet_diagnostic.IDE0083.severity = silent
 # IDE0200: Remove unnecessary lambda expression (ej. x => Foo(x) -> Foo)
 dotnet_diagnostic.IDE0200.severity = silent
 
-# CA1008: Los enums deben tener un valor cero; ErrorType arranca en 1 a propósito (no hay un tipo "None" válido).
+# CA1008: Enums should have zero value (ErrorType arranca en 1 a propósito: no hay un tipo "None" válido).
 dotnet_diagnostic.CA1008.severity = none
 
-# CA1873: Avisa que los argumentos del log se evalúan (p.ej. boxing de Guid) aunque el nivel esté deshabilitado; silenciada para no exigir el guard IsEnabled en cada log.
+# CA1873: Avoid potentially expensive logging (avisa que los argumentos del log se evalúan, p.ej. boxing de Guid,
+# aunque el nivel esté deshabilitado; silenciada para no exigir el guard IsEnabled en cada log).
 dotnet_diagnostic.CA1873.severity = silent
 
+
+#### Overrides por patrón de archivo ####
+
 [*EventHandler.cs]
-# CA1711: "EventHandler" es un sufijo reservado para delegados; acá es el contrato/handler de eventos de dominio.
+# CA1711: Identifiers should not have incorrect suffix ("EventHandler" es un sufijo reservado para delegados; acá es el
+# contrato/handler de eventos de dominio).
 dotnet_diagnostic.CA1711.severity = none
-# CA1812: los EventHandler se instancian por reflection (services.Scan en AddMediator), nunca con "new".
+# CA1812: Avoid uninstantiated internal classes (los EventHandler se instancian por reflection, services.Scan en
+# AddMediator, nunca con "new").
 dotnet_diagnostic.CA1812.severity = none
 
 [*Event.cs]
-# CA1062: los eventos de dominio los crea el aggregate con datos ya validados; NRT cubre el null en compilación
-# y un guard solo agregaría ruido (si llegara un null, el constructor explota igual al usar el parámetro).
+# CA1062: Validate arguments of public methods (los eventos de dominio los crea el aggregate con datos ya validados;
+# NRT cubre el null en compilación y un guard solo agregaría ruido: si llegara un null, el constructor explota igual
+# al usar el parámetro).
 dotnet_diagnostic.CA1062.severity = none
 
 [*Endpoint.cs]
-# CA1812: Si es internal y no se instancia, borrar la clase (es un endpoint, por eso no se instancia).
+# CA1812: Avoid uninstantiated internal classes (los endpoints se instancian por reflection, services.Scan en
+# AddEndpoints, nunca con "new").
 dotnet_diagnostic.CA1812.severity = none
 
 [*CommandHandler.cs]
-# CA1812: los CommandHandler se instancian por reflection (services.Scan en AddMediator), nunca con "new".
+# CA1812: Avoid uninstantiated internal classes (los CommandHandler se instancian por reflection, services.Scan en
+# AddMediator, nunca con "new").
 dotnet_diagnostic.CA1812.severity = none
 
 [*QueryHandler.cs]
-# CA1812: los QueryHandler se instancian por reflection (services.Scan en AddMediator), nunca con "new".
+# CA1812: Avoid uninstantiated internal classes (los QueryHandler se instancian por reflection, services.Scan en
+# AddMediator, nunca con "new").
 dotnet_diagnostic.CA1812.severity = none
 
 [*Mapper.cs]
-# CA1812: los Mapper se instancian por reflection (services.Scan en AddMappers), nunca con "new".
+# CA1812: Avoid uninstantiated internal classes (los Mapper se instancian por reflection, services.Scan en AddMappers,
+# nunca con "new").
 dotnet_diagnostic.CA1812.severity = none
 
 [*Validator.cs]
-# CA1812: los Validator raíz se instancian por reflection (services.Scan en AddValidators), nunca con "new".
+# CA1812: Avoid uninstantiated internal classes (los Validator raíz se instancian por reflection, services.Scan en
+# AddValidators, nunca con "new").
 dotnet_diagnostic.CA1812.severity = none

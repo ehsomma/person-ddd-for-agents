@@ -10,7 +10,8 @@ estructura, naming y documentación. No inventes patrones nuevos sin consultar.
 ## Comandos
 
 ```bash
-dotnet build Records.sln                                 # objetivo: 0 warnings (no hay TreatWarningsAsErrors, pero se exige igual)
+dotnet build Records.sln                                 # objetivo: 0 warnings (incluye las reglas IDE del .editorconfig)
+dotnet build Records.sln -p:CI=true                      # igual que el CI: TreatWarningsAsErrors, cualquier warning rompe el build
 dotnet run --project Src/Apps/Records.Persons.Api.V1    # Scalar en /v1/docs, requiere SQL Server
 ```
 
@@ -91,6 +92,16 @@ Las rutas son relativas a `Src/Modules/Persons/` salvo que se indique otra cosa.
 `*Repository` y `*Mapper`, y las que implementan `IEndpoint`, `IDomainService` o los handlers del mediator. Si el
 nombre no sigue la convención, la clase no se registra.
 
+## Cómo se aplican las reglas de código
+
+1. Antes de escribir C#, se lee la skill `team-standards` y el archivo de referencia del caso (ver arriba).
+2. El build es el juez de todo lo que tiene analyzer: SA (StyleCop), CA (`AnalysisMode=All`), IDE (`.editorconfig`,
+   por `EnforceCodeStyleInBuild`) y ARCH (`Directory.Build.targets`). VS, `dotnet build` y el CI ven las mismas reglas.
+3. Las reglas en `none`, `silent` o `suggestion` no las verifica el build: dejan libertad, salvo que la skill pida una
+   forma concreta.
+4. Si la skill y un analyzer se contradicen, no se elige uno en silencio: se frena, se avisa y se corrige la skill o
+   el `.editorconfig`.
+
 ## Convenciones
 
 - **Carpetas:** `<Entidad>/{Commands,Queries,Events,Mappers}/<UseCase>/<UseCase>{Command,CommandHandler,Query,QueryHandler}.cs`.
@@ -104,9 +115,11 @@ nombre no sigue la convención, la clase no se registra.
 - **`.editorconfig`:**
   - Todo override de severidad lleva un comentario con el código y el título de la regla, por ejemplo
     `dotnet_diagnostic.IDE0290.severity = silent # IDE0290: Use primary constructor`.
-  - Para cambiar la severidad de una regla IDE, usá `dotnet_diagnostic.IDExxxx.severity`. El sufijo de la opción
-    (`= true:silent`) no lo respeta el Error List de VS. Ojo: hay reglas con el mismo título (IDE0028 e IDE0306), así
-    que verificá el ID exacto.
+  - Las opciones de code style van sin sufijo de severidad (`= true`, nunca `= true:silent`). VS y el build resuelven
+    el sufijo distinto: en VS gana `category-Style = warning` y en el build gana el sufijo, así que la misma regla
+    quedaría warning en VS y silent en el build. Para cambiar la severidad de una regla IDE se usa solo
+    `dotnet_diagnostic.IDExxxx.severity`. Ojo: hay reglas con el mismo título (IDE0028 e IDE0306), así que verificá
+    el ID exacto.
 
 ## Trampas conocidas
 
@@ -143,6 +156,7 @@ nombre no sigue la convención, la clase no se registra.
 | `fluentvalidation-on-api` | La validación en la API y en el dominio, y el `ErrorResponse` único. |
 | `mapeo-errores-statuscode` | El `ErrorType` como única fuente del status HTTP. |
 | `api-xml-comments` | Los XML docs de los endpoints en Scalar y las respuestas comunes. |
+| `editorconfig-vs-teamStandars` | Las reglas IDE en el build (`EnforceCodeStyleInBuild`), sin sufijos de severidad, y el skill alineado con el `.editorconfig`. |
 | `domain-events-sin-mediatr` | **Obsoleto**: el diseño inicial, reemplazado por `BuildingBlocks.Mediator`. |
 
 ## Usar este repo como plantilla en otro proyecto

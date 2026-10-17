@@ -40,6 +40,7 @@ internal sealed class ThrowException1Endpoint : IEndpoint
         Exception ex = new Exception("Excepción de prueba 1");
 #pragma warning restore CA2201
         ex.Data.Add("TraceIdentifier", context.TraceIdentifier);
+
         throw ex;
     }
 

@@ -66,7 +66,7 @@ internal sealed class UpdatePersonEndpoint : IEndpoint
                 "The person ID in the route doesn't match the one in the body.",
                 person.Id);
 
-            throw new My.Exceptions.ValidationException(new[] { idMismatchError });
+            throw new My.Exceptions.ValidationException(new ValidationError[] { idMismatchError });
         }
 
         // Si no es válido lanza una ValidationException con todos los errores (el GlobalExceptionHandler

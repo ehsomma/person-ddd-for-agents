@@ -75,6 +75,7 @@ public abstract class CommandHandler<TCommand, TResponse> : RequestHandler<TComm
         catch
         {
             _unitOfWork.Rollback();
+
             throw;
         }
     }
@@ -162,6 +163,7 @@ public abstract class CommandHandler<TCommand> : RequestHandler<TCommand>
         catch
         {
             _unitOfWork.Rollback();
+
             throw;
         }
     }

@@ -135,6 +135,7 @@ public class InterceptedDbCommand : DbCommand
         {
             // Adds _cmd.CommandText and _cmd.Parameters (name, type and value) to the exception.
             AddDataToException(ex);
+
             throw;
         }
     }
@@ -150,6 +151,7 @@ public class InterceptedDbCommand : DbCommand
         {
             // Adds _command.CommandText and _command.Parameters (name, type and value) to the exception.
             AddDataToException(ex);
+
             throw;
         }
     }
@@ -165,6 +167,7 @@ public class InterceptedDbCommand : DbCommand
         {
             // Adds _command.CommandText and _command.Parameters (name, type and value) to the exception.
             AddDataToException(ex);
+
             throw;
         }
     }
@@ -180,6 +183,7 @@ public class InterceptedDbCommand : DbCommand
         {
             // Adds _command.CommandText and _command.Parameters (name, type and value) to the exception.
             AddDataToException(ex);
+
             throw;
         }
     }
@@ -199,6 +203,7 @@ public class InterceptedDbCommand : DbCommand
         {
             // Adds _command.CommandText and _command.Parameters (name, type and value) to the exception.
             AddDataToException(ex);
+
             throw;
         }
     }
@@ -214,6 +219,7 @@ public class InterceptedDbCommand : DbCommand
         {
             // Adds _command.CommandText and _command.Parameters (name, type and value) to the exception.
             AddDataToException(ex);
+
             throw;
         }
     }

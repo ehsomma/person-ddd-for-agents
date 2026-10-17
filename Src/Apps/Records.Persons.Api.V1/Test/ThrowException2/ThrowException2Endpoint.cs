@@ -42,6 +42,7 @@ internal sealed class ThrowException2Endpoint : IEndpoint
         ForbiddenException ex = new ForbiddenException("Excepción de negocio de prueba");
         ex.AddErrorCode("ERR.DOM.TESTEXCEPTION");
         ex.Data.Add("TraceIdentifier", context.TraceIdentifier);
+
         throw ex;
     }
 

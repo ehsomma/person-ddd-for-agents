@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using BuildingBlocks.Application.Cqrs;
 using BuildingBlocks.Application.DomainEvents;
 using BuildingBlocks.Application.Mappings.Abstractions.Mappers;
@@ -23,6 +24,10 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
     #region Declarations
 
     // ReSharper disable once NotAccessedField.Local
+    [SuppressMessage(
+        "CodeQuality",
+        "IDE0052:Remove unread private members",
+        Justification = "Not used, kept as an example of how to inject settings into a handler.")]
     private readonly PersonsSettings _settings; // NOTE: No se usa pero se deja como ejemplo de como inyectar settings en un handler.
 
     private readonly IPersonRepository _personRepository;

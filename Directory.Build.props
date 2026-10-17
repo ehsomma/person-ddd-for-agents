@@ -12,7 +12,24 @@
         • All:          Todas las CAxxxx habilitadas, incluidas las más opinables/ruidosas.
         -->
         <AnalysisMode>All</AnalysisMode>
+        <!--
+        Ejecuta las reglas de code style (IDExxxx: csharp_style_*, dotnet_style_*, naming, formato) también en el build.
+        Por defecto el SDK las ejecuta solo en el editor de VS: sin esto, dotnet build (y el CI) no las ve y el Error List
+        de VS muestra warnings que el build no reporta.
+        -->
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!--
+        En el CI cualquier warning rompe el build; en local (VS o dotnet build) se permiten mientras se desarrolla.
+        • CI:                         lo setean GitHub Actions y GitLab CI (variable de entorno, MSBuild la expone como propiedad).
+        • TF_BUILD:                   lo setea Azure DevOps.
+        • ContinuousIntegrationBuild: para pipelines que lo pasan explícito (-p:ContinuousIntegrationBuild=true).
+        Para reproducir el CI en local: dotnet build Records.sln -p:CI=true
+        -->
+        <TreatWarningsAsErrors Condition="'$(CI)' == 'true' or '$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">true</TreatWarningsAsErrors>
     </PropertyGroup>
     
     <ItemGroup>

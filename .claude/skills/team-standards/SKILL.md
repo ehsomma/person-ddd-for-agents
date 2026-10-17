@@ -5,7 +5,7 @@ description: Usar SIEMPRE al escribir, revisar o refactorizar código C# en este
 
 # Estándares de Código del Equipo
 
-El `.editorconfig` de este repositorio cubre todo lo que StyleCop/Roslyn/IDE pueden enforcar automáticamente con un analyzer. Pero hay convenciones que el equipo quiere seguir y que no existen como regla de analyzer (ni en StyleCop.Analyzers ni en Roslynator), así que no se pueden poner ahí. Este skill es el lugar donde documentarlas para que se apliquen manualmente al escribir o revisar código.
+El `.editorconfig` de este repositorio cubre todo lo que StyleCop/Roslyn/IDE pueden enforcar automáticamente con un analyzer, y el build lo verifica: las reglas SA, CA e IDE (estas últimas por `EnforceCodeStyleInBuild` en `Directory.Build.props`) salen como warning en `dotnet build`, igual que en el Error List de VS. Pero hay convenciones que el equipo quiere seguir y que no existen como regla de analyzer (ni en StyleCop.Analyzers ni en Roslynator), así que no se pueden poner ahí. Este skill es el lugar donde documentarlas para que se apliquen manualmente al escribir o revisar código. También van acá las preferencias sobre reglas que el `.editorconfig` deja en `none`, `silent` o `suggestion`: esas no las verifica ningún build, así que si el equipo quiere una forma concreta, la regla tiene que estar escrita en este skill.
 
 Es un documento vivo: cada vez que el equipo defina un estándar nuevo que no se pueda expresar en `.editorconfig`, se agrega acá como una sección nueva al final del archivo, con el mismo formato que las anteriores:
 
@@ -33,7 +33,7 @@ Es un documento vivo: cada vez que el equipo defina un estándar nuevo que no se
 
 En métodos con cuerpo de bloque (`{ }`), el `return` debe devolver una variable ya asignada, no una llamada a función/método hecha directamente en la línea del return.
 
-**Excepción:** no aplica a miembros expression-bodied (`=>`) — propiedades, accessors, lambdas, métodos de una sola expresión — porque ahí no hay bloque ni `return` explícito.
+**Excepción:** no aplica a miembros expression-bodied (`=>`) — propiedades, indexers, accessors y lambdas — porque ahí no hay bloque ni `return` explícito. Los métodos, constructores, operadores y funciones locales siempre llevan cuerpo de bloque (lo exige el `.editorconfig`: IDE0021, IDE0022, IDE0023/IDE0024 e IDE0061), así que la regla les aplica siempre.
 
 **Por qué:** nombrar la variable documenta qué representa el valor devuelto, en vez de dejar que el lector infiera el significado a partir de la expresión.
 
@@ -55,13 +55,13 @@ public Person GetPerson(int id)
 }
 ```
 
-## Línea en blanco antes del `return`
+## Línea en blanco antes de `return`, `throw`, `break` y `continue`
 
-Todo `return` lleva una línea en blanco antes, separándolo de la sentencia anterior.
+Todo `return`, `throw`, `break` y `continue` lleva una línea en blanco antes, separándolo de la sentencia anterior. Incluye los `throw;` que relanzan en un `catch` y los `break` de los `case` de un `switch`.
 
-**Excepción:** si el `return` es la primera sentencia de su bloque (justo después de la `{` o de una etiqueta `case`), no se deja la línea en blanco (StyleCop no permite una línea en blanco después de una llave de apertura, SA1505). Si el `return` tiene comentarios justo encima, la línea en blanco va antes de los comentarios, no entre el comentario y el `return` (SA1512).
+**Excepción:** si la sentencia es la primera de su bloque (justo después de la `{` o de una etiqueta `case`), no se deja la línea en blanco (StyleCop no permite una línea en blanco después de una llave de apertura, SA1505). Si tiene comentarios justo encima, la línea en blanco va antes de los comentarios, no entre el comentario y la sentencia. Esto último tampoco lo marca ningún analyzer (SA1512 está en `silent` en el `.editorconfig`), así que hay que respetarlo a mano.
 
-**Por qué:** separa visualmente la salida del método del cuerpo que calcula el valor, y hace que los puntos de salida se encuentren de un vistazo. No existe como regla de analyzer en StyleCop ni en Roslyn (ReSharper tiene una opción de formato, pero solo se aplica al reformatear y no marca nada en el build).
+**Por qué:** separa visualmente la salida (del método, del bloque o del `case`) del código que la precede, y hace que los puntos de salida se encuentren de un vistazo. No existe como regla de analyzer en StyleCop ni en Roslyn. ReSharper/Rider lo aplican al reformatear o en el Code Cleanup (`resharper_csharp_blank_lines_before_control_transfer_statements = 1` en el `.editorconfig`), pero no marcan nada en el build.
 
 ✗ Incorrecto:
 ```csharp
@@ -69,6 +69,19 @@ public Person GetPerson(int id)
 {
     Person person = _repository.FindById(id);
     return person;
+}
+
+catch
+{
+    _unitOfWork.Rollback();
+    throw;
+}
+
+switch (ex)
+{
+    case NotFoundException:
+        ret = HttpStatusCode.NotFound;
+        break;
 }
 ```
 
@@ -89,6 +102,26 @@ public void Validate(Person? person)
     }
 
     _validator.Validate(person);
+}
+
+catch
+{
+    _unitOfWork.Rollback();
+
+    throw;
+}
+
+switch (ex)
+{
+    case ValidationException:
+        ret = HttpStatusCode.BadRequest;
+
+        break;
+
+    case NotFoundException:
+        ret = HttpStatusCode.NotFound;
+
+        break;
 }
 ```
 
@@ -224,15 +257,17 @@ public async Task InsertAsync(DomainModel.Person person)
 
 ## Tipo explícito en el `new`
 
-Al crear un objeto se escribe siempre el tipo en el `new` (`new Person(...)`), no el `new(...)` target-typed, aunque el tipo ya esté a la izquierda de la asignación.
+Al crear un objeto se escribe siempre el tipo en el `new` (`new Person(...)`), no el `new(...)` target-typed, aunque el tipo ya esté a la izquierda de la asignación. Lo mismo con las colecciones: se escribe `new List<T>()` o `new T[] { ... }`, nunca una collection expression (`[]`, `[a, b]`, `[.. items]`) ni un array implícito (`new[] { ... }`).
 
-**Por qué:** es el mismo criterio que con `var` (se escribe el tipo explícito): se lee más fácil y no hay que mirar el otro lado de la asignación (o la firma del parámetro) para saber qué se está creando. En el `.editorconfig` está `csharp_style_implicit_object_creation_when_type_is_apparent = false` e `IDE0090` apagada, pero no existe una regla que marque el `new(...)`, así que hay que respetarlo a mano.
+**Por qué:** es el mismo criterio que con `var` (se escribe el tipo explícito): se lee más fácil y no hay que mirar el otro lado de la asignación (o la firma del parámetro) para saber qué se está creando. En el `.editorconfig` están `csharp_style_implicit_object_creation_when_type_is_apparent = false`, `dotnet_style_prefer_collection_expression = never`, `IDE0090` apagada e `IDE0028`/`IDE0300`-`IDE0306` en `silent`, pero eso solo evita que el IDE sugiera el estilo corto: no existe una regla que marque el `new(...)`, el `[]` ni el `new[]`, así que hay que respetarlo a mano.
 
 ✗ Incorrecto:
 ```csharp
 GetPersonByIdQuery query = new(id);
 private readonly List<IDomainEvent> _domainEvents = new();
+private readonly List<IDomainEvent> _domainEvents = [];
 InterceptedDbConnection connection = new(new SqlConnection(_connectionString));
+throw new ValidationException(new[] { idMismatchError });
 ```
 
 ✓ Correcto:
@@ -240,6 +275,7 @@ InterceptedDbConnection connection = new(new SqlConnection(_connectionString));
 GetPersonByIdQuery query = new GetPersonByIdQuery(id);
 private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
 InterceptedDbConnection connection = new InterceptedDbConnection(new SqlConnection(_connectionString));
+throw new ValidationException(new ValidationError[] { idMismatchError });
 ```
 
 ## `WITH (NOLOCK)` en todos los `SELECT`
