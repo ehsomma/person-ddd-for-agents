@@ -27,7 +27,7 @@
         • CI:                         lo setean GitHub Actions y GitLab CI (variable de entorno, MSBuild la expone como propiedad).
         • TF_BUILD:                   lo setea Azure DevOps.
         • ContinuousIntegrationBuild: para pipelines que lo pasan explícito (-p:ContinuousIntegrationBuild=true).
-        Para reproducir el CI en local: dotnet build Records.sln -p:CI=true
+        Para reproducir el CI en local: dotnet build Records.slnx -p:CI=true
         -->
         <TreatWarningsAsErrors Condition="'$(CI)' == 'true' or '$(TF_BUILD)' == 'true' or '$(ContinuousIntegrationBuild)' == 'true'">true</TreatWarningsAsErrors>
     </PropertyGroup>

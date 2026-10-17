@@ -10,8 +10,8 @@ estructura, naming y documentación. No inventes patrones nuevos sin consultar.
 ## Comandos
 
 ```bash
-dotnet build Records.sln                                 # objetivo: 0 warnings (incluye las reglas IDE del .editorconfig)
-dotnet build Records.sln -p:CI=true                      # igual que el CI: TreatWarningsAsErrors, cualquier warning rompe el build
+dotnet build Records.slnx                               # objetivo: 0 warnings (incluye las reglas IDE del .editorconfig)
+dotnet build Records.slnx -p:CI=true                    # igual que el CI: TreatWarningsAsErrors, cualquier warning rompe el build
 dotnet run --project Src/Apps/Records.Persons.Api.V1    # Scalar en /v1/docs, requiere SQL Server
 ```
 
@@ -89,7 +89,7 @@ Las rutas son relativas a `Src/Modules/Persons/` salvo que se indique otra cosa.
 3. **Infra:** el método en el repositorio (write) o un `<UseCase>Repository` nuevo (read).
 4. **API:** el validator si hay body, y `<UseCase>Endpoint` con sus XML docs y los `.Produces<ErrorResponse>(...)`
    específicos (por ejemplo un 404). El 500 y el 400 del body ya los agrega `MapEndpoints`.
-5. `dotnet build Records.sln` con 0 warnings.
+5. `dotnet build Records.slnx` con 0 warnings.
 
 **El registro en DI es automático por convención de nombres** (Scrutor). Se registran las clases que terminan en
 `*Repository` y `*Mapper`, y las que implementan `IEndpoint`, `IDomainService` o los handlers del mediator. Si el
@@ -126,8 +126,10 @@ nombre no sigue la convención, la clase no se registra.
 
 ## Trampas conocidas
 
-- **No uses `dotnet sln add`:** agrega las plataformas x64/x86 y convierte el archivo a LF. Editá `Records.sln` a mano,
-  manteniendo CRLF y BOM.
+- **La solución es `Records.slnx`, no hay `.sln`:** los proyectos se agregan con
+  `dotnet sln Records.slnx add <ruta>.csproj --solution-folder <carpeta>`, usando la misma carpeta que sus hermanos
+  (por ejemplo `Src/Modules/Persons/Infra`). No crees un `.sln` nuevo: con dos archivos de solución en la raíz,
+  `dotnet build` sin argumento falla con MSB1011.
 - **El método del endpoint tiene que ser `public`**, aunque la clase sea `internal`. El generador de XML docs de OpenAPI
   ignora los métodos privados sin avisar. Al ser público, SA1615 exige un `<returns>`. Si la operación queda con una
   sola respuesta, el generador usa ese `<returns>` como descripción, así que agregá un `<response code="...">`
@@ -172,8 +174,8 @@ nombre no sigue la convención, la clase no se registra.
    - `.claude/skills/*` y `.claude/commands/handoff*`.
 2. **Se crea un módulo por bounded context:** `Src/Modules/<Módulo>/<Producto>.<Módulo>.{Domain,Application,Dtos,Configuration,Infra.Persistence.Sql,Infra.Queries.Sql,Infra.Configuration.DependencyInjection}`.
    Respetá los sufijos, porque `Directory.Build.targets` infiere la capa a partir de ellos.
-3. **Se cambia el prefijo** `Records.` por el del producto en los proyectos, los namespaces y el `.sln`. El `.sln` se
-   edita a mano.
+3. **Se cambia el prefijo** `Records.` por el del producto en los proyectos y los namespaces. La solución se crea con
+   `dotnet new sln -n <Producto>` (en .NET 10 ya genera `.slnx`) y los proyectos se agregan con `dotnet sln add`.
 4. **Se crea el host** en `Src/Apps/<Producto>.<Módulo>.Api.V1/`, con un `Program.cs` que siga el mismo orden de
    `AddXxx` que `Records.Persons.Api.V1/Program.cs` (incluido el `AddOpenApi` literal).
 5. **Se crea el CLAUDE.md del proyecto nuevo** a partir de este. Se conservan las secciones de arquitectura,

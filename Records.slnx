@@ -1,0 +1,58 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="CLAUDE.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="stylecop.json" />
+    <File Path="TODO.md" />
+  </Folder>
+  <Folder Name="/Src/" />
+  <Folder Name="/Src/Apps/">
+    <Project Path="Src/Apps/Records.Persons.Api.V1/Records.Persons.Api.V1.csproj" />
+  </Folder>
+  <Folder Name="/Src/BuildingBlocks/">
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Application.DependencyInjection/BuildingBlocks.Application.DependencyInjection.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Application.Mappings.Abstractions/BuildingBlocks.Application.Mappings.Abstractions.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Application/BuildingBlocks.Application.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Configuration/BuildingBlocks.Configuration.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Contracts/BuildingBlocks.Contracts.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Domain/BuildingBlocks.Domain.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Mediator.Abstractions/BuildingBlocks.Mediator.Abstractions.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Mediator.DependencyInjection/BuildingBlocks.Mediator.DependencyInjection.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Mediator/BuildingBlocks.Mediator.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Messaging/BuildingBlocks.Messaging.csproj" />
+  </Folder>
+  <Folder Name="/Src/BuildingBlocks/Infra/">
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Application.Persistence.Abstractions/BuildingBlocks.Application.Persistence.Abstractions.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Infra.Http.DependencyInjection/BuildingBlocks.Infra.Http.DependencyInjection.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Infra.Http/BuildingBlocks.Infra.Http.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Infra.Mappings.DependencyInjection/BuildingBlocks.Infra.Mappings.DependencyInjection.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Infra.OpenApi.DependencyInjection/BuildingBlocks.Infra.OpenApi.DependencyInjection.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Infra.Persistence.DependencyInjection/BuildingBlocks.Infra.Persistence.DependencyInjection.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Infra.Persistence.Mappings.Abstractions/BuildingBlocks.Infra.Persistence.Mappings.Abstractions.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Infra.Persistence/BuildingBlocks.Infra.Persistence.csproj" />
+    <Project Path="Src/BuildingBlocks/BuildingBlocks.Infra.Serilog.DependencyInjection/BuildingBlocks.Infra.Serilog.DependencyInjection.csproj" />
+  </Folder>
+  <Folder Name="/Src/Core/">
+    <Project Path="Src/Core/My.Data.InterceptableDbConnection/My.Data.InterceptableDbConnection.csproj" />
+    <Project Path="Src/Core/My.Exceptions/My.Exceptions.csproj" />
+    <Project Path="Src/Core/My.System.Extensions/My.System.Extensions.csproj" />
+  </Folder>
+  <Folder Name="/Src/Modules/" />
+  <Folder Name="/Src/Modules/Persons/">
+    <Project Path="Src/Modules/Persons/Records.Persons.Application/Records.Persons.Application.csproj" />
+    <Project Path="Src/Modules/Persons/Records.Persons.Configuration/Records.Persons.Configuration.csproj" />
+    <Project Path="Src/Modules/Persons/Records.Persons.Domain/Records.Persons.Domain.csproj" />
+    <Project Path="Src/Modules/Persons/Records.Persons.Dtos/Records.Persons.Dtos.csproj" />
+  </Folder>
+  <Folder Name="/Src/Modules/Persons/Infra/">
+    <Project Path="Src/Modules/Persons/Records.Persons.Infra.Configuration.DependencyInjection/Records.Persons.Infra.Configuration.DependencyInjection.csproj" />
+    <Project Path="Src/Modules/Persons/Records.Persons.Infra.Persistence.Sql/Records.Persons.Infra.Persistence.Sql.csproj" />
+    <Project Path="Src/Modules/Persons/Records.Persons.Infra.Queries.Sql/Records.Persons.Infra.Queries.Sql.csproj" />
+  </Folder>
+  <Folder Name="/Src/Modules/Persons/Infra/DatabaseScripts/">
+    <File Path="RecordsPersons_Source.sql" />
+  </Folder>
+</Solution>
