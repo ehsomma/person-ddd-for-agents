@@ -17,7 +17,7 @@ public static class DomainErrors
     /// </summary>
     public static class Person
     {
-        #region Errors
+        #region Properties
 
         /// <summary>When a Person not found.</summary>
         public static Error NotFound =>

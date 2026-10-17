@@ -18,7 +18,7 @@ public sealed class DbSession : IDbSession
 
     #endregion
 
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DbSession"/> class.
@@ -50,7 +50,7 @@ public sealed class DbSession : IDbSession
 
     #endregion
 
-    #region Prpperties
+    #region Properties
 
     /// <inheritdoc />
     public IDbConnection Connection { get; }

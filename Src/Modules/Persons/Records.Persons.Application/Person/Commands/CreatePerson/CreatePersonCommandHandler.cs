@@ -33,7 +33,7 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
 
     #endregion
 
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreatePersonCommandHandler"/> class.

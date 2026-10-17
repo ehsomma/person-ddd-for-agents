@@ -11,7 +11,7 @@ namespace Records.Persons.Infra.Configuration.DependencyInjection;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
-    #region Definitions
+    #region Declarations
 
     private const string KeyNotFound = "The '{0}' configuration key was not found.";
 

@@ -108,7 +108,7 @@ public sealed class Address : Entity<int>
 
     #endregion
 
-    #region Methods
+    #region Private methods
 
     /// <summary>
     /// Ensures the minimum required data are valid.

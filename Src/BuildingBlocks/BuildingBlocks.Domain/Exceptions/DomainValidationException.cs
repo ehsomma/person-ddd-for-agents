@@ -14,7 +14,7 @@ namespace BuildingBlocks.Domain.Exceptions;
     Justification = "We want to use this constructor only.")]
 public class DomainValidationException : ValidationException
 {
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainException"/> class.

@@ -11,7 +11,7 @@ public sealed class UnitOfWork : IUnitOfWork
 
     #endregion
 
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.

@@ -29,7 +29,7 @@ public abstract class Repository
 
     #endregion
 
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Repository"/> class.

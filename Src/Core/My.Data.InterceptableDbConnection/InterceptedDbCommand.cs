@@ -21,7 +21,7 @@ public class InterceptedDbCommand : DbCommand
 
     #endregion
 
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InterceptedDbCommand"/> class.

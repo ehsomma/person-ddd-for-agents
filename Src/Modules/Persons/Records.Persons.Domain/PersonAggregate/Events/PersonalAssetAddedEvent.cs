@@ -8,7 +8,7 @@ namespace Records.Persons.Domain.PersonAggregate.Events;
 /// </summary>
 public sealed class PersonalAssetAddedEvent : DomainEvent
 {
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PersonalAssetAddedEvent"/> class.

@@ -75,7 +75,7 @@ public sealed class PersonalAsset : Entity<int>
 
     #endregion
 
-    #region Methods
+    #region Private methods
 
     private void EnsureMinimalRequiredData(PersonalAssetDescription? description, Money? value)
     {

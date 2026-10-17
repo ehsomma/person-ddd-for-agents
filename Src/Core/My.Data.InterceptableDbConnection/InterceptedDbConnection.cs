@@ -17,7 +17,7 @@ public class InterceptedDbConnection : DbConnection
 
     #endregion
 
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InterceptedDbConnection"/> class.

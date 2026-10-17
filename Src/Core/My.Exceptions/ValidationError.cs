@@ -5,7 +5,7 @@ namespace My.Exceptions;
 /// </summary>
 public class ValidationError
 {
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ValidationError"/> class.

@@ -21,7 +21,7 @@ public sealed class Gender : Enumeration<Gender>
 
     #endregion
 
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Gender"/> class.

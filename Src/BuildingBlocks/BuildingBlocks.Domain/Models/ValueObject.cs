@@ -90,13 +90,17 @@ public abstract class ValueObject : IEquatable<ValueObject>
 
     #endregion
 
-    #region Private methods
+    #region Protected methods
 
     /// <summary>
     /// Gets the equality components of the value object.
     /// </summary>
     /// <returns>The collection of objects representing the value object equality components.</returns>
     protected abstract IEnumerable<object> GetEqualityComponents();
+
+    #endregion
+
+    #region Private methods
 
     /// <summary>
     /// Checks values of the specified ValueObject are equal to the current valueObject.

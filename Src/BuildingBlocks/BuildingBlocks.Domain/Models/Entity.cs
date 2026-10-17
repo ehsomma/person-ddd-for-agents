@@ -12,7 +12,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     #endregion
 
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Entity{TId}"/> class.
@@ -32,7 +32,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     #endregion
 
-    #region Operators overload
+    #region Operators
 
     /// <summary>
     /// Implicit operator.

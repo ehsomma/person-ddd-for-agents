@@ -11,7 +11,7 @@ namespace BuildingBlocks.Contracts;
     Justification = "Para permitir omitir el punto final en el tag <example> usado por OpenAPI.")]
 public class ValidationErrorResponse
 {
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ValidationErrorResponse"/> class.

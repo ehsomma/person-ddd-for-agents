@@ -5,7 +5,7 @@ namespace My.Exceptions;
 /// </summary>
 public static class ExceptionExtensions
 {
-    #region Methods
+    #region Public methods
 
     /// <summary>Add an errorCode to the exception.</summary>
     /// <param name="ex">The exception.</param>

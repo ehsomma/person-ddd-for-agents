@@ -60,7 +60,7 @@ public sealed class LatLng : ValueObject
 
     #endregion
 
-    #region Methods
+    #region Public methods
 
     /// <inheritdoc />
     public override string ToString()
@@ -70,12 +70,20 @@ public sealed class LatLng : ValueObject
         return ret;
     }
 
+    #endregion
+
+    #region Protected methods
+
     /// <inheritdoc />
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Lat;
         yield return Lng;
     }
+
+    #endregion
+
+    #region Private methods
 
     /// <summary>
     /// Ensures that the arguments to create the <see cref="LatLng"/> value object are valid.

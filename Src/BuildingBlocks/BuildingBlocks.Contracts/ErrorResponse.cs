@@ -12,7 +12,7 @@ namespace BuildingBlocks.Contracts;
     Justification = "Para permitir omitir el punto final en el tag <example> usado por OpenAPI.")]
 public class ErrorResponse
 {
-    #region Contructor
+    #region Constructor
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ErrorResponse"/> class.
