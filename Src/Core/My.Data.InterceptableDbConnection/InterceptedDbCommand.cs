@@ -1,6 +1,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 
 namespace My.Data.InterceptableDbConnection;
@@ -258,7 +259,9 @@ public class InterceptedDbCommand : DbCommand
             StringBuilder myparamsBuilder = new StringBuilder();
             foreach (DbParameter param in _command.Parameters)
             {
-                myparamsBuilder.AppendLine($"{param.ParameterName} ({param.DbType.ToString()}): {param.Value}\n");
+                myparamsBuilder.AppendLine(
+                    CultureInfo.InvariantCulture,
+                    $"{param.ParameterName} ({param.DbType}): {param.Value}");
             }
 
             _commandParamsSummary = myparamsBuilder.ToString();

@@ -1,3 +1,4 @@
+using System.Globalization;
 using BuildingBlocks.Domain.Events;
 using Records.Persons.Domain.PersonAggregate.Models;
 
@@ -16,7 +17,7 @@ public sealed class PersonalAssetAddedEvent : DomainEvent
     /// <param name="person">The <see cref="Person"/> that the <see cref="PersonalAsset"/> belongs.</param>
     /// <param name="newPersonalAsset">The added <see cref="PersonalAsset"/>.</param>
     public PersonalAssetAddedEvent(Person person, PersonalAsset newPersonalAsset)
-        : base(newPersonalAsset.Id.ToString())
+        : base(newPersonalAsset.Id.ToString(CultureInfo.InvariantCulture))
     {
         Person = person;
         PersonalAsset = newPersonalAsset;

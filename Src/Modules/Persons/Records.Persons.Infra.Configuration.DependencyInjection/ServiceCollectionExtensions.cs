@@ -52,7 +52,9 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations()
             .Validate(
                 o => !string.IsNullOrWhiteSpace(o.Setting1),
+#pragma warning disable CA1863
                 string.Format(null, KeyNotFound, "AppSettings.Persons.Setting1"))
+#pragma warning restore CA1863
             .ValidateOnStart();
 
         // AppSettingsService (singleton).

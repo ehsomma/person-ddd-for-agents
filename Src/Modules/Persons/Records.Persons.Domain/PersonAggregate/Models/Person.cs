@@ -211,10 +211,10 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
     }
 
     /// <summary>
-    /// Adds a new <see cref="Records.Persons.Domain.PersonAggregate.Models.PersonalAsset"/> to the <see cref="Person"/>.
+    /// Adds a new <see cref="PersonalAsset"/> to the <see cref="Person"/>.
     /// (Registers the events).
     /// </summary>
-    /// <param name="personalAsset">The <see cref="Records.Persons.Domain.PersonAggregate.Models.PersonalAsset"/> to add.</param>
+    /// <param name="personalAsset">The <see cref="PersonalAsset"/> to add.</param>
     public void AddPersonalAsset(PersonalAsset personalAsset)
     {
         _personalAssets.Add(personalAsset);
@@ -223,9 +223,9 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
     }
 
     /// <summary>
-    /// Loads a new <see cref="Records.Persons.Domain.PersonAggregate.Models.PersonalAsset"/> to the <see cref="Person"/>.
+    /// Loads a new <see cref="PersonalAsset"/> to the <see cref="Person"/>.
     /// </summary>
-    /// <param name="personalAsset">The <see cref="Records.Persons.Domain.PersonAggregate.Models.PersonalAsset"/> to add.</param>
+    /// <param name="personalAsset">The <see cref="PersonalAsset"/> to add.</param>
     public void LoadPersonalAsset(PersonalAsset personalAsset)
     {
         _personalAssets.Add(personalAsset);

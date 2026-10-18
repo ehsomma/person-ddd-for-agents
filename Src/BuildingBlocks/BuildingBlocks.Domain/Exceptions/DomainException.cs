@@ -5,7 +5,7 @@ namespace BuildingBlocks.Domain.Exceptions;
 
 /// <summary>
 /// Represents an exception that occurs in the domain and contains information about the domain
-/// <see cref="BuildingBlocks.Domain.Models.Error"/> like Message, Code, and Type.
+/// <see cref="Error"/> like Message, Code, and Type.
 /// </summary>
 [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design",

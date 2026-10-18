@@ -36,7 +36,7 @@ public class Person
     /// <summary>The birthdate.</summary>
     public DateTime? Birthdate { get; init; }
 
-    /// <summary>The <see cref="Records.Persons.Dtos.Person.Address"/> of the person.</summary>
+    /// <summary>The <see cref="Address"/> of the person.</summary>
     public Address? Address { get; set; }
 
     /// <summary>The <see cref="PersonalAsset"/> list.</summary>
