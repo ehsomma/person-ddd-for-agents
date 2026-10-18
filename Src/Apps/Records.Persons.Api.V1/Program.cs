@@ -18,64 +18,66 @@ using Scalar.AspNetCore;
 namespace Records.Persons.Api.V1;
 
 /// <summary>
-/// Entry point of the application.
+/// Punto de entrada de la aplicación.
 /// </summary>
 internal sealed class Program
 {
     #region Public methods
 
     /// <summary>
-    /// Creates an instance of the web application’s host. The host is responsible for
-    /// bootstrapping the application and setting up the necessary services and middleware.
-    ///
-    /// It calls the Run method on the host, which starts the web server and listens for
-    /// incoming HTTP requests.
+    /// Crea el host de la aplicación web: registra los servicios, arma el pipeline de middlewares y
+    /// arranca el servidor, que queda escuchando los requests HTTP.
     /// </summary>
-    /// <param name="args">Arguments parameter that can be used to retrieve the arguments passed while running the application.</param>
+    /// <param name="args">Los argumentos de línea de comandos con los que se ejecutó la aplicación.</param>
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         IServiceCollection services = builder.Services;
 
-        // Configures and registers Serilog as the logger.
+        // Configura y registra Serilog como logger.
         builder.AddSerilogCustom();
 
-        // Registers the necessary configurations with the DI framework.
+        // Registra las configuraciones (settings) en el contenedor de DI.
         services.AddConfiguration(builder.Configuration);
 
+        // Registra el GlobalExceptionHandler, que convierte cualquier excepción en un ErrorResponse
+        // con el status HTTP que corresponde a su ErrorType.
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        // Hace que minimal APIs lance BadHttpRequestException ante un request mal formado (body faltante, JSON
-        // inválido, header requerido ausente, etc.) en todos los ambientes, para que el GlobalExceptionHandler
-        // devuelva el ErrorResponse. Por defecto solo lo hace en Development; en el resto devuelve un 400 vacío.
+        // Hace que minimal APIs lance BadHttpRequestException ante un request mal formado (body
+        // faltante, JSON inválido, header requerido ausente, etc.) en todos los ambientes, para que
+        // el GlobalExceptionHandler devuelva el ErrorResponse. Por defecto solo lo hace en
+        // Development; en el resto devuelve un 400 vacío.
         services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
 
-        // Registers the necessary services for the mediator (commands and queries) with the DI framework.
+        // Registra los servicios del mediator (commands y queries) en el contenedor de DI.
         services.AddMediator(typeof(AssemblyReference).Assembly);
 
-        // Registers the shared application services with the DI framework.
+        // Registra los servicios compartidos de application y los servicios de dominio en el
+        // contenedor de DI.
         services.AddApplication(typeof(PersonService).Assembly);
 
-        // Registers the mappers (IDomainMapper<,> of the application and IPersistanceMapper<,> of the
-        // persistence) with the DI framework.
+        // Registra los mappers (IDomainMapper<,> de application e IPersistanceMapper<,> de
+        // persistencia) en el contenedor de DI.
         services.AddMappers(
             Assembly.GetExecutingAssembly(),
             typeof(AssemblyReference).Assembly,
             typeof(PersonMapper).Assembly);
 
-        // Registers the persistence services (IUnitOfWork, IDbSession, repositories and query repositories)
-        // with the DI framework.
+        // Registra los servicios de persistencia (IUnitOfWork, IDbSession, repositorios y query
+        // repositories) en el contenedor de DI.
         services.AddPersistence(
             typeof(PersonRepository).Assembly,
             typeof(GetPersonByIdRepository).Assembly);
 
+        // Registra los endpoints (las clases que implementan IEndpoint).
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 
-        // Registers the FluentValidation validators of the requests with the DI framework.
+        // Registra los validators de FluentValidation de los requests en el contenedor de DI.
         services.AddValidators(Assembly.GetExecutingAssembly());
 
-        // Adds services to the container.
+        // Registra los servicios de autorización.
         services.AddAuthorization();
 
         // Configura y registra la generación del documento OpenAPI.
@@ -94,7 +96,7 @@ internal sealed class Program
             version: "v1",
             description: description));
 
-        // Enables API explorer for endpoints.
+        // Habilita el API explorer para los endpoints.
         services.AddEndpointsApiExplorer();
 
         WebApplication app = builder.Build();
@@ -103,23 +105,23 @@ internal sealed class Program
         // `ProblemDetails` para devolver errores, falla al arrancar.
         app.UseExceptionHandler(_ => { });
 
-        // Configure the HTTP request pipeline.
+        // Configura el pipeline de requests HTTP.
         app.MapOpenApi();
 
-        // Exposes the OpenAPI JSON document in a UI.
+        // Expone el documento OpenAPI (JSON) en una UI.
         // NOTE: Para que al ejecutar el api abra directamente la UI de Scalar, agregar lo siguiente
         // en el archivo launchSettings.json:
         //
         // "launchBrowser": true,
         // "launchUrl": "v1/docs",
         ////app.MapScalarApiReference(); // https://localhost:xxxx/scalar/v1
-        app.MapScalarApiReference("/v1/docs"); // https://localhost:xxxx/docs
+        app.MapScalarApiReference("/v1/docs"); // https://localhost:xxxx/v1/docs
 
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
-        ////app.UseSerilogRequestLogging();
+        ////app.UseSerilogRequestLogging(); // Se descomenta para loguear cada request.
 
         // Mapea los endpoints.
         app.MapEndpoints();

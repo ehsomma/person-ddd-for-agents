@@ -9,39 +9,38 @@ using Throw;
 namespace Records.Persons.Domain.PersonAggregate.Models;
 
 /// <summary>
-/// Represents a Person.
+/// Representa una persona. Es el aggregate root del aggregate de personas, que también incluye su
+/// dirección (<see cref="Models.Address"/>) y sus bienes personales (<see cref="PersonalAsset"/>).
 /// </summary>
 [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "StyleCop.CSharp.OrderingRules",
     "SA1201:Elements should appear in the correct order",
-    Justification = "Prefere to have the Create() and Load() inside the constructor region.")]
+    Justification = "Create() y Load() van dentro de la region Constructor.")]
 public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
 {
     #region Declarations
 
-    // NOTE: DDD Patterns comment: Using a private collection field, better for DDD Aggregate's
-    // encapsulation so Items cannot be added from "outside the AggregateRoot" directly to the
-    // collection, but only through the method .AddXxxxItem() which includes behaviour or
-    // AggregateRoot constructor.
+    // NOTE: Es un field privado (y no una lista pública) para proteger el aggregate: desde afuera
+    // no se pueden agregar bienes personales directo a la colección, solo a través de los métodos
+    // del aggregate (AddPersonalAsset, LoadPersonalAsset) o del constructor, que son los que
+    // aplican las reglas y registran los eventos.
     private readonly IList<PersonalAsset> _personalAssets;
 
     #endregion
 
     #region Constructor
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Person"/> class with the specified arguments.
-    /// </summary>
-    /// <param name="id">The Person ID.</param>
-    /// <param name="address">The address.</param>
-    /// <param name="fullName">The full name.</param>
-    /// <param name="email">The email.</param>
-    /// <param name="phone">The phone number.</param>
-    /// <param name="gender">The gender.</param>
-    /// <param name="personalAssets">The <see cref="PersonalAsset"/> list.</param>
-    /// <param name="birthdate">The birthdate.</param>
-    /// <param name="createdOnUtc">The date and time (UTC) the entity was created on.</param>
-    /// <param name="updatedOnUtc">The date and time (UTC) the entity was modified on.</param>
+    /// <summary>Inicializa una nueva instancia de <see cref="Person"/> con los datos especificados.</summary>
+    /// <param name="id">El ID de la persona.</param>
+    /// <param name="address">La dirección (<see cref="Models.Address"/>).</param>
+    /// <param name="fullName">El nombre completo (<see cref="ValueObjects.FullName"/>).</param>
+    /// <param name="email">El email.</param>
+    /// <param name="phone">El teléfono (<see cref="PhoneNumber"/>).</param>
+    /// <param name="gender">El género (<see cref="Enumerators.Gender"/>).</param>
+    /// <param name="personalAssets">Los bienes personales (<see cref="PersonalAsset"/>).</param>
+    /// <param name="birthdate">La fecha de nacimiento.</param>
+    /// <param name="createdOnUtc">La fecha y hora (UTC) en que se creó la entidad.</param>
+    /// <param name="updatedOnUtc">La fecha y hora (UTC) en que se modificó la entidad por última vez.</param>
     private Person(
         Guid id,
         Address? address,
@@ -58,11 +57,11 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
         EnsureMinimalRequiredData(address, fullName, email, gender);
 
         Id = id;
-        Address = address!; // Validated.
-        FullName = fullName!; // Validated.
-        Email = email!; // Validated.
-        Phone = phone!; // Validated.
-        Gender = gender!; // Validated.
+        Address = address!; // Validado en EnsureMinimalRequiredData.
+        FullName = fullName!; // Validado en EnsureMinimalRequiredData.
+        Email = email!; // Validado en EnsureMinimalRequiredData.
+        Phone = phone!; // Puede ser null: el teléfono es opcional.
+        Gender = gender!; // Validado en EnsureMinimalRequiredData.
         Birthdate = birthdate;
         _personalAssets = personalAssets ?? new List<PersonalAsset>();
         CreatedOnUtc = createdOnUtc;
@@ -70,18 +69,18 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
     }
 
     /// <summary>
-    /// Creates a new instance of the <see cref="Person"/> class with the specified arguments.
-    /// (Instantiates the class, ensure the data and registers the events).
+    /// Crea una persona nueva: valida los datos mínimos y registra el
+    /// <see cref="PersonCreatedEvent"/>. Es la forma de crear una persona que todavía no existe.
     /// </summary>
-    /// <param name="id">The Person ID.</param>
-    /// <param name="address">The address.</param>
-    /// <param name="fullName">The full name.</param>
-    /// <param name="email">The email.</param>
-    /// <param name="phone">The phone number.</param>
-    /// <param name="gender">The gender.</param>
-    /// <param name="personalAssets">The <see cref="PersonalAsset"/> list.</param>
-    /// <param name="birthdate">The birthdate.</param>
-    /// <returns>The created <see cref="Person"/>.</returns>
+    /// <param name="id">El ID de la persona.</param>
+    /// <param name="address">La dirección (<see cref="Models.Address"/>).</param>
+    /// <param name="fullName">El nombre completo (<see cref="ValueObjects.FullName"/>).</param>
+    /// <param name="email">El email.</param>
+    /// <param name="phone">El teléfono (<see cref="PhoneNumber"/>).</param>
+    /// <param name="gender">El género (<see cref="Enumerators.Gender"/>).</param>
+    /// <param name="personalAssets">Los bienes personales (<see cref="PersonalAsset"/>).</param>
+    /// <param name="birthdate">La fecha de nacimiento.</param>
+    /// <returns>La persona creada.</returns>
     public static Person Create(
         Guid id,
         Address? address,
@@ -102,20 +101,20 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
     }
 
     /// <summary>
-    /// Creates a new instance of the <see cref="Person"/> class with the specified arguments.
-    /// (Instantiates the class, ensure the data).
+    /// Rehidrata una persona que ya existe (p.ej. leída de la base): valida los datos mínimos pero
+    /// no registra eventos, porque no es un cambio sino la reconstrucción de algo ya persistido.
     /// </summary>
-    /// <param name="id">The Person ID.</param>
-    /// <param name="address">The address.</param>
-    /// <param name="fullName">The full name.</param>
-    /// <param name="email">The email.</param>
-    /// <param name="phone">The phone number.</param>
-    /// <param name="gender">The gender.</param>
-    /// <param name="personalAssets">The <see cref="PersonalAsset"/> list.</param>
-    /// <param name="birthdate">The birthdate.</param>
-    /// <param name="createdOnUtc">The date and time (UTC) the entity was created on.</param>
-    /// <param name="updatedOnUtc">The date and time (UTC) the entity was modified on.</param>
-    /// <returns>The created <see cref="Person"/>.</returns>
+    /// <param name="id">El ID de la persona.</param>
+    /// <param name="address">La dirección (<see cref="Models.Address"/>).</param>
+    /// <param name="fullName">El nombre completo (<see cref="ValueObjects.FullName"/>).</param>
+    /// <param name="email">El email.</param>
+    /// <param name="phone">El teléfono (<see cref="PhoneNumber"/>).</param>
+    /// <param name="gender">El género (<see cref="Enumerators.Gender"/>).</param>
+    /// <param name="personalAssets">Los bienes personales (<see cref="PersonalAsset"/>).</param>
+    /// <param name="birthdate">La fecha de nacimiento.</param>
+    /// <param name="createdOnUtc">La fecha y hora (UTC) en que se creó la entidad.</param>
+    /// <param name="updatedOnUtc">La fecha y hora (UTC) en que se modificó la entidad por última vez.</param>
+    /// <returns>La persona rehidratada.</returns>
     public static Person Load(
         Guid id,
         Address? address,
@@ -137,25 +136,25 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
 
     #region Properties
 
-    /// <summary>The address.</summary>
+    /// <summary>La dirección.</summary>
     public Address Address { get; private set; }
 
-    /// <summary>The full name.</summary>
+    /// <summary>El nombre completo.</summary>
     public FullName FullName { get; private set; }
 
-    /// <summary>The email.</summary>
+    /// <summary>El email.</summary>
     public Email Email { get; private set; }
 
-    /// <summary>The phone number.</summary>
+    /// <summary>El teléfono (opcional).</summary>
     public PhoneNumber? Phone { get; private set; }
 
-    /// <summary>The gender.</summary>
+    /// <summary>El género.</summary>
     public Gender Gender { get; private set; }
 
-    /// <summary>The birthdate.</summary>
+    /// <summary>La fecha de nacimiento (opcional).</summary>
     public DateTime? Birthdate { get; private set; }
 
-    /// <summary>The <see cref="PersonalAsset"/> list.</summary>
+    /// <summary>Los bienes personales (<see cref="PersonalAsset"/>), de solo lectura.</summary>
     public IReadOnlyCollection<PersonalAsset> PersonalAssets => (IReadOnlyCollection<PersonalAsset>)_personalAssets;
 
     /// <inheritdoc />
@@ -169,13 +168,15 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
     #region Public methods
 
     /// <summary>
-    /// Updates the current (this) <see cref="Person"/> with the specified data.
+    /// Actualiza esta persona con los datos de <paramref name="updatedData"/>: reemplaza los datos
+    /// personales y la dirección, agrega los bienes personales nuevos y registra el
+    /// <see cref="PersonUpdatedEvent"/>.
     /// </summary>
-    /// <param name="updatedData">The data to update.</param>
+    /// <param name="updatedData">La persona con los datos editados.</param>
     public void Update(Person updatedData)
     {
-        // Si bien un Person nunca podria ser inválido, pero si desde un CommandHandler podrian mandar
-        // como parámetro Null.
+        // Una Person ya construida nunca es inválida, pero un command handler podría pasar null
+        // como parámetro.
         updatedData.ThrowIfNull();
 
         FullName = updatedData.FullName;
@@ -189,32 +190,37 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
 
         RegisterDomainEvent(new PersonUpdatedEvent(this));
 
-        // Only adds the new personal assets (without ID, see PersonalAsset.Create()): the existing ones
-        // are neither updated nor removed from here.
+        // Solo agrega los bienes personales nuevos (los que todavía no tienen ID, ver
+        // PersonalAsset.Create()): los existentes no se actualizan ni se eliminan desde acá.
+        //   Id = 0  → nuevo: se agrega y registra un PersonalAssetAddedEvent ✓
+        //   Id = 15 → ya existe: se ignora (no se pisa con los datos que vienen)
         foreach (PersonalAsset personalAsset in updatedData.PersonalAssets.Where(personalAsset => personalAsset.Id == 0))
         {
             AddPersonalAsset(personalAsset);
         }
 
-        ////_personalAssets = ... // TODO: Update personalAssets separately by its own Update, not from here.
+        // TODO: Actualizar los bienes personales existentes con su propio Update, no desde acá.
+        ////_personalAssets = ...
     }
 
     /// <summary>
-    /// Delete the current (this) <see cref="Person"/>.
+    /// Elimina esta persona: registra el <see cref="PersonDeletedEvent"/>. El borrado en la base lo
+    /// hace el repositorio cuando el command handler persiste el cambio.
     /// </summary>
     public void Delete()
     {
-        // Do some validation/enseres.
-        // Update status if you need logic delete.
+        // Acá van las reglas de negocio que impidan eliminar la persona (p.ej. que tenga
+        // operaciones pendientes). Si el borrado fuese lógico, acá también se actualizaría el
+        // estado.
 
         RegisterDomainEvent(new PersonDeletedEvent(this));
     }
 
     /// <summary>
-    /// Adds a new <see cref="PersonalAsset"/> to the <see cref="Person"/>.
-    /// (Registers the events).
+    /// Agrega un bien personal (<see cref="PersonalAsset"/>) nuevo a la persona y registra el
+    /// <see cref="PersonalAssetAddedEvent"/>.
     /// </summary>
-    /// <param name="personalAsset">The <see cref="PersonalAsset"/> to add.</param>
+    /// <param name="personalAsset">El bien personal a agregar.</param>
     public void AddPersonalAsset(PersonalAsset personalAsset)
     {
         _personalAssets.Add(personalAsset);
@@ -223,9 +229,10 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
     }
 
     /// <summary>
-    /// Loads a new <see cref="PersonalAsset"/> to the <see cref="Person"/>.
+    /// Carga un bien personal (<see cref="PersonalAsset"/>) que ya existe (p.ej. leído de la base),
+    /// sin registrar eventos. Es el equivalente de <see cref="Load"/> para los bienes personales.
     /// </summary>
-    /// <param name="personalAsset">The <see cref="PersonalAsset"/> to add.</param>
+    /// <param name="personalAsset">El bien personal a cargar.</param>
     public void LoadPersonalAsset(PersonalAsset personalAsset)
     {
         _personalAssets.Add(personalAsset);
@@ -236,13 +243,14 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
     #region Private methods
 
     /// <summary>
-    /// Ensures the minimum required data are valid.
+    /// Valida que estén los datos mínimos obligatorios: la dirección, el nombre completo, el email
+    /// y el género. El teléfono y la fecha de nacimiento son opcionales.
     /// </summary>
-    /// <param name="address">The address.</param>
-    /// <param name="fullName">The full name.</param>
-    /// <param name="email">The email.</param>
-    /// <param name="gender">The gender.</param>
-    /// <exception cref="DomainValidationException">If some argument is invalid.</exception>
+    /// <param name="address">La dirección.</param>
+    /// <param name="fullName">El nombre completo.</param>
+    /// <param name="email">El email.</param>
+    /// <param name="gender">El género.</param>
+    /// <exception cref="DomainValidationException">Cuando falta alguno de los datos obligatorios.</exception>
     private void EnsureMinimalRequiredData(Address? address, FullName? fullName, Email? email, Gender? gender)
     {
         try
@@ -250,9 +258,9 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
             address.ThrowIfNull();
             fullName.ThrowIfNull();
             email.ThrowIfNull();
-            ////phone.ThrowIfNull(); // Allow null.
+            ////phone.ThrowIfNull(); // Puede ser null.
             gender.ThrowIfNull();
-            ////birthdate.ThrowIfNull(); // Allow null.
+            ////birthdate.ThrowIfNull(); // Puede ser null.
         }
         catch (Exception ex)
         {
@@ -260,10 +268,15 @@ public sealed class Person : AggregateRoot<Guid>, IEntityAuditable
         }
     }
 
+    /// <summary>
+    /// Reemplaza la dirección por una con los datos de <paramref name="updatedAddress"/>, pero con
+    /// el ID de la dirección actual.
+    /// </summary>
+    /// <param name="updatedAddress">La dirección con los datos editados.</param>
     private void UpdateAddress(Address updatedAddress)
     {
         Address = Address.Load(
-            Address.Id, // Not update the ID.
+            Address.Id, // Se conserva el ID: es la misma dirección con otros datos.
             updatedAddress.StreetLine1,
             updatedAddress.StreetLine2,
             updatedAddress.City,

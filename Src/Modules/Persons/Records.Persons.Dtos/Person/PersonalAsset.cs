@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Records.Persons.Dtos.Person;
 
 /// <summary>
-/// Represents a personal asset.
+/// Representa un bien personal de una persona.
 /// </summary>
 [SuppressMessage(
     "StyleCop.CSharp.DocumentationRules",
@@ -13,15 +13,15 @@ public class PersonalAsset
 {
     #region Properties
 
-    /// <summary>The PersonalAsset ID.</summary>
+    /// <summary>ID del bien personal. En un bien personal nuevo se envía 0, porque lo genera el sistema.</summary>
     /// <example>1</example>
-    public int Id { get; init; } // Autoincrement.
+    public int Id { get; init; } // Autoincremental.
 
-    /// <summary>The description.</summary>
+    /// <summary>Descripción del bien personal.</summary>
     /// <example>Oculus Quest 2</example>
     public string? Description { get; init; }
 
-    /// <summary>The monetary value.</summary>
+    /// <summary>Valor monetario del bien personal.</summary>
     /// <example>400</example>
     public decimal Value { get; init; }
 

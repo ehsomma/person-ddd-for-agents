@@ -7,7 +7,8 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Application.Person.Queries.GetPersonById;
 
 /// <summary>
-/// Represents the <see cref="GetPersonByIdQuery"/> handler.
+/// Representa el query handler que obtiene una persona por su ID (<see
+/// cref="GetPersonByIdQuery"/>).
 /// </summary>
 internal sealed class GetPersonByIdQueryHandler : QueryHandler<GetPersonByIdQuery, Dto.Person>
 {
@@ -19,13 +20,9 @@ internal sealed class GetPersonByIdQueryHandler : QueryHandler<GetPersonByIdQuer
 
     #region Constructor
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GetPersonByIdQueryHandler"/> class.
-    /// </summary>
-    /// <param name="getPersonByIdRepository">
-    /// Represents the query repository that reads the <see cref="Dto.Person"/> (<see langword="null"/> if it doesn't exist).
-    /// </param>
-    /// <exception cref="ArgumentNullException">When some argument for the constructor parameters is null.</exception>
+    /// <summary>Inicializa una nueva instancia de <see cref="GetPersonByIdQueryHandler"/>.</summary>
+    /// <param name="getPersonByIdRepository">El query repository que lee la persona (<see cref="Dto.Person"/>), o <see langword="null"/> si no existe.</param>
+    /// <exception cref="ArgumentNullException">Cuando alguno de los parámetros es <see langword="null"/>.</exception>
     public GetPersonByIdQueryHandler(IQueryRepository<GetPersonByIdQuery, Dto.Person?> getPersonByIdRepository)
     {
         _getPersonByIdRepository = getPersonByIdRepository ?? throw new ArgumentNullException(nameof(getPersonByIdRepository));
@@ -36,12 +33,13 @@ internal sealed class GetPersonByIdQueryHandler : QueryHandler<GetPersonByIdQuer
     #region Public methods
 
     /// <inheritdoc />
-    /// <exception cref="DomainException">When the person doesn't exist (<see cref="DomainErrors.Person.NotFound"/>).</exception>
+    /// <exception cref="DomainException">Cuando la persona no existe (<see cref="DomainErrors.Person.NotFound"/>).</exception>
     public override async Task<Dto.Person> Handle(GetPersonByIdQuery query, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(query);
 
-        // Not found: same error as the commands (ERR.PERSON.NOTFOUND -> 404), so the API answers the same way.
+        // Si no existe, lanza el mismo error que los commands (ERR.PERSON.NOTFOUND → 404), así la
+        // API responde igual en los dos casos.
         Dto.Person person = await _getPersonByIdRepository.GetAsync(query, cancellationToken)
             ?? throw new DomainException(DomainErrors.Person.NotFound);
 

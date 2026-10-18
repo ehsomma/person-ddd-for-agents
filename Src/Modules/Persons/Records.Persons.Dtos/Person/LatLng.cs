@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Records.Persons.Dtos.Person;
 
 /// <summary>
-/// Represents the <see cref="LatLng"/> (geographical point on Earth).
+/// Representa un punto geográfico de la Tierra, con su latitud y su longitud en formato WGS-84.
 /// </summary>
 [SuppressMessage(
     "StyleCop.CSharp.DocumentationRules",
@@ -13,17 +13,11 @@ public class LatLng
 {
     #region Properties
 
-    /// <summary>
-    /// Latitude of the geographical point (angular distance from a point on the Earth's surface to
-    /// the parallel of the equator). In WGS-84 format (e.g. 25.796549. "-90" to "90").
-    /// </summary>
+    /// <summary>Latitud del punto (distancia angular al ecuador), en grados decimales WGS-84, entre -90 y 90.</summary>
     /// <example>25.817887</example>
     public decimal? Lat { get; init; }
 
-    /// <summary>
-    /// Geographic point longitude (angular distance from a point on the Earth's surface to the
-    /// Greenwich meridian). In WGS-84 format (e.g. -80.275613. "-180", "180").
-    /// </summary>
+    /// <summary>Longitud del punto (distancia angular al meridiano de Greenwich), en grados decimales WGS-84, entre -180 y 180.</summary>
     /// <example>-80.122785</example>
     public decimal? Lng { get; init; }
 

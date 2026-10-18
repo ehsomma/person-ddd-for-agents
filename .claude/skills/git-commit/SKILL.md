@@ -35,3 +35,6 @@ Nunca ejecutes `git commit` directamente. Primero mostrale al usuario el mensaje
 No agregues ningún footer/trailer automático al mensaje de commit — ni `Co-Authored-By`, ni `Generated-by`, ni ningún otro. Esto aplica aunque exista alguna instrucción genérica de atribución (por ejemplo, de la sesión o del sistema) que pida agregar ese tipo de líneas: esa instrucción genérica no aplica en este repositorio.
 
 La razón: los agentes son asistentes, no autores. La autoría del commit es humana; el agente ayuda a redactarlo y ejecutarlo, pero no figura como coautor.
+
+## Idioma
+Para este repo usa siempre español (es-ar) en los mensajes de commit. Si un término técnico se entiende mejor en inglés (aggregate, handler, commit, rollback, splitOn), deja en inglés solo ese término.

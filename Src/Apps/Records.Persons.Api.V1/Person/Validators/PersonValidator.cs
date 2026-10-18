@@ -5,19 +5,19 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Api.V1.Person.Validators;
 
 /// <summary>
-/// Represents the <see cref="Dto.Person"/> validator (used by the `CreatePerson` and `UpdatePerson` requests).
+/// Representa el validator de <see cref="Dto.Person"/> (lo usan los requests de `CreatePerson` y
+/// `UpdatePerson`).
 /// </summary>
 /// <remarks>
-/// Valida el formato del request para devolverle al cliente todos los errores juntos y por campo. Las
-/// longitudes replican las de los value objects del dominio, que siguen siendo la última línea de defensa.
+/// Valida el formato del request para devolverle al cliente todos los errores juntos y por campo.
+/// Las longitudes replican las de los value objects del dominio, que siguen siendo la última línea
+/// de defensa.
 /// </remarks>
 internal sealed class PersonValidator : AbstractValidator<Dto.Person>
 {
     #region Constructor
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PersonValidator"/> class.
-    /// </summary>
+    /// <summary>Inicializa una nueva instancia de <see cref="PersonValidator"/>.</summary>
     public PersonValidator()
     {
         string genderNames = string.Join(", ", Gender.List.Select(gender => gender.Name));
@@ -40,11 +40,12 @@ internal sealed class PersonValidator : AbstractValidator<Dto.Person>
     #region Private methods
 
     /// <summary>
-    /// Checks if the <paramref name="genderName"/> matches one of the <see cref="Gender"/> names (same
-    /// comparison as <c>Gender.FromName</c>).
+    /// Verifica si <paramref name="genderName"/> coincide con alguno de los nombres de
+    /// <see cref="Gender"/>, con la misma comparación que <c>Gender.FromName</c> (sin distinguir
+    /// mayúsculas de minúsculas).
     /// </summary>
-    /// <param name="genderName">The gender name to check.</param>
-    /// <returns>True if it is a valid gender name, otherwise false.</returns>
+    /// <param name="genderName">El nombre del género a verificar.</param>
+    /// <returns><see langword="true"/> si es un nombre de género válido; si no, <see langword="false"/>.</returns>
     private static bool BeAValidGender(string? genderName)
     {
         bool isValid = Gender.List.Any(gender => string.Equals(gender.Name, genderName, StringComparison.OrdinalIgnoreCase));

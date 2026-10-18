@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Records.Persons.Dtos.Person;
 
 /// <summary>
-/// Represents a Person.
+/// Representa una persona, con su dirección y sus bienes personales.
 /// </summary>
 [SuppressMessage(
     "StyleCop.CSharp.DocumentationRules",
@@ -13,37 +13,37 @@ public class Person
 {
     #region Properties
 
-    /// <summary>The Person ID.</summary>
+    /// <summary>ID de la persona.</summary>
     public Guid Id { get; init; }
 
-    /// <summary>The full name.</summary>
+    /// <summary>Nombre completo de la persona.</summary>
     /// <example>Doe, John</example>
     public string? FullName { get; init; }
 
-    /// <summary>The email.</summary>
+    /// <summary>Email de la persona.</summary>
     /// <example>johndoe@gmail.com</example>
     public string? Email { get; init; }
 
-    /// <summary>The phone number.</summary>
+    /// <summary>Número de teléfono (opcional).</summary>
     /// <example>1150011234</example>
     public string? Phone { get; init; }
 
-    /// <summary>The gender ("Male, Female, Other").</summary>
+    /// <summary>Género de la persona. Valores posibles: Male, Female u Other.</summary>
     /// <example>Male</example>
-    // TODO: Implement Gender enum.
+    // TODO: Implementar el enum Gender en el DTO, así OpenAPI documenta los valores posibles.
     public string? Gender { get; init; }
 
-    /// <summary>The birthdate.</summary>
+    /// <summary>Fecha de nacimiento (opcional).</summary>
     public DateTime? Birthdate { get; init; }
 
-    /// <summary>The <see cref="Address"/> of the person.</summary>
+    /// <summary>Dirección de la persona (<see cref="Address"/>).</summary>
     public Address? Address { get; set; }
 
-    /// <summary>The <see cref="PersonalAsset"/> list.</summary>
+    /// <summary>Bienes personales de la persona (<see cref="PersonalAsset"/>).</summary>
     [SuppressMessage(
         "Usage",
         "CA2227:Collection properties should be read only",
-        Justification = "Settable (not init) so the query repositories can compose the DTO after the Dapper multi-mapping.")]
+        Justification = "Tiene set (y no init) para que los query repositories puedan armar el DTO después del multi-mapping de Dapper.")]
     public IList<PersonalAsset>? PersonalAssets { get; set; }
 
     #endregion

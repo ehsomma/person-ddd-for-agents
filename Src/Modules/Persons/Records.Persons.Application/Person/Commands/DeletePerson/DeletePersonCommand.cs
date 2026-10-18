@@ -3,17 +3,15 @@ using BuildingBlocks.Application.Cqrs;
 namespace Records.Persons.Application.Person.Commands.DeletePerson;
 
 /// <summary>
-/// Represents a command to delete an existing person.
+/// Representa el command para eliminar una persona existente.
 /// </summary>
 public sealed class DeletePersonCommand : ICommand
 {
     #region Constructor
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DeletePersonCommand"/> class.
-    /// </summary>
-    /// <param name="appKey">The appKey (just an example).</param>
-    /// <param name="id">The ID of the person to delete.</param>
+    /// <summary>Inicializa una nueva instancia de <see cref="DeletePersonCommand"/>.</summary>
+    /// <param name="appKey">La app key (es solo un ejemplo).</param>
+    /// <param name="id">El ID de la persona a eliminar.</param>
     public DeletePersonCommand(string appKey, Guid id)
     {
         AppKey = appKey;
@@ -24,10 +22,10 @@ public sealed class DeletePersonCommand : ICommand
 
     #region Properties
 
-    /// <summary>The ID of the person to delete.</summary>
+    /// <summary>El ID de la persona a eliminar.</summary>
     public Guid Id { get; init; }
 
-    /// <summary>The appKey (just an example).</summary>
+    /// <summary>La app key (es solo un ejemplo).</summary>
     public string AppKey { get; init; }
 
     #endregion

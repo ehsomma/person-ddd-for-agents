@@ -10,26 +10,26 @@ using DomainModel = Records.Persons.Domain.PersonAggregate.Models; // Using alia
 namespace Records.Persons.Infra.Persistence.Sql.PersonAggregate.Repository;
 
 /// <summary>
-/// Represents the persistence operations of the <see cref="DomainModel.Person"/>.
+/// Representa el repositorio (write side) del aggregate <see cref="DomainModel.Person"/>: lo
+/// persiste y lo carga completo con Dapper, usando la conexión y la transacción de la
+/// <see cref="IDbSession"/>.
 /// </summary>
 public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPersonRepository
 {
     #region Declarations
 
-    /// <summary>Defines a mapper to map a <see cref="DomainModel.Person"/> to a <see cref="DataModel.Person"/> and vice versa.</summary>
+    /// <summary>El mapper entre el <see cref="DomainModel.Person"/> del dominio y el <see cref="DataModel.Person"/> de la base, en los dos sentidos.</summary>
     private readonly IPersistanceMapper<DomainModel.Person, DataModel.Person> _personMapper;
 
     #endregion
 
     #region Constructor
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PersonRepository"/> class.
-    /// </summary>
-    /// <param name="configuration">Represents a set of key/value application configuration properties.</param>
-    /// <param name="dbSession">Represents a session in the database/UOW that contains a connection and a transaction.</param>
-    /// <param name="personMapper">Defines a mapper to map a <see cref="DomainModel.Person"/> to a<see cref="DataModel.Person"/> and vice versa.</param>
-    /// <exception cref="ArgumentNullException">When some argument for the constructor parameters is null.</exception>
+    /// <summary>Inicializa una nueva instancia de <see cref="PersonRepository"/>.</summary>
+    /// <param name="configuration">La configuración de la aplicación.</param>
+    /// <param name="dbSession">La sesión de base de datos (UoW), con la conexión y la transacción.</param>
+    /// <param name="personMapper">El mapper entre el <see cref="DomainModel.Person"/> del dominio y el <see cref="DataModel.Person"/> de la base, en los dos sentidos.</param>
+    /// <exception cref="ArgumentNullException">Cuando alguno de los parámetros es <see langword="null"/>.</exception>
     public PersonRepository(
         IConfiguration configuration,
         IDbSession dbSession,
@@ -51,17 +51,19 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
         DataModel.Person dataPerson = _personMapper.FromDomainToDataModel(person);
 
         // Dapper.Contrib.
-        // NOTE: Dapper.Contrib (InsertAsync/UpdateAsync/DeleteAsync) doesn't accept a CancellationToken, so
-        // it's checked before each call: a cancellation stops before the next command (an ongoing one isn't
-        // interrupted) and the exception rolls back the transaction (see CommandHandler.ExecuteInTransaction).
+        // NOTE: Dapper.Contrib (InsertAsync/UpdateAsync/DeleteAsync) no acepta un
+        // CancellationToken, así que se chequea antes de cada llamada: una cancelación frena antes
+        // del comando siguiente (el que está en curso no se interrumpe) y la excepción hace
+        // rollback de la transacción (ver CommandHandler.ExecuteInTransaction).
         cancellationToken.ThrowIfCancellationRequested();
         await _dbSession.Connection.InsertAsync(dataPerson, _dbSession.Transaction);
 
         cancellationToken.ThrowIfCancellationRequested();
         await _dbSession.Connection.InsertAsync(dataPerson.Address, _dbSession.Transaction);
 
-        // NOTE: Sequential (not Task.WhenAll): the inserts share the same connection and transaction, and
-        // SqlConnection doesn't support concurrent commands (not even with MultipleActiveResultSets).
+        // NOTE: Secuencial (no Task.WhenAll): los inserts comparten la misma conexión y
+        // transacción, y SqlConnection no soporta comandos concurrentes (ni siquiera con
+        // MultipleActiveResultSets).
         foreach (DataModel.PersonalAsset personalAsset in dataPerson.PersonalAssets.NotNull())
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -76,17 +78,19 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
 
         DataModel.Person dataPerson = _personMapper.FromDomainToDataModel(person);
 
-        // Dapper.Contrib (by [ExplicitKey]/[Key], the IDs come from the loaded person).
-        // NOTE: Dapper.Contrib doesn't accept a CancellationToken, it's checked before each call (see InsertAsync).
+        // Dapper.Contrib (por [ExplicitKey]/[Key]; los IDs vienen de la persona cargada).
+        // NOTE: Dapper.Contrib no acepta un CancellationToken, se chequea antes de cada llamada
+        // (ver InsertAsync).
         cancellationToken.ThrowIfCancellationRequested();
         await _dbSession.Connection.UpdateAsync(dataPerson, _dbSession.Transaction);
 
         cancellationToken.ThrowIfCancellationRequested();
         await _dbSession.Connection.UpdateAsync(dataPerson.Address, _dbSession.Transaction);
 
-        // The domain doesn't update or remove the existing personal assets (Person.Update doesn't touch
-        // them), it only adds new ones with Person.AddPersonalAsset(): those are the ones without ID yet.
-        // NOTE: Sequential (not Task.WhenAll), see InsertAsync.
+        // El dominio no actualiza ni elimina los bienes personales existentes (Person.Update no los
+        // toca), solo agrega nuevos con Person.AddPersonalAsset(): son los que todavía no tienen
+        // ID.
+        // NOTE: Secuencial (no Task.WhenAll), ver InsertAsync.
         foreach (DataModel.PersonalAsset personalAsset in dataPerson.PersonalAssets.NotNull().Where(personalAsset => personalAsset.Id == 0))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -99,15 +103,15 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
     {
         ArgumentNullException.ThrowIfNull(person);
 
-        // Physical delete of the whole aggregate in a single round trip. The children go first because the
-        // FKs (FK_PersonalAssets_Persons, FK_Addresses_Persons) don't have ON DELETE CASCADE.
+        // Borrado físico del aggregate completo en un solo round trip. Primero van los hijos porque
+        // las FKs (FK_PersonalAssets_Persons, FK_Addresses_Persons) no tienen ON DELETE CASCADE.
         const string sql = """
                            DELETE FROM [dbo].[PersonalAssets] WHERE [PersonId] = @id;
                            DELETE FROM [dbo].[Addresses] WHERE [PersonId] = @id;
                            DELETE FROM [dbo].[Persons] WHERE [Id] = @id;
                            """;
 
-        // CommandDefinition to be able to pass the cancellationToken.
+        // Se usa CommandDefinition para poder pasarle el cancellationToken a Dapper.
         CommandDefinition command = new CommandDefinition(
             sql,
             new { id = person.Id },
@@ -120,7 +124,10 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
     /// <inheritdoc />
     public async Task<DomainModel.Person?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        // The person, its address and its personal assets in a single round trip to the database.
+        // La persona, su dirección y sus bienes personales en un solo round trip a la base.
+        // NOTE: Sin WITH (NOLOCK) a propósito: carga el aggregate para un command. Si leyera un
+        // cambio no confirmado de otra transacción que después hace rollback, el command decidiría
+        // y persistiría sobre datos que nunca existieron.
         const string sql = """
                            SELECT [Id]
                                ,[FullName]
@@ -153,7 +160,7 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
                            WHERE [PersonId] = @id;
                            """;
 
-        // CommandDefinition to be able to pass the cancellationToken.
+        // Se usa CommandDefinition para poder pasarle el cancellationToken a Dapper.
         CommandDefinition command = new CommandDefinition(
             sql,
             new { id },
@@ -164,7 +171,8 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
 
         DataModel.Person? dataPerson = await reader.ReadSingleOrDefaultAsync<DataModel.Person>();
 
-        // Not found: the caller decides what to do (e.g. PersonService throws DomainErrors.Person.NotFound).
+        // Si no existe devuelve null, y el que llama decide qué hacer (p.ej. PersonService lanza
+        // DomainErrors.Person.NotFound).
         if (dataPerson == null)
         {
             return null;

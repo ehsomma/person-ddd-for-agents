@@ -9,8 +9,8 @@ using DomainModel = Records.Persons.Domain.PersonAggregate.Models; // Using alia
 namespace Records.Persons.Infra.Persistence.Sql.PersonAggregate.Mappers;
 
 /// <summary>
-/// Defines a mapper to map a <see cref="DomainModel.Person"/> to a <see cref="DataModel.Person"/>
-/// and vice versa.
+/// Representa el mapper que convierte un <see cref="DomainModel.Person"/> del dominio en un
+/// <see cref="DataModel.Person"/> de la base, y viceversa.
 /// </summary>
 public class PersonMapper : IPersistanceMapper<DomainModel.Person, DataModel.Person>
 {
@@ -34,7 +34,7 @@ public class PersonMapper : IPersistanceMapper<DomainModel.Person, DataModel.Per
             CreatedOnUtc = domainPerson.CreatedOnUtc,
             UpdatedOnUtc = domainPerson.UpdatedOnUtc,
 
-            // The children (address and personal assets) receive the ID of the person (FK).
+            // Los hijos (la dirección y los bienes personales) reciben el ID de la persona (FK).
             Address = new DataModel.Address
             {
                 Id = domainAddress.Id,
@@ -68,14 +68,18 @@ public class PersonMapper : IPersistanceMapper<DomainModel.Person, DataModel.Per
 
         if (dataPerson != null)
         {
-            // DomainModel.Value.
+            // DomainModel.Address.
             DomainModel.Address? domainAddress = null;
             if (dataPerson.Address != null)
             {
                 DataModel.Address dataAddress = dataPerson.Address;
 
-                // The address may not have coordinates. With "||" (not "&&") a row with only one of them
-                // (corrupt data) reaches LatLng.Build, which throws instead of silently discarding it.
+                // La dirección puede no tener coordenadas. Se usa "||" (y no "&&") a propósito: una
+                // fila con una sola de las dos (dato corrupto) llega igual a LatLng.Build, que
+                // lanza la excepción en vez de descartarla en silencio.
+                //   Lat = -34.60, Lng = -58.38  → LatLng válido ✓
+                //   Lat = null,   Lng = null    → sin coordenadas (latLng queda en null)
+                //   Lat = -34.60, Lng = null    → LatLng.Build lanza la excepción ⚠️
                 LatLng? latLng = null;
                 if (dataAddress.Lat != null || dataAddress.Lng != null)
                 {
@@ -104,7 +108,7 @@ public class PersonMapper : IPersistanceMapper<DomainModel.Person, DataModel.Per
                 email,
                 phoneNumber,
                 Gender.FromName(dataPerson.Gender),
-                null,
+                null, // Los bienes personales se cargan abajo, con LoadPersonalAsset (sin eventos).
                 dataPerson.Birthdate,
                 dataPerson.CreatedOnUtc,
                 dataPerson.UpdatedOnUtc);

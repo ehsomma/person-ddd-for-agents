@@ -8,17 +8,16 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Infra.Queries.Sql.Person.GetPersonById;
 
 /// <summary>
-/// Represents the query repository that reads the <see cref="Dto.Person"/> corresponding to the
-/// <see cref="GetPersonByIdQuery"/>. Dapper maps the result directly to the DTOs (no data model, no mappers).
+/// Representa el query repository que lee la persona (<see cref="Dto.Person"/>) de la
+/// <see cref="GetPersonByIdQuery"/>. Dapper mapea el resultado directo a los DTOs, sin data models
+/// ni mappers.
 /// </summary>
 public sealed class GetPersonByIdRepository : QueryRepository<GetPersonByIdQuery, Dto.Person?>
 {
     #region Constructor
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GetPersonByIdRepository"/> class.
-    /// </summary>
-    /// <param name="configuration">Represents a set of key/value application configuration properties.</param>
+    /// <summary>Inicializa una nueva instancia de <see cref="GetPersonByIdRepository"/>.</summary>
+    /// <param name="configuration">La configuración de la aplicación (de donde sale el connection string).</param>
     public GetPersonByIdRepository(IConfiguration configuration)
         : base(configuration)
     {
@@ -33,8 +32,9 @@ public sealed class GetPersonByIdRepository : QueryRepository<GetPersonByIdQuery
     {
         ArgumentNullException.ThrowIfNull(query);
 
-        // The person, its address and its personal assets in a single round trip (one row per personal asset).
-        // NOTE: The column order is the one expected by QueryPersonsAsync (it defines the splitOn).
+        // La persona, su dirección y sus bienes personales en un solo round trip (una fila por cada
+        // bien personal).
+        // NOTE: El orden de las columnas es el que espera QueryPersonsAsync (define el splitOn).
         const string sql = """
                            SELECT PE.[Id]
                                ,PE.[FullName]
@@ -60,7 +60,7 @@ public sealed class GetPersonByIdRepository : QueryRepository<GetPersonByIdQuery
                            ORDER BY PA.[Id];
                            """;
 
-        // CommandDefinition to be able to pass the cancellationToken.
+        // Se usa CommandDefinition para poder pasarle el cancellationToken a Dapper.
         CommandDefinition command = new CommandDefinition(
             sql,
             new { id = query.Id },
@@ -70,8 +70,8 @@ public sealed class GetPersonByIdRepository : QueryRepository<GetPersonByIdQuery
 
         IList<Dto.Person> persons = await connection.QueryPersonsAsync(command);
 
-        // Not found (null): the caller decides what to do (e.g. GetPersonByIdQueryHandler throws
-        // DomainErrors.Person.NotFound).
+        // Si no existe devuelve null, y el que llama decide qué hacer (p.ej.
+        // GetPersonByIdQueryHandler lanza DomainErrors.Person.NotFound).
         Dto.Person? person = persons.SingleOrDefault();
 
         return person;

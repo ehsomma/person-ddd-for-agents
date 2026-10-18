@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Records.Persons.Dtos.Person;
 
 /// <summary>
-/// Represents an address.
+/// Representa la dirección de una persona.
 /// </summary>
 [SuppressMessage(
     "StyleCop.CSharp.DocumentationRules",
@@ -13,30 +13,30 @@ public class Address
 {
     #region Properties
 
-    /// <summary>The id of the address.</summary>
+    /// <summary>ID de la dirección.</summary>
     public int Id { get; init; }
 
-    /// <summary>The street line 1.</summary>
+    /// <summary>Calle y número.</summary>
     /// <example>4441 Collins Avenue</example>
     public string? StreetLine1 { get; init; }
 
-    /// <summary>The street line 2.</summary>
+    /// <summary>Datos adicionales de la dirección, como piso o departamento (opcional).</summary>
     /// <example>null</example>
     public string? StreetLine2 { get; init; }
 
-    /// <summary>The name of the city.</summary>
+    /// <summary>Nombre de la ciudad.</summary>
     /// <example>Miami Beach</example>
     public string? City { get; init; }
 
-    /// <summary>The name of the state.</summary>
+    /// <summary>Nombre del estado o la provincia.</summary>
     /// <example>FL</example>
     public string? State { get; init; }
 
-    /// <summary>The name of the country.</summary>
+    /// <summary>Nombre del país.</summary>
     /// <example>United States</example>
     public string? Country { get; init; }
 
-    /// <summary>Represents the <see cref="LatLng"/> (geographical point on Earth).</summary>
+    /// <summary>Coordenadas geográficas de la dirección (<see cref="LatLng"/>), opcionales.</summary>
     public LatLng? LatLng { get; set; }
 
     #endregion

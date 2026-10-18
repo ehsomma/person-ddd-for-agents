@@ -77,7 +77,8 @@ Las rutas son relativas a `Src/Modules/Persons/` salvo que se indique otra cosa.
 | Query + handler | `Records.Persons.Application/Person/Queries/GetPersonById/*` |
 | Query repository (read) | `Records.Persons.Infra.Queries.Sql/Person/GetPersonById/GetPersonByIdRepository.cs` |
 | Event handler | `Records.Persons.Application/Person/Events/PersonDeleted/PersonDeletedEventHandler.cs` |
-| Repositorio (write) + mapper | `Records.Persons.Infra.Persistence.Sql/PersonAggregate/{Repository,Mappers}/*` |
+| Repositorio (write) + mapper | `Records.Persons.Domain/PersonAggregate/Repositories/IPersonRepository.cs` (contrato) y `Records.Persons.Infra.Persistence.Sql/PersonAggregate/{Repository,Mappers}/*` |
+| DTO | `Records.Persons.Dtos/Person/Person.cs` |
 | Endpoint | `Src/Apps/Records.Persons.Api.V1/Person/DeletePerson/DeletePersonEndpoint.cs` |
 | Validator | `Src/Apps/Records.Persons.Api.V1/Person/Validators/PersonValidator.cs` |
 | Cableado de DI | `Src/Apps/Records.Persons.Api.V1/Program.cs` |
@@ -97,7 +98,9 @@ nombre no sigue la convención, la clase no se registra.
 
 ## Cómo se aplican las reglas de código
 
-1. Antes de escribir C#, se lee la skill `team-standards` y el archivo de referencia del caso (ver arriba).
+1. Antes de escribir C#, se leen las skills `team-standards` y `code-comments` y el archivo de referencia del caso
+   (ver arriba). Del archivo de referencia se imitan la estructura y el código. En los comentarios, si el archivo
+   contradice a `code-comments`, gana la skill.
 2. El build es el juez de todo lo que tiene analyzer: SA (StyleCop), CA (`AnalysisMode=All`), IDE (`.editorconfig`,
    por `EnforceCodeStyleInBuild`) y ARCH (`Directory.Build.targets`). VS, `dotnet build` y el CI ven las mismas reglas.
 3. Las reglas en `none`, `silent` o `suggestion` no las verifica el build: dejan libertad, salvo que la skill pida una
@@ -109,12 +112,15 @@ nombre no sigue la convención, la clase no se registra.
 
 - **Carpetas:** `<Entidad>/{Commands,Queries,Events,Mappers}/<UseCase>/<UseCase>{Command,CommandHandler,Query,QueryHandler}.cs`.
 - **Visibilidad:** los handlers, endpoints y validators son `internal sealed`. Los commands y queries son `public sealed`.
-- **Idioma:**
-  - En inglés: los identificadores, los mensajes y códigos de error (`ERR.PERSON.NOTFOUND`) y los XML docs de
-    BuildingBlocks, dominio y application.
-  - En español: los XML docs de los endpoints, porque se ven en Scalar.
-- **Estilo:** lo controlan `.editorconfig` y StyleCop con `AnalysisMode=All`. **Usá la skill `team-standards`** al
-  escribir o revisar C#: ahí están las reglas que ningún analyzer cubre (regiones, `return`, aliases, endpoints, etc.).
+- **Idioma** (el detalle, el tono y el formato de los comentarios están en la skill `code-comments`):
+  - En inglés: los identificadores, los mensajes y códigos de error (`ERR.PERSON.NOTFOUND`), los mensajes de log y
+    los XML docs de `Src/Core` y `Src/BuildingBlocks`.
+  - En español (es-AR): los XML docs de `Src/Modules` y `Src/Apps`, y en todo el repo los comentarios inline
+    (`//`, `NOTE:`, `TODO:`) y los `Justification` de los `SuppressMessage`.
+  - Los comentarios que ya existen no se traducen salvo que se pida explícitamente.
+- **Estilo:** lo controlan `.editorconfig` y StyleCop con `AnalysisMode=All`. **Usá las skills `team-standards` y
+  `code-comments`** al escribir o revisar C#: ahí están las reglas que ningún analyzer cubre (regiones, `return`,
+  aliases, endpoints, idioma y formato de los comentarios, etc.).
 - **`.editorconfig`:**
   - Todo override de severidad lleva un comentario con el código y el título de la regla, por ejemplo
     `dotnet_diagnostic.IDE0290.severity = silent # IDE0290: Use primary constructor`.

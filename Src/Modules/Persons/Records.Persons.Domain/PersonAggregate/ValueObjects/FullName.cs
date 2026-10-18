@@ -3,26 +3,26 @@
 namespace Records.Persons.Domain.PersonAggregate.ValueObjects;
 
 /// <summary>
-/// Represents the FullName value object.
+/// Representa el value object del nombre completo de una persona.
 /// </summary>
 public sealed class FullName : StringValueObject
 {
     #region Constructor
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FullName"/> value object.
-    /// </summary>
-    /// <param name="value">The person fullname.</param>
+    /// <summary>Inicializa una nueva instancia de <see cref="FullName"/>.</summary>
+    /// <param name="value">El nombre completo de la persona.</param>
     private FullName(string? value)
         : base(value, "FullName", 62, 1)
     {
     }
 
     /// <summary>
-    /// Build a new <see cref="FullName"/> instance based on the specified <paramref name="value"/>.
+    /// Crea un <see cref="FullName"/> a partir de <paramref name="value"/>. La validación la hace
+    /// <see cref="StringValueObject"/>: no puede ser null y tiene que tener entre 1 y 62
+    /// caracteres.
     /// </summary>
-    /// <param name="value">The person fullname.</param>
-    /// <returns>The value object.</returns>
+    /// <param name="value">El nombre completo de la persona.</param>
+    /// <returns>El value object creado.</returns>
     public static FullName Build(string? value)
     {
         return new FullName(value);

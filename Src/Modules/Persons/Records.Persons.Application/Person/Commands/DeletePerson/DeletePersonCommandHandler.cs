@@ -8,7 +8,8 @@ using DomainModel = Records.Persons.Domain.PersonAggregate.Models; // Using alia
 namespace Records.Persons.Application.Person.Commands.DeletePerson;
 
 /// <summary>
-/// Represents a command handler for deleting an existing person.
+/// Representa el command handler para eliminar una persona existente
+/// (<see cref="DomainModel.Person"/>).
 /// </summary>
 internal sealed class DeletePersonCommandHandler : CommandHandler<DeletePersonCommand>
 {
@@ -22,14 +23,12 @@ internal sealed class DeletePersonCommandHandler : CommandHandler<DeletePersonCo
 
     #region Constructor
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DeletePersonCommandHandler"/> class.
-    /// </summary>
-    /// <param name="domainEventPublisher">Publishes the domain events raised by the <see cref="DomainModel.Person"/> aggregate.</param>
-    /// <param name="unitOfWork">Manage a <see cref="IDbSession"/> to encapsulate a business transaction which can affect the database.</param>
-    /// <param name="personService">Represents the service for <see cref="DomainModel.Person"/>.</param>
-    /// <param name="personRepository">Represents the repository for <see cref="DomainModel.Person"/>.</param>
-    /// <exception cref="ArgumentNullException">When some argument for the constructor parameters is null.</exception>
+    /// <summary>Inicializa una nueva instancia de <see cref="DeletePersonCommandHandler"/>.</summary>
+    /// <param name="domainEventPublisher">Publica los eventos de dominio que registra el aggregate <see cref="DomainModel.Person"/>.</param>
+    /// <param name="unitOfWork">Maneja la <see cref="IDbSession"/> para ejecutar las operaciones que modifican la base dentro de una transacción.</param>
+    /// <param name="personService">El servicio de dominio de <see cref="DomainModel.Person"/>.</param>
+    /// <param name="personRepository">El repositorio de <see cref="DomainModel.Person"/>.</param>
+    /// <exception cref="ArgumentNullException">Cuando alguno de los parámetros es <see langword="null"/>.</exception>
     public DeletePersonCommandHandler(
         IDomainEventPublisher domainEventPublisher,
         IUnitOfWork unitOfWork,
@@ -50,21 +49,21 @@ internal sealed class DeletePersonCommandHandler : CommandHandler<DeletePersonCo
     {
         ArgumentNullException.ThrowIfNull(command);
 
-        // Gets the whole aggregate (not just an "exists" check): if it doesn't exist the service throws
-        // DomainErrors.Person.NotFound, and the aggregate is the one that decides whether it can be
-        // deleted (Person.Delete applies the business rules and registers PersonDeleted).
+        // Carga el aggregate completo (no alcanza con chequear que exista): si no existe, el
+        // servicio lanza DomainErrors.Person.NotFound, y es el aggregate el que decide si se puede
+        // eliminar (Person.Delete aplica las reglas de negocio y registra el PersonDeletedEvent).
         DomainModel.Person person = await _personService.GetByIdAsync(command.Id, cancellationToken);
 
         person.Delete();
 
-        // Ejecuta la `operación` especificada dentro de una transacción de base de datos, hace commit
-        // de los cambios si tiene éxito o rollback y relanza la excepción si falla.
+        // Ejecuta la operación dentro de una transacción de base de datos: si sale bien hace
+        // commit, y si falla hace rollback y relanza la excepción.
         await ExecuteInTransaction(
             () => _personRepository.DeleteAsync(person, cancellationToken),
             cancellationToken);
 
-        // Publica los eventos de dominio del agregado (p.ej. PersonDeleted) recien despues del Commit,
-        // para que los handlers solo reaccionen a cambios ya persistidos.
+        // Publica los eventos de dominio del aggregate (p.ej. PersonDeletedEvent) recién después
+        // del commit, para que los handlers solo reaccionen a cambios ya persistidos.
         await PublishDomainEvents(person.PullDomainEvents());
     }
 

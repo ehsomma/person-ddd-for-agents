@@ -17,8 +17,8 @@ internal sealed class DeletePersonEndpoint : IEndpoint
     /// <inheritdoc/>
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        // Crea un grupo de rutas para organizar los endpoints relacionados con un path
-        // comun y nombre de grupo.
+        // Crea un grupo de rutas para organizar los endpoints relacionados con un path común y
+        // nombre de grupo.
         RouteGroupBuilder routeGroup = app.MapGroup("/persons").WithTags("Persons");
 
         routeGroup.MapDelete("/{id:guid}", DeleteDeletePerson)
@@ -26,17 +26,19 @@ internal sealed class DeletePersonEndpoint : IEndpoint
             .Produces<ErrorResponse>(StatusCodes.Status404NotFound);
     }
 
-    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
-    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
-    // los muestra.
+    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los
+    // comentarios XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es
+    // privado, Scalar no los muestra.
 
     /// <summary>
     /// Eliminar persona.
     /// </summary>
-    /// <remarks>Elimina una persona existente junto con su address y sus personal assets.</remarks>
+    /// <remarks>
+    /// Elimina una persona existente junto con su address y sus personal assets.
+    /// </remarks>
     /// <param name="appKey" example="MobileAppKey">Clave que identifica a la aplicación que origina el request.</param>
     /// <param name="id">ID de la persona a eliminar.</param>
-    /// <param name="sender">Injects the mediator sender used to send the command to its handler.</param>
+    /// <param name="sender">Sender del mediator, que envía el command a su handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
     /// <returns>Una respuesta sin contenido.</returns>
     /// <response code="204">Persona eliminada.</response>

@@ -4,16 +4,18 @@ using Records.Persons.Domain.PersonAggregate.Models;
 namespace Records.Persons.Domain.PersonAggregate.Events;
 
 /// <summary>
-/// Represents an event to indicate that a <see cref="Person"/> was deleted.
+/// Representa el evento que indica que se eliminó una persona (<see cref="Models.Person"/>).
 /// </summary>
+/// <remarks>
+/// Lo registra <see cref="Person.Delete"/> y se publica recién después del commit, así que los
+/// handlers reaccionan a un borrado que ya está persistido.
+/// </remarks>
 public sealed class PersonDeletedEvent : DomainEvent
 {
     #region Constructor
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PersonDeletedEvent"/> class.
-    /// </summary>
-    /// <param name="deletedPerson">The <see cref="Person"/> deleted.</param>
+    /// <summary>Inicializa una nueva instancia de <see cref="PersonDeletedEvent"/>.</summary>
+    /// <param name="deletedPerson">La persona eliminada.</param>
     public PersonDeletedEvent(Person deletedPerson)
         : base(deletedPerson.Id.ToString())
     {
@@ -24,7 +26,7 @@ public sealed class PersonDeletedEvent : DomainEvent
 
     #region Properties
 
-    /// <summary>The <see cref="Person"/> deleted.</summary>
+    /// <summary>La persona eliminada.</summary>
     public Person Person { get; private set; }
 
     #endregion
