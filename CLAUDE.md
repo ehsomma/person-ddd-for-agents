@@ -47,6 +47,10 @@ Estas son cosas que un agente suele hacer por costumbre y que **acá no se hacen
   - Se lanza `new DomainException(DomainErrors.<Entidad>.<Error>)`, y cada `Error` lleva código, mensaje y `ErrorType`.
   - El status HTTP lo resuelve **solo** `GlobalExceptionHandler` a partir del `ErrorType`.
   - La respuesta de error es siempre `ErrorResponse` (`BuildingBlocks.Contracts`), nunca ProblemDetails.
+- **El origen de una operación no es un parámetro genérico de los commands.** Si el negocio lo usa (p.ej. el canal de
+  una reserva), es un dato del command que viaja en el body. Si es identidad técnica del cliente, sale de la
+  autenticación (`client_id`) cuando exista. No se crea un contexto del llamador (`ICallerContext`, `ICurrentUser`)
+  hasta que exista un caso de uso que lo consuma.
 - **IDs:** `Guid` en los agregados, sin strongly-typed IDs. Las entidades hijas usan `int`, y `0` significa nueva.
 - **Validación en dos niveles:** FluentValidation en la API y las invariantes en el dominio. Los value objects tienen
   constructor privado y se crean con `static Build(...)`, que valida con la librería `Throw`.

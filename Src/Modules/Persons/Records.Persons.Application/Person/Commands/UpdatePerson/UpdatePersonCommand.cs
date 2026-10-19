@@ -13,11 +13,9 @@ public sealed class UpdatePersonCommand : ICommand<Dto.Person>
     /// <summary>
     /// Inicializa una nueva instancia de la clase <see cref="UpdatePersonCommand"/>.
     /// </summary>
-    /// <param name="appKey">La appKey (solo un ejemplo).</param>
     /// <param name="person">El objeto <see cref="Dto.Person"/> como datos de contenido.</param>
-    public UpdatePersonCommand(string appKey, Dto.Person person)
+    public UpdatePersonCommand(Dto.Person person)
     {
-        AppKey = appKey;
         Person = person;
     }
 
@@ -27,9 +25,6 @@ public sealed class UpdatePersonCommand : ICommand<Dto.Person>
 
     /// <summary>El objeto <see cref="Dto.Person"/> como datos de contenido.</summary>
     public Dto.Person Person { get; init; }
-
-    /// <summary>La appKey (solo un ejemplo).</summary>
-    public string AppKey { get; init; }
 
     #endregion
 }

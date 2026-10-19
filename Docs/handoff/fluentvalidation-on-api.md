@@ -61,8 +61,7 @@ Todo en `feature/mediator`, **sin commitear**.
   - Request con 10 errores → 400 con los 10 en `validationErrors`, en inglés y con rutas anidadas
     (`Address.LatLng.Lat`, `PersonalAssets[0].Value`).
   - PUT con ID distinto entre ruta y body → 400 `ERR.VALIDATION` con el error sobre `Id`.
-  - **En Production** (`ASPNETCORE_ENVIRONMENT=Production`): body vacío, `null`, JSON inválido y header
-    `X-App-Key` faltante → 400 con `ErrorResponse` (antes: 400 con body vacío). El mensaje original queda en el
+  - **En Production** (`ASPNETCORE_ENVIRONMENT=Production`): body vacío, `null` y JSON inválido → 400 con `ErrorResponse` (antes: 400 con body vacío). El mensaje original queda en el
     log.
 - Mensajes del dominio: verificados con un script aparte (`dotnet run t.cs` con `#:project` al proyecto de
   dominio) porque por HTTP el request no llega al handler sin base (ver gotchas).

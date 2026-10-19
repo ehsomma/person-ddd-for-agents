@@ -15,7 +15,7 @@ Todo en `feature/mediator`.
 
 | Archivo | Cambio | Por qué |
 |---|---|---|
-| `BuildingBlocks.Infra.OpenApi.DependencyInjection/XmlParamCommentsOperationTransformer.cs` (nuevo) | Operation transformer que vuelve a aplicar los `<param>` del método del endpoint, leyéndolos del `.xml` de documentación del assembly: la descripción y el ejemplo del body salen solo del parámetro del body, y los headers/query/route con un nombre de binding distinto al de C# (p.ej. `appKey` → `X-App-Key`) reciben su descripción y su `example`. El comentario de la clase explica el bug. | Corrige un bug del source generator de Microsoft (ver gotchas). Se escribe una vez y sirve para todas las APIs, sin tocar los endpoints. |
+| `BuildingBlocks.Infra.OpenApi.DependencyInjection/XmlParamCommentsOperationTransformer.cs` (nuevo) | Operation transformer que vuelve a aplicar los `<param>` del método del endpoint, leyéndolos del `.xml` de documentación del assembly: la descripción y el ejemplo del body salen solo del parámetro del body, y los headers/query/route con un nombre de binding distinto al de C# (p.ej. `correlationId` → `X-Correlation-Id`) reciben su descripción y su `example`. El comentario de la clase explica el bug. | Corrige un bug del source generator de Microsoft (ver gotchas). Se escribe una vez y sirve para todas las APIs, sin tocar los endpoints. |
 | `BuildingBlocks.Infra.OpenApi.DependencyInjection/ServiceCollectionExtensions.cs` | `ConfigureOpenApiCustom` registra el transformer. | Corre después del transformer del generator, porque este se registra antes de ejecutar las options de `AddOpenApi`. |
 | `BuildingBlocks.Infra.Http.DependencyInjection/ServiceCollectionExtensions.cs` | `MapEndpoints` mapea todos los endpoints dentro de un grupo raíz sin prefijo y llama a `AddCommonErrorResponses(rootGroup)`, que agrega el **500** (`ErrorResponse`) a todos los endpoints y el **400** (`ErrorResponse`) solo a los que reciben body, salvo que el endpoint ya declare su propio 400. Se agregaron las regions de la clase. | Son errores que devuelve el `GlobalExceptionHandler`, iguales para toda la API: así no se declaran en cada endpoint (equivalente a un `IOperationFilter` de Swashbuckle). |
 | Los 10 `*Endpoint.cs` de `Records.Persons.Api.V1` (Person y Test) | Método del endpoint `public` (con un `NOTE`); `<summary>` corto en infinitivo; `<remarks>` solo con lo que hace; `<returns>`; orden de parámetros y atributo explícito en todos; `.Produces<ErrorResponse>(404)` en GetById, Update y Delete; `.Produces<ErrorResponse>(400)` en `by-gender-and-birthdate` (no tiene body); `.Produces<ErrorResponse>(403)` en `tests/exception2`. Regions en los endpoints de test. | Ver decisiones. |
@@ -45,8 +45,8 @@ Todo en `feature/mediator`.
 
 * Probar todo en Scalar con la API real. Se verificó el `/openapi/v1.json` levantando una copia en otro puerto (5199),
   pero esa copia no tenía conexión a SQL Server, así que no se llamó a los endpoints de Person contra la base.
-* Un endpoint sin body también puede devolver 400 (p.ej. DELETE sin `X-App-Key`, porque `ThrowOnBadRequest` está
-  activo) y no lo documenta. Se habló de cambiar el criterio a "tiene algún parámetro del request"; quedó así.
+* Un endpoint sin body también puede devolver 400 (p.ej. si falta un header o un query obligatorio, porque
+  `ThrowOnBadRequest` está activo) y no lo documenta. Se habló de cambiar el criterio a "tiene algún parámetro del request"; quedó así.
 * Las respuestas salen en Scalar como 200, 500, 400 (las comunes se agregan al final). Se puede ordenar por código
   en el transformer de OpenAPI si molesta.
 * `Program.cs` tiene un `using System.Runtime.InteropServices;` que no parece usarse (lo agregó el usuario).
@@ -63,7 +63,7 @@ Todo en `feature/mediator`.
   `<param>` cuyo nombre no coincide con un parámetro de la operación se escribe en la descripción del body (gana el
   último) y su `example` pisa el ejemplo del body. Pasa con los servicios, el `CancellationToken` y los headers con
   `Name` distinto. Síntomas: el body mostraba "Token de cancelación del request." y Scalar decía "Invalid JSON
-  body" (el ejemplo del body era `MobileAppKey`). Lo corrige `XmlParamCommentsOperationTransformer`.
+  body" (el ejemplo de un header, que no era JSON, terminaba como ejemplo del body). Lo corrige `XmlParamCommentsOperationTransformer`.
 * **Métodos privados**: el generator no los incluye en su cache de comentarios, sin error ni warning. Para ver qué
   tomó: compilar con `-p:EmitCompilerGeneratedFiles=true` y buscar el `M:` del método en
   `OpenApiXmlCommentSupport.generated.cs`.

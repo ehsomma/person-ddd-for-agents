@@ -34,7 +34,6 @@ internal sealed class DeletePersonEndpoint : IEndpoint
     /// <remarks>
     /// Elimina una persona existente junto con su address y sus personal assets.
     /// </remarks>
-    /// <param name="appKey" example="MobileAppKey">Clave que identifica a la aplicación que origina el request.</param>
     /// <param name="id">ID de la persona a eliminar.</param>
     /// <param name="sender">Sender del mediator, que envía el command a su handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
@@ -42,12 +41,11 @@ internal sealed class DeletePersonEndpoint : IEndpoint
     /// <response code="204">Persona eliminada.</response>
     /// <response code="404">La persona no existe.</response>
     public async Task<NoContent> DeleteDeletePerson(
-        [FromHeader(Name = "X-App-Key")] string appKey,
         [FromRoute] Guid id,
         [FromServices] ISender sender,
         CancellationToken cancellationToken)
     {
-        DeletePersonCommand command = new DeletePersonCommand(appKey, id);
+        DeletePersonCommand command = new DeletePersonCommand(id);
 
         await sender.Send(command, cancellationToken);
 

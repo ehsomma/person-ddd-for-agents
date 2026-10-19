@@ -306,7 +306,7 @@ WHERE PE.[Id] = @id;
 
 Los endpoints (las clases `*Endpoint : IEndpoint`) siguen estas reglas:
 
-1. **Orden de los parámetros:** primero los headers (`appKey`), después los de ruta y query, después el body, después los servicios inyectados y el `CancellationToken` siempre último. Los `<param>` van en el mismo orden (lo exige SA1612).
+1. **Orden de los parámetros:** primero los headers (`[FromHeader]`), después los de ruta y query, después el body, después los servicios inyectados y el `CancellationToken` siempre último. Los `<param>` van en el mismo orden (lo exige SA1612).
 2. **Atributo explícito en todos los parámetros:** `[FromHeader]`, `[FromRoute]`, `[FromQuery]`, `[FromBody]` o `[FromServices]`, aunque minimal APIs los pueda inferir. Solo `CancellationToken` y `HttpContext` van sin atributo (no existe uno para ellos: ASP.NET Core los resuelve solo) y van al final.
 3. **El método del endpoint es `public`** (en la region `Public methods`, con el `NOTE` que explica por qué), aunque la clase sea `internal`.
 4. **Documentación XML:** el `<summary>` (título en infinitivo), el `<remarks>` y el tono los define la skill `code-comments` (sección "API: lo que se ve en Scalar").
@@ -337,7 +337,6 @@ routeGroup.MapPut("/{id:guid}", PutUpdatePerson)
 private async Task<Dto.Person> PutUpdatePerson(
     Guid id,
     Dto.Person person,
-    [FromHeader(Name = "X-App-Key")] string appKey,
     CancellationToken cancellationToken,
     ISender sender)
 ```
@@ -358,7 +357,6 @@ routeGroup.MapPut("/{id:guid}", PutUpdatePerson)
 /// <response code="200">Persona actualizada.</response>
 /// <response code="404">La persona no existe.</response>
 public async Task<Dto.Person> PutUpdatePerson(
-    [FromHeader(Name = "X-App-Key")] string appKey,
     [FromRoute] Guid id,
     [FromBody] Dto.Person person,
     [FromServices] ISender sender,

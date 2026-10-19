@@ -37,7 +37,6 @@ internal sealed class UpdatePersonEndpoint : IEndpoint
     /// Actualiza los datos de una persona existente, le agrega los personal assets nuevos que vengan
     /// en el body y devuelve la persona tal como quedó guardada.
     /// </remarks>
-    /// <param name="appKey" example="MobileAppKey">Clave que identifica a la aplicación que origina el request.</param>
     /// <param name="id">ID de la persona a actualizar.</param>
     /// <param name="person">Datos de la persona a actualizar.</param>
     /// <param name="sender">Injects the mediator sender used to send the command to its handler.</param>
@@ -47,7 +46,6 @@ internal sealed class UpdatePersonEndpoint : IEndpoint
     /// <response code="200">Persona actualizada.</response>
     /// <response code="404">La persona no existe.</response>
     public async Task<Dto.Person> PutUpdatePerson(
-        [FromHeader(Name = "X-App-Key")] string appKey,
         [FromRoute] Guid id,
         [FromBody] Dto.Person person,
         [FromServices] ISender sender,
@@ -71,7 +69,7 @@ internal sealed class UpdatePersonEndpoint : IEndpoint
         // la convierte en un 400 con el detalle en `ValidationErrors`).
         personValidator.ValidateAndThrowExeption(person);
 
-        UpdatePersonCommand command = new UpdatePersonCommand(appKey, person);
+        UpdatePersonCommand command = new UpdatePersonCommand(person);
 
         Dto.Person updatedPerson = await sender.Send(command, cancellationToken);
 

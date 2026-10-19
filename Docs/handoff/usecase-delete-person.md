@@ -35,7 +35,7 @@ tienen cascade) y `Person.Delete()` (registra `PersonDeletedEvent`) **ya existí
 
 | Archivo | Cambio |
 |---|---|
-| `Application/Person/Commands/DeletePerson/DeletePersonCommand.cs` (nuevo) | `ICommand` sin respuesta, con `AppKey` e `Id` |
+| `Application/Person/Commands/DeletePerson/DeletePersonCommand.cs` (nuevo) | `ICommand` sin respuesta, con el `Id` |
 | `Application/Person/Commands/DeletePerson/DeletePersonCommandHandler.cs` (nuevo) | Usa `CommandHandler<DeletePersonCommand>` (la variante sin `TResponse`). Hace `GetByIdAsync` → `person.Delete()` → `ExecuteInTransaction(DeleteAsync)` → `PublishDomainEvents`. No usa mapper porque no devuelve nada |
 | `Api.V1/Person/DeletePerson/DeletePersonEndpoint.cs` (nuevo) | `DELETE /persons/{id:guid}` (name `DeleteDeletePerson`, por la convención `<Verbo><CasoDeUso>`), devuelve `TypedResults.NoContent()` (204). El 404 lo resuelve `GlobalExceptionHandler` según `ErrorType.NotFound` |
 

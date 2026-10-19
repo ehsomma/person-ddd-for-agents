@@ -34,10 +34,10 @@ namespace BuildingBlocks.Infra.OpenApi.DependencyInjection;
 /// de la operación. Como gana el último &lt;param&gt;, el body termina mostrando, por ejemplo,
 /// "Token de cancelación del request.".</item>
 /// <item>Los parámetros con un nombre de binding distinto al de C#, como
-/// <c>[FromHeader(Name = "X-App-Key")] string appKey</c>: en la operación el header se llama
-/// <c>X-App-Key</c>, así que no matchea con <c>appKey</c>. El header queda sin descripción y su ejemplo
-/// (p.ej. <c>MobileAppKey</c>, que no es JSON válido) termina como ejemplo del body, y Scalar muestra
-/// "Invalid JSON body".</item>
+/// <c>[FromHeader(Name = "X-Correlation-Id")] string correlationId</c>: en la operación el header se
+/// llama <c>X-Correlation-Id</c>, así que no matchea con <c>correlationId</c>. El header queda sin
+/// descripción y su ejemplo (p.ej. <c>abc-123</c>, que no es JSON válido) termina como ejemplo del body,
+/// y Scalar muestra "Invalid JSON body".</item>
 /// </list>
 /// <para>
 /// El generator registra su transformer antes de ejecutar las options del <c>AddOpenApi</c>, así que
@@ -153,7 +153,7 @@ internal sealed class XmlParamCommentsOperationTransformer : IOpenApiOperationTr
     /// Sets the description and the example of a query/header/route parameter of the operation.
     /// </summary>
     /// <param name="operation">The operation to fix.</param>
-    /// <param name="name">The name of the parameter in the operation (the binding name, ej. X-App-Key).</param>
+    /// <param name="name">The name of the parameter in the operation (the binding name, ej. X-Correlation-Id).</param>
     /// <param name="description">The description of the parameter.</param>
     /// <param name="example">The example of the parameter.</param>
     private static void ApplyToParameter(OpenApiOperation operation, string name, string? description, string? example)
@@ -171,7 +171,7 @@ internal sealed class XmlParamCommentsOperationTransformer : IOpenApiOperationTr
 
         if (example is not null)
         {
-            // NOTE: En query/header/route un texto que no es JSON (ej. MobileAppKey) es un string.
+            // NOTE: En query/header/route un texto que no es JSON (ej. abc-123) es un string.
             parameter.Example = TryParseJson(example) ?? JsonValue.Create(example);
         }
     }

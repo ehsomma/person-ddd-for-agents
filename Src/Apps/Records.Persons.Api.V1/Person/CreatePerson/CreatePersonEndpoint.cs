@@ -36,7 +36,6 @@ internal sealed class CreatePersonEndpoint : IEndpoint
     /// como quedó
     /// guardada.
     /// </remarks>
-    /// <param name="appKey" example="MobileAppKey">Clave que identifica a la aplicación que origina el request.</param>
     /// <param name="person">Datos de la persona a crear.</param>
     /// <param name="sender">Injects the mediator sender used to send the command to its handler.</param>
     /// <param name="personValidator">Injects the validator of the request body.</param>
@@ -44,7 +43,6 @@ internal sealed class CreatePersonEndpoint : IEndpoint
     /// <returns>La persona creada.</returns>
     /// <response code="200">Persona creada.</response>
     public async Task<Dto.Person> PostCreatePerson(
-        [FromHeader(Name = "X-App-Key")] string appKey,
         [FromBody] Dto.Person person,
         [FromServices] ISender sender,
         [FromServices] IValidator<Dto.Person> personValidator,
@@ -54,7 +52,7 @@ internal sealed class CreatePersonEndpoint : IEndpoint
         // la convierte en un 400 con el detalle en `ValidationErrors`).
         personValidator.ValidateAndThrowExeption(person);
 
-        CreatePersonCommand command = new CreatePersonCommand(appKey, person);
+        CreatePersonCommand command = new CreatePersonCommand(person);
 
         Dto.Person createdPerson = await sender.Send(command, cancellationToken);
 
