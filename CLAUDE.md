@@ -83,18 +83,17 @@ Las rutas son relativas a `Src/Modules/Persons/` salvo que se indique otra cosa.
 | Validator | `Src/Apps/Records.Persons.Api.V1/Person/Validators/PersonValidator.cs` |
 | Cableado de DI | `Src/Apps/Records.Persons.Api.V1/Program.cs` |
 
-### Pasos para agregar un caso de uso nuevo
+### Casos de uso y módulos nuevos
 
-1. **Dominio:** el método de comportamiento en el agregado, el evento si corresponde y el error en `DomainErrors`.
-2. **Application:** el command o la query y su handler, en `<Entidad>/{Commands|Queries}/<UseCase>/`.
-3. **Infra:** el método en el repositorio (write) o un `<UseCase>Repository` nuevo (read).
-4. **API:** el validator si hay body, y `<UseCase>Endpoint` con sus XML docs y los `.Produces<ErrorResponse>(...)`
-   específicos (por ejemplo un 404). El 500 y el 400 del body ya los agrega `MapEndpoints`.
-5. `dotnet build Records.slnx` con 0 warnings.
+Las recetas están en dos skills, que se cargan solo cuando hacen falta:
 
-**El registro en DI es automático por convención de nombres** (Scrutor). Se registran las clases que terminan en
-`*Repository` y `*Mapper`, y las que implementan `IEndpoint`, `IDomainService` o los handlers del mediator. Si el
-nombre no sigue la convención, la clase no se registra.
+- **`new-usecase`**: un command, una query o un event handler de punta a punta, un aggregate nuevo en un módulo
+  existente o un cambio de esquema. Termina con una verificación (build, convenciones de nombre y arranque de la
+  API) que no se saltea.
+- **`new-module`**: un bounded context nuevo, su host y un proyecto nuevo a partir de esta plantilla.
+
+**El registro en DI es automático por convención de nombres** (Scrutor): una clase que no la respeta no se
+registra y el build no avisa. El detalle está en `new-usecase`.
 
 ## Cómo se aplican las reglas de código
 
@@ -174,16 +173,5 @@ nombre no sigue la convención, la clase no se registra.
 
 ## Usar este repo como plantilla en otro proyecto
 
-1. **Se copia tal cual:**
-   - `Src/Core/My.*` y `Src/BuildingBlocks/*`.
-   - `Directory.Build.props`, `Directory.Build.targets`, `stylecop.json` y `.editorconfig`.
-   - `.claude/skills/*` y `.claude/commands/handoff*`.
-2. **Se crea un módulo por bounded context:** `Src/Modules/<Módulo>/<Producto>.<Módulo>.{Domain,Application,Dtos,Configuration,Infra.Persistence.Sql,Infra.Queries.Sql,Infra.Configuration.DependencyInjection}`.
-   Respetá los sufijos, porque `Directory.Build.targets` infiere la capa a partir de ellos.
-3. **Se cambia el prefijo** `Records.` por el del producto en los proyectos y los namespaces. La solución se crea con
-   `dotnet new sln -n <Producto>` (en .NET 10 ya genera `.slnx`) y los proyectos se agregan con `dotnet sln add`.
-4. **Se crea el host** en `Src/Apps/<Producto>.<Módulo>.Api.V1/`, con un `Program.cs` que siga el mismo orden de
-   `AddXxx` que `Records.Persons.Api.V1/Program.cs` (incluido el `AddOpenApi` literal).
-5. **Se crea el CLAUDE.md del proyecto nuevo** a partir de este. Se conservan las secciones de arquitectura,
-   decisiones, convenciones, trampas y flujo de trabajo, y se actualizan las rutas de los archivos de referencia.
-6. **No se copian** `Docs/handoff/*` (es el historial de este repo) ni el módulo Persons, que queda solo como ejemplo.
+Los pasos (qué se copia, qué no, el prefijo, el host y el `CLAUDE.md` nuevo) están en la skill `new-module`, en la
+sección "Proyecto nuevo a partir de esta plantilla".
