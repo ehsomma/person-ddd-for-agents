@@ -17,7 +17,7 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Application.Person.Commands.CreatePerson;
 
 /// <summary>
-/// Represents a command handler for creating a new person.
+/// Representa el command handler para crear una nueva persona.
 /// </summary>
 internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCommand, Dto.Person>
 {
@@ -41,15 +41,15 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreatePersonCommandHandler"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="CreatePersonCommandHandler"/>.
     /// </summary>
-    /// <param name="domainEventPublisher">Publishes the domain events raised by the <see cref="DomainModel.Person"/> aggregate.</param>
-    /// <param name="unitOfWork">Manage a <see cref="IDbSession"/> to encapsulate a business transaction which can affect the database.</param>
-    /// <param name="settings">Represents the settings that will be mapped from the Persons key in the appsettings.</param>
-    /// <param name="personRepository">Represents the repository for <see cref="DomainModel.Person"/>.</param>
-    /// <param name="personService">Represents the service for <see cref="DomainModel.Person"/>.</param>
-    /// <param name="personMapper">Defines a mapper to map a <see cref="DomainModel.Person"/> to a <see cref="Dto.Person"/>.</param>
-    /// <exception cref="ArgumentNullException">When some argument for the constructor parameters is null.</exception>
+    /// <param name="domainEventPublisher">Publica los eventos de dominio generados por el agregado <see cref="DomainModel.Person"/>.</param>
+    /// <param name="unitOfWork">Gestiona un <see cref="IDbSession"/> para encapsular una transacción de negocio que puede afectar la base de datos.</param>
+    /// <param name="settings">Representa la configuración que se mapeará desde la clave Persons en los appsettings.</param>
+    /// <param name="personRepository">Representa el repositorio para <see cref="DomainModel.Person"/>.</param>
+    /// <param name="personService">Representa el servicio para <see cref="DomainModel.Person"/>.</param>
+    /// <param name="personMapper">Define un mapeador para mapear un <see cref="DomainModel.Person"/> a un <see cref="Dto.Person"/>.</param>
+    /// <exception cref="ArgumentNullException">Cuando algún argumento de los parámetros del constructor es nulo.</exception>
     public CreatePersonCommandHandler(
         IDomainEventPublisher domainEventPublisher,
         IUnitOfWork unitOfWork,

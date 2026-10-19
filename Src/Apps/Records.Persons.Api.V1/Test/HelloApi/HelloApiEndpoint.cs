@@ -21,9 +21,7 @@ internal sealed class HelloApiEndpoint : IEndpoint
             .WithName("GetTestHelloApi");
     }
 
-    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
-    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
-    // los muestra.
+    // NOTE: El delegado debe ser público para que Scalar tome los comentarios xml.
 
     /// <summary>
     /// Probar el funcionamiento del API.

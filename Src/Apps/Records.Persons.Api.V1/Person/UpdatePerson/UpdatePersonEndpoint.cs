@@ -28,16 +28,14 @@ internal sealed class UpdatePersonEndpoint : IEndpoint
             .Produces<ErrorResponse>(StatusCodes.Status404NotFound);
     }
 
-    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
-    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
-    // los muestra.
+    // NOTE: El delegado debe ser público para que Scalar tome los comentarios xml.
 
     /// <summary>
     /// Actualizar persona.
     /// </summary>
     /// <remarks>
-    /// Actualiza los datos de una persona existente, le agrega los personal assets nuevos que vengan en el body
-    /// y devuelve la persona tal como quedó guardada.
+    /// Actualiza los datos de una persona existente, le agrega los personal assets nuevos que vengan
+    /// en el body y devuelve la persona tal como quedó guardada.
     /// </remarks>
     /// <param name="appKey" example="MobileAppKey">Clave que identifica a la aplicación que origina el request.</param>
     /// <param name="id">ID de la persona a actualizar.</param>

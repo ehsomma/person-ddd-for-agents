@@ -23,16 +23,14 @@ internal sealed class ThrowException2Endpoint : IEndpoint
             .Produces<ErrorResponse>(StatusCodes.Status403Forbidden);
     }
 
-    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
-    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
-    // los muestra.
+    // NOTE: El delegado debe ser público para que Scalar tome los comentarios xml.
 
     /// <summary>
     /// Probar un error de negocio.
     /// </summary>
     /// <remarks>
-    /// Endpoint de prueba: lanza una excepción de negocio (ForbiddenException, con su código de error), para
-    /// probar el manejo de errores de negocio del API.
+    /// Endpoint de prueba: lanza una excepción de negocio (ForbiddenException, con su código de error),
+    /// para probar el manejo de errores de negocio del API.
     /// </remarks>
     /// <param name="context">HTTP-specific information about an individual HTTP request.</param>
     /// <returns>Nunca devuelve nada: siempre lanza la excepción.</returns>

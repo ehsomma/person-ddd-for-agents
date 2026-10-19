@@ -5,7 +5,7 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Application.Person.Queries.GetPersonsByGenderAndBirthdate;
 
 /// <summary>
-/// Represents the <see cref="GetPersonsByGenderAndBirthdateQuery"/> handler.
+/// Representa el handler de la <see cref="GetPersonsByGenderAndBirthdateQuery"/>.
 /// </summary>
 internal sealed class GetPersonsByGenderAndBirthdateQueryHandler : QueryHandler<GetPersonsByGenderAndBirthdateQuery, IList<Dto.Person>>
 {
@@ -18,10 +18,10 @@ internal sealed class GetPersonsByGenderAndBirthdateQueryHandler : QueryHandler<
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GetPersonsByGenderAndBirthdateQueryHandler"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="GetPersonsByGenderAndBirthdateQueryHandler"/>.
     /// </summary>
-    /// <param name="getPersonsByGenderAndBirthdateRepository">Represents the query repository that reads the <see cref="Dto.Person"/> list.</param>
-    /// <exception cref="ArgumentNullException">When some argument for the constructor parameters is null.</exception>
+    /// <param name="getPersonsByGenderAndBirthdateRepository">Representa el repositorio de la query que lee la lista de <see cref="Dto.Person"/>.</param>
+    /// <exception cref="ArgumentNullException">Cuando algún argumento de los parámetros del constructor es nulo.</exception>
     public GetPersonsByGenderAndBirthdateQueryHandler(
         IQueryRepository<GetPersonsByGenderAndBirthdateQuery, IList<Dto.Person>> getPersonsByGenderAndBirthdateRepository)
     {

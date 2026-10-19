@@ -5,7 +5,7 @@ using Records.Persons.Domain.PersonAggregate.Events;
 namespace Records.Persons.Application.Person.Events.PersonUpdated;
 
 /// <summary>
-/// The <see cref="PersonUpdatedEvent"/> handler.
+/// El <see cref="PersonUpdatedEvent"/> handler.
 /// </summary>
 internal sealed class PersonUpdatedEventHandler : DomainEventHandler<PersonUpdatedEvent>
 {
@@ -18,10 +18,10 @@ internal sealed class PersonUpdatedEventHandler : DomainEventHandler<PersonUpdat
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PersonUpdatedEventHandler"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="PersonUpdatedEventHandler"/>.
     /// </summary>
-    /// <param name="logger">Logger injection.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="logger"/> is <see langword="null"/>.</exception>
+    /// <param name="logger">Inyección del logger.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="logger"/> es <see langword="null"/>.</exception>
     public PersonUpdatedEventHandler(ILogger<PersonUpdatedEventHandler> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

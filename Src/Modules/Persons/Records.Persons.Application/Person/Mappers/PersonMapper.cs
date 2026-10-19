@@ -5,7 +5,7 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Application.Person.Mappers;
 
 /// <summary>
-/// Represents a mapper to map a <see cref="DomainModel.Person"/> to a <see cref="Dto.Person"/>.
+/// Representa un mapper para mapear un <see cref="DomainModel.Person"/> a un <see cref="Dto.Person"/>.
 /// </summary>
 internal sealed class PersonMapper : IDomainMapper<DomainModel.Person, Dto.Person>
 {

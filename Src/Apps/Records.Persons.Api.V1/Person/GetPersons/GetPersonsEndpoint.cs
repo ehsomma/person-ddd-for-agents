@@ -24,14 +24,14 @@ internal sealed class GetPersonsEndpoint : IEndpoint
             .WithName("GetGetPersons");
     }
 
-    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
-    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
-    // los muestra.
+    // NOTE: El delegado debe ser público para que Scalar tome los comentarios xml.
 
     /// <summary>
     /// Listar personas.
     /// </summary>
-    /// <remarks>Devuelve todas las personas junto con su address y sus personal assets, sin filtros ni paginado.</remarks>
+    /// <remarks>
+    /// Devuelve todas las personas junto con su address y sus personal assets, sin filtros ni paginado.
+    /// </remarks>
     /// <param name="sender">Injects the mediator sender used to send the query to its handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>
     /// <returns>La lista de personas.</returns>

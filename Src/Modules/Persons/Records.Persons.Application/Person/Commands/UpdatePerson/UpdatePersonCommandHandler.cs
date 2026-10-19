@@ -14,7 +14,7 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Application.Person.Commands.UpdatePerson;
 
 /// <summary>
-/// Represents a command handler for updating an existing person.
+/// Representa el command handler para actualizar una persona existente.
 /// </summary>
 internal sealed class UpdatePersonCommandHandler : CommandHandler<UpdatePersonCommand, Dto.Person>
 {
@@ -31,14 +31,14 @@ internal sealed class UpdatePersonCommandHandler : CommandHandler<UpdatePersonCo
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UpdatePersonCommandHandler"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="UpdatePersonCommandHandler"/>.
     /// </summary>
-    /// <param name="domainEventPublisher">Publishes the domain events raised by the <see cref="DomainModel.Person"/> aggregate.</param>
-    /// <param name="unitOfWork">Manage a <see cref="IDbSession"/> to encapsulate a business transaction which can affect the database.</param>
-    /// <param name="personService">Represents the service for <see cref="DomainModel.Person"/>.</param>
-    /// <param name="personRepository">Represents the repository for <see cref="DomainModel.Person"/>.</param>
-    /// <param name="personMapper">Defines a mapper to map a <see cref="DomainModel.Person"/> to a <see cref="Dto.Person"/>.</param>
-    /// <exception cref="ArgumentNullException">When some argument for the constructor parameters is null.</exception>
+    /// <param name="domainEventPublisher">Publica los eventos de dominio generados por el agregado <see cref="DomainModel.Person"/>.</param>
+    /// <param name="unitOfWork">Gestiona un <see cref="IDbSession"/> para encapsular una transacción de negocio que puede afectar la base de datos.</param>
+    /// <param name="personService">Representa el servicio para <see cref="DomainModel.Person"/>.</param>
+    /// <param name="personRepository">Representa el repositorio para <see cref="DomainModel.Person"/>.</param>
+    /// <param name="personMapper">Define un mapeador para mapear un <see cref="DomainModel.Person"/> a un <see cref="Dto.Person"/>.</param>
+    /// <exception cref="ArgumentNullException">Cuando algún argumento de los parámetros del constructor es nulo.</exception>
     public UpdatePersonCommandHandler(
         IDomainEventPublisher domainEventPublisher,
         IUnitOfWork unitOfWork,

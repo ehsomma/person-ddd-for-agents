@@ -7,7 +7,8 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Api.V1.Person.GetPersonsWithSpecificProfile;
 
 /// <summary>
-/// Endpoint para el caso de uso `GetPersonsWithSpecificProfile` (ejemplo de query vía POST con el filtro en el body).
+/// Endpoint para el caso de uso `GetPersonsWithSpecificProfile` (ejemplo de query vía POST con el
+/// filtro en el body).
 /// </summary>
 internal sealed class GetPersonsWithSpecificProfileEndpoint : IEndpoint
 {
@@ -24,9 +25,7 @@ internal sealed class GetPersonsWithSpecificProfileEndpoint : IEndpoint
             .WithName("PostGetPersonsWithSpecificProfile");
     }
 
-    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
-    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
-    // los muestra.
+    // NOTE: El delegado debe ser público para que Scalar tome los comentarios xml.
 
     /// <summary>
     /// Buscar personas por perfil.

@@ -26,14 +26,14 @@ internal sealed class GetPersonByIdEndpoint : IEndpoint
             .Produces<ErrorResponse>(StatusCodes.Status404NotFound);
     }
 
-    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
-    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
-    // los muestra.
+    // NOTE: El delegado debe ser público para que Scalar tome los comentarios xml.
 
     /// <summary>
     /// Obtener persona por ID.
     /// </summary>
-    /// <remarks>Devuelve la persona con el ID especificado junto con su address y sus personal assets.</remarks>
+    /// <remarks>
+    /// Devuelve la persona con el ID especificado junto con su address y sus personal assets.
+    /// </remarks>
     /// <param name="id">ID de la persona a buscar.</param>
     /// <param name="sender">Injects the mediator sender used to send the query to its handler.</param>
     /// <param name="cancellationToken">Token de cancelación del request.</param>

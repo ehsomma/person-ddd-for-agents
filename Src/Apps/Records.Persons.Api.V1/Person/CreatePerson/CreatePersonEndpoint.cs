@@ -26,15 +26,14 @@ internal sealed class CreatePersonEndpoint : IEndpoint
             .Produces<Dto.Person>(StatusCodes.Status200OK);
     }
 
-    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
-    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
-    // los muestra.
+    // NOTE: El delegado debe ser público para que Scalar tome los comentarios xml.
 
     /// <summary>
     /// Crear persona.
     /// </summary>
     /// <remarks>
-    /// Crea una persona nueva junto con su address y sus personal assets, y devuelve la persona tal como quedó
+    /// Crea una persona nueva junto con su address y sus personal assets, y devuelve la persona tal
+    /// como quedó
     /// guardada.
     /// </remarks>
     /// <param name="appKey" example="MobileAppKey">Clave que identifica a la aplicación que origina el request.</param>

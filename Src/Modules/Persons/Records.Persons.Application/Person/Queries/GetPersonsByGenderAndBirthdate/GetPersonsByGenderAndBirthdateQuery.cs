@@ -4,18 +4,19 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Application.Person.Queries.GetPersonsByGenderAndBirthdate;
 
 /// <summary>
-/// Represents a query to get the Persons corresponding to the gender and birthdate period filters.
+/// Representa una query para obtener las Personas correspondientes a los filtros de género y período
+/// de fecha de nacimiento.
 /// </summary>
 public sealed class GetPersonsByGenderAndBirthdateQuery : IQuery<IList<Dto.Person>>
 {
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GetPersonsByGenderAndBirthdateQuery"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="GetPersonsByGenderAndBirthdateQuery"/>.
     /// </summary>
-    /// <param name="gender">The gender of the Person ("Male, Female, Other").</param>
-    /// <param name="birthdateFrom">The birthdate from (inclusive).</param>
-    /// <param name="birthdateTo">The birthdate to (inclusive).</param>
+    /// <param name="gender">El género de la Persona ("Male, Female, Other").</param>
+    /// <param name="birthdateFrom">La fecha de nacimiento desde (inclusive).</param>
+    /// <param name="birthdateTo">La fecha de nacimiento hasta (inclusive).</param>
     public GetPersonsByGenderAndBirthdateQuery(string gender, DateTime birthdateFrom, DateTime birthdateTo)
     {
         Gender = gender;
@@ -27,13 +28,13 @@ public sealed class GetPersonsByGenderAndBirthdateQuery : IQuery<IList<Dto.Perso
 
     #region Properties
 
-    /// <summary>The gender of the Person ("Male, Female, Other").</summary>
+    /// <summary>El género de la Persona ("Male, Female, Other").</summary>
     public string Gender { get; } // Readonly.
 
-    /// <summary>The birthdate from (inclusive).</summary>
+    /// <summary>La fecha de nacimiento desde (inclusive).</summary>
     public DateTime BirthdateFrom { get; } // Readonly.
 
-    /// <summary>The birthdate to (inclusive).</summary>
+    /// <summary>La fecha de nacimiento hasta (inclusive).</summary>
     public DateTime BirthdateTo { get; } // Readonly.
 
     #endregion

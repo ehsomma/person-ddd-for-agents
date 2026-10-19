@@ -5,7 +5,7 @@ using Records.Persons.Domain.PersonAggregate.Events;
 namespace Records.Persons.Application.Person.Events.PersonalAssetAdded;
 
 /// <summary>
-/// The <see cref="PersonalAssetAddedEvent"/> handler.
+/// El <see cref="PersonalAssetAddedEvent"/> handler.
 /// </summary>
 internal sealed class PersonalAssetAddedEventHandler : DomainEventHandler<PersonalAssetAddedEvent>
 {
@@ -18,10 +18,10 @@ internal sealed class PersonalAssetAddedEventHandler : DomainEventHandler<Person
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PersonalAssetAddedEventHandler"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="PersonalAssetAddedEventHandler"/>.
     /// </summary>
-    /// <param name="logger">Logger injection.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="logger"/> is <see langword="null"/>.</exception>
+    /// <param name="logger">Inyección del logger.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="logger"/> es <see langword="null"/>.</exception>
     public PersonalAssetAddedEventHandler(ILogger<PersonalAssetAddedEventHandler> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

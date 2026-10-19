@@ -8,7 +8,8 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Api.V1.Person.GetPersonsByGenderAndBirthdate;
 
 /// <summary>
-/// Endpoint para el caso de uso `GetPersonsByGenderAndBirthdate` (ejemplo de query con parámetros vía query string).
+/// Endpoint para el caso de uso `GetPersonsByGenderAndBirthdate` (ejemplo de query con parámetros
+/// vía query string).
 /// </summary>
 internal sealed class GetPersonsByGenderAndBirthdateEndpoint : IEndpoint
 {
@@ -28,9 +29,7 @@ internal sealed class GetPersonsByGenderAndBirthdateEndpoint : IEndpoint
             .Produces<ErrorResponse>(StatusCodes.Status400BadRequest);
     }
 
-    // NOTE: Es público porque el source generator de Microsoft.AspNetCore.OpenApi solo lee los comentarios
-    // XML (<summary>, <remarks>, <param>, <response>) de métodos públicos. Si es privado, Scalar no
-    // los muestra.
+    // NOTE: El delegado debe ser público para que Scalar tome los comentarios xml.
 
     /// <summary>
     /// Buscar personas por género y fecha de nacimiento.

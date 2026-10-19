@@ -5,7 +5,7 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Application.Person.Queries.GetPersons;
 
 /// <summary>
-/// Represents the <see cref="GetPersonsQuery"/> handler.
+/// Representa el handler de la <see cref="GetPersonsQuery"/>.
 /// </summary>
 internal sealed class GetPersonsQueryHandler : QueryHandler<GetPersonsQuery, IList<Dto.Person>>
 {
@@ -18,10 +18,10 @@ internal sealed class GetPersonsQueryHandler : QueryHandler<GetPersonsQuery, ILi
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GetPersonsQueryHandler"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="GetPersonsQueryHandler"/>.
     /// </summary>
-    /// <param name="getPersonsRepository">Represents the query repository that reads the <see cref="Dto.Person"/> list.</param>
-    /// <exception cref="ArgumentNullException">When some argument for the constructor parameters is null.</exception>
+    /// <param name="getPersonsRepository">Representa el repositorio de la query que lee la lista de <see cref="Dto.Person"/>.</param>
+    /// <exception cref="ArgumentNullException">Cuando algún argumento de los parámetros del constructor es nulo.</exception>
     public GetPersonsQueryHandler(IQueryRepository<GetPersonsQuery, IList<Dto.Person>> getPersonsRepository)
     {
         _getPersonsRepository = getPersonsRepository ?? throw new ArgumentNullException(nameof(getPersonsRepository));

@@ -4,11 +4,11 @@ using Dto = Records.Persons.Dtos.Person; // Using aliases.
 namespace Records.Persons.Application.Person.Queries.GetPersons;
 
 /// <summary>
-/// Represents a query to get the full list of Persons.
+/// Representa una query para obtener la lista completa de Personas.
 /// </summary>
 /// <remarks>
-/// It's empty (no filters), but it's still needed: the mediator resolves the handler and the DI resolves
-/// the query repository by the type of the query.
+/// Está vacía (sin filtros), pero aún es necesaria: el mediador resuelve el handler y la DI resuelve
+/// el repositorio de la query por el tipo de la query.
 /// </remarks>
 public sealed class GetPersonsQuery : IQuery<IList<Dto.Person>>
 {
