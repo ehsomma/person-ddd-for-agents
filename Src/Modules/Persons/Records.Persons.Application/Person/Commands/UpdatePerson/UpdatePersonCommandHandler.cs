@@ -76,7 +76,7 @@ internal sealed class UpdatePersonCommandHandler : CommandHandler<UpdatePersonCo
             () => _personRepository.UpdateAsync(currentPerson, cancellationToken),
             cancellationToken);
 
-        // Publica los eventos de dominio del agregado (p.ej. PersonUpdated) recien despues del Commit,
+        // Publica los eventos de dominio del agregado (p.ej. PersonUpdated) recién después del Commit,
         // para que los handlers solo reaccionen a cambios ya persistidos.
         await PublishDomainEvents(currentPerson.PullDomainEvents());
 
