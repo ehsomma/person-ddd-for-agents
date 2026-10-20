@@ -339,7 +339,7 @@ Para un bloque de varias líneas también vale `/* ... */`:
 
 ✓ Correcto:
 ```csharp
-/* 
+/*
 Se activa cuando se quiera loguear cada request.
 app.UseSerilogRequestLogging();
 app.UseHttpLogging();

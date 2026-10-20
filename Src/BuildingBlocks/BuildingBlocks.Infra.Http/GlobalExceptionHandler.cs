@@ -146,6 +146,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     }
 
     /*
+    Queda por si en algún momento resolvemos el status code por tipo de excepción.
     /// <summary>
     /// Resolves the <see cref="HttpStatusCode"/> from the exception type.
     /// </summary>
