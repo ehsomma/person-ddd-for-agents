@@ -111,10 +111,10 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     #region Private methods
 
     /// <summary>
-    /// If the exception is ValidationException, gets the ValidationErros, otherwise return null.
+    /// If the exception is ValidationException, gets the ValidationErrors, otherwise return null.
     /// </summary>
     /// <param name="ex">The exception.</param>
-    /// <returns>The validation erros.</returns>
+    /// <returns>The validation errors.</returns>
     private IReadOnlyCollection<ValidationError>? GetValidationErrors(Exception ex)
     {
         IReadOnlyCollection<ValidationError>? validationErrors = (ex as ValidationException)?.ValidationErrors;
@@ -126,8 +126,8 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     /// Maps an IReadOnlyCollection of <see cref="ValidationError"/> to a IReadOnlyCollection
     /// of <see cref="ValidationErrorResponse"/>.
     /// </summary>
-    /// <param name="validationErrors">The ValidationErros.</param>
-    /// <returns>The validation erros dtos.</returns>
+    /// <param name="validationErrors">The ValidationErrors.</param>
+    /// <returns>The validation errors DTOs.</returns>
     private IReadOnlyCollection<ValidationErrorResponse>? MapValidationErrors(IReadOnlyCollection<ValidationError>? validationErrors)
     {
         IReadOnlyCollection<ValidationErrorResponse>? validationErrorsResponses = null;
@@ -151,7 +151,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     /// </summary>
     /// <param name="ex">The exception.</param>
     /// <returns>The resolved <see cref="HttpStatusCode"/>.</returns>
-    [SuppressMessage("Style", "IDE0051:Remove unused private members", Justification = "Queda por si en algún momento resolvermos el status code por tipo de excepción.")]
+    [SuppressMessage("Style", "IDE0051:Remove unused private members", Justification = "Queda por si en algún momento resolvemos el status code por tipo de excepción.")]
     private HttpStatusCode ResolveHttpStatusCode(Exception ex)
     {
         HttpStatusCode ret;

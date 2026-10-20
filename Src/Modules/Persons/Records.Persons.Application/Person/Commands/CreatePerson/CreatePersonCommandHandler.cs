@@ -87,7 +87,7 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
             () => _personRepository.InsertAsync(person, cancellationToken),
             cancellationToken);
 
-        // Publica los eventos de dominio del agregado (p.ej. PersonCreated) recien despues del Commit,
+        // Publica los eventos de dominio del agregado (p.ej. PersonCreated) recién después del Commit,
         // para que los handlers solo reaccionen a cambios ya persistidos.
         await PublishDomainEvents(person.PullDomainEvents());
 
