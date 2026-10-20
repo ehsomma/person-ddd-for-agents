@@ -335,6 +335,16 @@ lleva el motivo por el que se deja. Si no hay un motivo, se borra: el historial 
 ////app.UseSerilogRequestLogging(); // Se activa cuando se quiera loguear cada request.
 ```
 
+Para un bloque de varias líneas también vale `/* ... */`, con el motivo en la primera línea:
+
+✓ Correcto:
+```csharp
+/* Se activa cuando se quiera loguear cada request.
+app.UseSerilogRequestLogging();
+app.UseHttpLogging();
+*/
+```
+
 ## `Justification` de los `SuppressMessage`
 
 Va en español y explica por qué la regla no aplica en ese caso. No repite el nombre de la regla.
