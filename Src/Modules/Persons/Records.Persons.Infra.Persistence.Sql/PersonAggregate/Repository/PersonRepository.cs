@@ -19,7 +19,7 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
     #region Declarations
 
     /// <summary>El mapper entre el <see cref="DomainModel.Person"/> del dominio y el <see cref="DataModel.Person"/> de la base, en los dos sentidos.</summary>
-    private readonly IPersistanceMapper<DomainModel.Person, DataModel.Person> _personMapper;
+    private readonly IPersistenceMapper<DomainModel.Person, DataModel.Person> _personMapper;
 
     #endregion
 
@@ -33,7 +33,7 @@ public class PersonRepository : BuildingBlocks.Infra.Persistence.Repository, IPe
     public PersonRepository(
         IConfiguration configuration,
         IDbSession dbSession,
-        IPersistanceMapper<DomainModel.Person, DataModel.Person> personMapper)
+        IPersistenceMapper<DomainModel.Person, DataModel.Person> personMapper)
         : base(configuration, dbSession)
     {
         _personMapper = personMapper ?? throw new ArgumentNullException(nameof(personMapper));

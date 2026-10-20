@@ -33,7 +33,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <!-- Agrega el paquete StyleCop.Analyzers a todos los pryectos. -->
+        <!-- Agrega el paquete StyleCop.Analyzers a todos los proyectos. -->
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -41,7 +41,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <!-- Integra el archivo stylecop.json a todos los pryectos. -->
+        <!-- Integra el archivo stylecop.json a todos los proyectos. -->
         <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 

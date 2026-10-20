@@ -1,12 +1,10 @@
-﻿namespace BuildingBlocks.Application.Persistence.Abstractions;
+namespace BuildingBlocks.Application.Persistence.Abstractions;
 
 /// <summary>
 /// Manage a <see cref="IDbSession"/> to encapsulate a business transaction which can affect the database.
 /// </summary>
 public interface IUnitOfWork : IDisposable
 {
-    #region Private methods
-
     /// <summary>
     /// Begins a database transaction, opening the connection first if it's closed.
     /// </summary>
@@ -31,6 +29,4 @@ public interface IUnitOfWork : IDisposable
     /// </remarks>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task RollbackAsync();
-
-    #endregion
 }

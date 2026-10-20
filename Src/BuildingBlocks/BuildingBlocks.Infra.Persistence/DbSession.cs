@@ -10,14 +10,6 @@ namespace BuildingBlocks.Infra.Persistence;
 /// <inheritdoc cref="IDbSession"/>
 public sealed class DbSession : IDbSession
 {
-    #region Declarations
-
-#pragma warning disable IDE0052 // Remove unread private members
-    private readonly Guid _id;
-#pragma warning restore IDE0052 // Remove unread private members
-
-    #endregion
-
     #region Constructor
 
     /// <summary>
@@ -26,8 +18,6 @@ public sealed class DbSession : IDbSession
     /// <param name="configuration">Represents a set of key/value application configuration properties.</param>
     public DbSession(IConfiguration configuration)
     {
-        _id = Guid.NewGuid();
-
         SqlServerSettings databaseSettings = configuration.GetSectionOrThrow<SqlServerSettings>(SqlServerSettings.SettingsKey);
 
         // Connection to the "Source" DataBase.

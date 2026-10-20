@@ -58,7 +58,7 @@ internal sealed class Program
         // contenedor de DI.
         services.AddApplication(typeof(PersonService).Assembly);
 
-        // Registra los mappers (IDomainMapper<,> de application e IPersistanceMapper<,> de
+        // Registra los mappers (IDomainMapper<,> de application e IPersistenceMapper<,> de
         // persistencia) en el contenedor de DI.
         services.AddMappers(
             Assembly.GetExecutingAssembly(),

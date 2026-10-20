@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
 
         // Registers the domain services.
         // NOTA: El `publicOnly: false` permite registrar servicios internos (`internal`); sin el, Scrutor
-        // los saltea en silencio y recien falla DI al resolverlos.
+        // los saltea en silencio y recién falla DI al resolverlos.
         services.Scan(selector =>
         {
             selector.FromAssemblies(assemblies)
