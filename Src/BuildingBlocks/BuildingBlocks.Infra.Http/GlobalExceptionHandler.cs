@@ -117,14 +117,10 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     /// <returns>The validation erros.</returns>
     private IReadOnlyCollection<ValidationError>? GetValidationErrors(Exception ex)
     {
-        IReadOnlyCollection<ValidationError>? validationErrors = (ex is ValidationException)
-            ? ((ValidationException)ex).ValidationErrors ?? null
-            : null;
+        IReadOnlyCollection<ValidationError>? validationErrors = (ex as ValidationException)?.ValidationErrors;
 
         return validationErrors;
     }
-
-    // Map IReadOnlyCollection<ValidationError> to
 
     /// <summary>
     /// Maps an IReadOnlyCollection of <see cref="ValidationError"/> to a IReadOnlyCollection
@@ -149,6 +145,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         return validationErrorsResponses;
     }
 
+    /*
     /// <summary>
     /// Resolves the <see cref="HttpStatusCode"/> from the exception type.
     /// </summary>
@@ -189,6 +186,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
 
         return ret;
     }
+    */
 
     /// <summary>
     /// Resolves the <see cref="HttpStatusCode"/> from the <paramref name="errorType"/> specified.
