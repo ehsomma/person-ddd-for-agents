@@ -12,7 +12,7 @@ namespace Records.Persons.Infra.Persistence.Sql.PersonAggregate.Mappers;
 /// Representa el mapper que convierte un <see cref="DomainModel.Person"/> del dominio en un
 /// <see cref="DataModel.Person"/> de la base, y viceversa.
 /// </summary>
-public class PersonMapper : IPersistanceMapper<DomainModel.Person, DataModel.Person>
+public class PersonMapper : IPersistenceMapper<DomainModel.Person, DataModel.Person>
 {
     #region Public methods
 

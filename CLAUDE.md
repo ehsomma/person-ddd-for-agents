@@ -42,7 +42,7 @@ Estas son cosas que un agente suele hacer por costumbre y que **acá no se hacen
 
 - **Mediator propio** (`BuildingBlocks.Mediator*`): no se usa MediatR.
 - **Persistencia con Dapper**: no se usa EF Core.
-- **Mappers manuales** (`IDomainMapper<,>`, `IPersistanceMapper<,>`): no se usa AutoMapper ni Mapster.
+- **Mappers manuales** (`IDomainMapper<,>`, `IPersistenceMapper<,>`): no se usa AutoMapper ni Mapster.
 - **Los errores son excepciones**, no se usa el patrón Result.
   - Se lanza `new DomainException(DomainErrors.<Entidad>.<Error>)`, y cada `Error` lleva código, mensaje y `ErrorType`.
   - El status HTTP lo resuelve **solo** `GlobalExceptionHandler` a partir del `ErrorType`.

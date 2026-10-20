@@ -5,7 +5,7 @@ namespace BuildingBlocks.Infra.Persistence.Mappings.Abstractions.Mappers;
 /// </summary>
 /// <typeparam name="TDomain">The type of the domain model object.</typeparam>
 /// <typeparam name="TDataModel">The type of the data model object.</typeparam>
-public interface IPersistanceMapper<TDomain, TDataModel>
+public interface IPersistenceMapper<TDomain, TDataModel>
 {
     #region Public methods
 

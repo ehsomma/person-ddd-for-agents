@@ -49,7 +49,7 @@ En los ejemplos, `<Módulo>` es el bounded context (`Persons`), `<Entidad>` el a
 | Event handler | `Application/<Entidad>/Events/<Evento>/` | `<Evento>EventHandler` | `internal sealed` | `DomainEventHandler<<Evento>Event>` |
 | Error | `Domain/<Entidad>Aggregate/Errors/DomainErrors.cs` | `DomainErrors.<Entidad>.<Error>`, código `ERR.<ENTIDAD>.<ERROR>` | `public static` | `Error` |
 | Repositorio (write) | `Infra.Persistence.Sql/<Entidad>Aggregate/Repository/` | `<Entidad>Repository` | **`public`** | `Repository`, `I<Entidad>Repository` |
-| Mapper de persistencia | `Infra.Persistence.Sql/<Entidad>Aggregate/Mappers/` | `<Entidad>Mapper` | `public` | `IPersistanceMapper<DomainModel, DataModel>` |
+| Mapper de persistencia | `Infra.Persistence.Sql/<Entidad>Aggregate/Mappers/` | `<Entidad>Mapper` | `public` | `IPersistenceMapper<DomainModel, DataModel>` |
 | Mapper de application | `Application/<Entidad>/Mappers/` | `<Entidad>Mapper` | `internal sealed` | `IDomainMapper<DomainModel, Dto>` |
 | Servicio de dominio | `Domain/<Entidad>Aggregate/Services/` | `<Entidad>Service` + `I<Entidad>Service` | `public sealed` | `IDomainService` |
 | Endpoint | `Api.V1/<Entidad>/<UseCase>/` (en `Src/Apps`) | `<UseCase>Endpoint`; el método y el `WithName` son `<Verbo><UseCase>` (`GetGetPersonById`, `PutUpdatePerson`) | `internal sealed`, el método **`public`** | `IEndpoint` |
@@ -236,7 +236,7 @@ No cierres la tarea sin hacer estos pasos y sin reportar el resultado de cada un
    grep -rnE "class\s+\w+\s*:\s*.*(QueryRepository<|Persistence\.Repository\b)" Src/Modules --include=*.cs | grep -vE "class\s+\w+Repository\b"
 
    # Mappers que no terminan en Mapper.
-   grep -rnE "class\s+\w+\s*:\s*.*I(Domain|Persistance)Mapper<" Src --include=*.cs | grep -vE "class\s+\w+Mapper\b"
+   grep -rnE "class\s+\w+\s*:\s*.*I(Domain|Persistence)Mapper<" Src --include=*.cs | grep -vE "class\s+\w+Mapper\b"
 
    # Handlers que no siguen el nombre del caso de uso.
    grep -rnE "class\s+\w+\s*:\s*(CommandHandler|QueryHandler|DomainEventHandler)<" Src/Modules --include=*.cs | grep -vE "class\s+\w+(CommandHandler|QueryHandler|EventHandler)\b"
