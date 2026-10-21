@@ -1,7 +1,8 @@
 * [X] Documentación xml de endpoints/Scalar.
 * [X] Validación con fluentvalidation de endpoints.
 * [X] Return con espacio.
-* [ ] Short circuit.
+* [ ] Circuit breaker / Polly. https://github.com/BrighterCommand/fences
+* [ ] Outbox.
 * [ ] Worker de background.
 * [X] Columna límite para comentarios VS 100 vs Claude 120?
 * [X] Estandar sobre comentarios e idioma de comentarios.
@@ -10,3 +11,5 @@
       Si se quiere logear, se puede usar el Client_Id que se obtiene del token de autenticación.
 * [ ] Test unitarios.
 * [ ] CI.
+* [ ] Analizar /refactor de https://github.com/BrighterCommand/Brighter/tree/master/.claude/commands/refactor
+* [ ] Analizar este repo: https://github.com/BrighterCommand/Brighter/blob/master/README.md
