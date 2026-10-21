@@ -5,9 +5,7 @@ using Records.Persons.Configuration;
 namespace Records.Persons.Infra.Configuration.DependencyInjection;
 
 /// <summary>
-/// Extensions methods for dependency injection.
-/// Registra la configuración y bindea la sección especificada con el tipo correspondiente para luego
-/// poder inyectarlo en los servicios que lo necesiten.
+/// Métodos de extensión para agregar servicios al contenedor de IoC de .NET.
 /// </summary>
 public static class ServiceCollectionExtensions
 {

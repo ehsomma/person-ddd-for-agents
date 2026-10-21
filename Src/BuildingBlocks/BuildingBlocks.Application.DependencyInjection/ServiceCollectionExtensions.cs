@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace BuildingBlocks.Application.DependencyInjection;
 
 /// <summary>
-/// Extension methods to register the shared application services with an <see cref="IServiceCollection"/>.
+/// Extension methods for adding services to the .NET IoC container.
 /// </summary>
 public static class ServiceCollectionExtensions
 {

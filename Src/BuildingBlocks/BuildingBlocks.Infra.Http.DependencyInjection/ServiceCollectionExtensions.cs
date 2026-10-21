@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace BuildingBlocks.Infra.Http.DependencyInjection;
 
 /// <summary>
-/// Extensions methods for dependency injection.
+/// Extension methods for adding services to the .NET IoC container.
 /// </summary>
 public static class ServiceCollectionExtensions
 {

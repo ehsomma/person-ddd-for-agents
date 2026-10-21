@@ -9,7 +9,7 @@ using Serilog.Exceptions.Core;
 namespace BuildingBlocks.Infra.Serilog.DependencyInjection;
 
 /// <summary>
-/// Extensions methods for dependency injection.
+/// Extension methods for adding services to the .NET IoC container.
 /// </summary>
 public static class ServiceCollectionExtensions
 {

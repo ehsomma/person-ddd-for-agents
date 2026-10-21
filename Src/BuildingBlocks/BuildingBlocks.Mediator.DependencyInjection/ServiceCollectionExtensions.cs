@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace BuildingBlocks.Mediator.DependencyInjection;
 
 /// <summary>
-/// Extension methods to register the mediator and its handlers with an <see cref="IServiceCollection"/>.
+/// Extension methods for adding services to the .NET IoC container.
 /// </summary>
 public static class ServiceCollectionExtensions
 {

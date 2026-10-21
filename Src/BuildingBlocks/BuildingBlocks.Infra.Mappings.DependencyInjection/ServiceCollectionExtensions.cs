@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace BuildingBlocks.Infra.Mappings.DependencyInjection;
 
 /// <summary>
-/// Extension methods to register the mappers.
+/// Extension methods for adding services to the .NET IoC container.
 /// </summary>
 public static class ServiceCollectionExtensions
 {
