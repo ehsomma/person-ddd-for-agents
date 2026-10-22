@@ -1,0 +1,32 @@
+name: Build 🧱
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # Instala el SDK que fija global.json, el mismo que se usa en local.
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Restore dependencies
+        run: dotnet restore Records.slnx
+
+      # GitHub Actions setea CI=true, así que Directory.Build.props activa TreatWarningsAsErrors: cualquier warning
+      # (SA, CA, IDE o ARCH) rompe el build. Para reproducirlo en local: dotnet build Records.slnx -p:CI=true
+      - name: Build
+        run: dotnet build Records.slnx --configuration Release --no-restore --verbosity minimal

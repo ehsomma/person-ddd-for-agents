@@ -5,6 +5,7 @@
     <File Path="CLAUDE.md" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
+    <File Path="global.json" />
     <File Path="stylecop.json" />
     <File Path="TODO.md" />
   </Folder>
