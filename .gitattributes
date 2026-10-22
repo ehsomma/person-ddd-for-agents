@@ -1,0 +1,12 @@
+# Finales de línea de los archivos del repo.
+#
+# En el repo los archivos de texto se guardan siempre con LF; el final de línea se decide al hacer checkout.
+# Sin este archivo, cada máquina usa su core.autocrlf: en Windows los .cs quedan en CRLF, pero en el runner Linux
+# del CI quedan en LF, y como el .editorconfig pide end_of_line = crlf para los .cs, IDE0055 (Fix formatting) rompe
+# el build del CI aunque en local compile con 0 warnings.
+
+# Base: git detecta qué archivos son texto, los normaliza a LF en el repo y en el checkout usa el EOL de la máquina.
+* text=auto
+
+# Los .cs salen siempre con CRLF en cualquier sistema operativo, igual que pide el end_of_line del .editorconfig.
+*.cs text eol=crlf
