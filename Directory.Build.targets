@@ -15,11 +15,15 @@
     | Infra       | *.Infra.*                                       | Core, Dtos, Shared, Domain, Application, Infra      |
     | Composition | *.DependencyInjection                           | Core, Dtos, Shared, Domain, Application, Infra      |
     | Host        | Proyectos bajo Src/Apps/                        | Todas                                               |
+    | Test        | Proyectos bajo Tests/                           | Todas                                               |
 
     • Composition (*.DependencyInjection) solo puede ser referenciada desde Host.
+    • Test es la primera regla que se evalúa: un proyecto de tests repite el nombre del proyecto que testea
+      (Records.Persons.Domain.UnitTests), así que si no se infiriera por la carpeta quedaría en la capa de ese
+      proyecto (Domain). Ninguna otra capa puede referenciar a Test, así que el código de Src nunca depende de un test.
     • Con cada proyecto validando sus referencias directas y las capas ordenadas, las transitivas quedan cubiertas.
     • La capa se infiere del nombre del proyecto; si no alcanza, el csproj la declara con <ArchLayer>...</ArchLayer>
-      (ej.: BuildingBlocks.Mediator.Abstractions, o un futuro proyecto de tests con <ArchLayer>Host</ArchLayer>).
+      (ej.: BuildingBlocks.Mediator.Abstractions).
     • Para desactivar la validación en un proyecto: <ArchValidationEnabled>false</ArchValidationEnabled>.
     • ArchLayer y ArchValidationEnabled NO son propiedades del SDK de .NET ni de MSBuild: son propiedades propias
       de este repo, definidas y consumidas solo por este archivo.
@@ -34,6 +38,7 @@
 
     <!-- Inferencia de la capa por convención (el orden importa: gana la primera que matchea). -->
     <PropertyGroup Condition="'$(ArchLayer)' == ''">
+        <ArchLayer Condition="'$(ArchLayer)' == '' and $(MSBuildProjectDirectory.Replace('\', '/').Contains('/Tests/'))">Test</ArchLayer>
         <ArchLayer Condition="'$(ArchLayer)' == '' and $(MSBuildProjectDirectory.Replace('\', '/').Contains('/Src/Apps/'))">Host</ArchLayer>
         <ArchLayer Condition="'$(ArchLayer)' == '' and $(MSBuildProjectName.EndsWith('.DependencyInjection'))">Composition</ArchLayer>
         <ArchLayer Condition="'$(ArchLayer)' == '' and $(MSBuildProjectName.Contains('.Infra.'))">Infra</ArchLayer>
@@ -54,6 +59,7 @@
         <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Infra'">Core;Dtos;Shared;Domain;Application;Infra</_ArchAllowedLayers>
         <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Composition'">Core;Dtos;Shared;Domain;Application;Infra</_ArchAllowedLayers>
         <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Host'">Core;Dtos;Shared;Domain;Application;Infra;Composition;Host</_ArchAllowedLayers>
+        <_ArchAllowedLayers Condition="'$(ArchLayer)' == 'Test'">Core;Dtos;Shared;Domain;Application;Infra;Composition;Host;Test</_ArchAllowedLayers>
     </PropertyGroup>
 
     <!-- Devuelve la capa de este proyecto a quien lo referencia (Identity = capa, Project = nombre del proyecto). -->

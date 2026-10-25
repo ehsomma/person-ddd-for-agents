@@ -30,3 +30,7 @@ jobs:
       # (SA, CA, IDE o ARCH) rompe el build. Para reproducirlo en local: dotnet build Records.slnx -p:CI=true
       - name: Build
         run: dotnet build Records.slnx --configuration Release --no-restore --verbosity minimal
+
+      # Corre con Microsoft Testing Platform (lo activa global.json), por eso la solución va con --solution.
+      - name: Test
+        run: dotnet test --solution Records.slnx --configuration Release --no-build

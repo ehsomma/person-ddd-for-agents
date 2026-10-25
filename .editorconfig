@@ -405,3 +405,17 @@ dotnet_diagnostic.CA1812.severity = none
 # CA1812: Avoid uninstantiated internal classes (los Validator raíz se instancian por reflection, services.Scan en
 # AddValidators, nunca con "new").
 dotnet_diagnostic.CA1812.severity = none
+
+
+#### Overrides de los proyectos de tests ####
+
+[Tests/**.cs]
+# CA1707: Identifiers should not contain underscores (los tests se nombran Method_WhenCondition_ShouldExpectedResult).
+dotnet_diagnostic.CA1707.severity = none
+# CA1515: Consider making public types internal (los proyectos de xUnit v3 son ejecutables, pero xUnit exige que las
+# clases de test sean públicas, xUnit1000).
+dotnet_diagnostic.CA1515.severity = none
+# SA1600: Elements should be documented (el nombre del test ya documenta el escenario y el resultado esperado).
+dotnet_diagnostic.SA1600.severity = none
+# CS1591: Missing XML comment for publicly visible type or member (mismo motivo que SA1600).
+dotnet_diagnostic.CS1591.severity = none

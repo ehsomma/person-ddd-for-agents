@@ -56,4 +56,11 @@
   <Folder Name="/Src/Modules/Persons/Infra/DatabaseScripts/">
     <File Path="RecordsPersons_Source.sql" />
   </Folder>
+  <Folder Name="/Tests/">
+    <File Path="Tests/Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Tests/Modules/" />
+  <Folder Name="/Tests/Modules/Persons/">
+    <Project Path="Tests/Modules/Persons/Records.Persons.Domain.UnitTests/Records.Persons.Domain.UnitTests.csproj" />
+  </Folder>
 </Solution>

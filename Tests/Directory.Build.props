@@ -1,0 +1,30 @@
+<Project>
+
+    <!--
+    Configuración común de los proyectos de tests (todo lo que está bajo Tests/).
+    • MSBuild carga solo el primer Directory.Build.props que encuentra subiendo desde el proyecto, así que este archivo
+      importa explícitamente el de la raíz: los tests heredan TargetFramework, AnalysisMode, StyleCop, etc.
+    • Las reglas que se relajan para los tests están en la sección [Tests/**.cs] del .editorconfig.
+    • La capa de arquitectura (Test) la infiere Directory.Build.targets por la carpeta.
+    -->
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+    <PropertyGroup>
+        <!--
+        xUnit v3 corre sobre Microsoft Testing Platform (MTP), no sobre VSTest: cada proyecto de tests es un ejecutable
+        y no lleva Microsoft.NET.Test.Sdk ni xunit.runner.visualstudio. Para que dotnet test use MTP, global.json tiene
+        "test": { "runner": "Microsoft.Testing.Platform" } (sin eso, en .NET 10 dotnet test falla).
+        -->
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="xunit.v3" Version="4.0.2" />
+        <!-- Fork comunitario de FluentAssertions (la v8 de FluentAssertions pasó a licencia comercial). -->
+        <PackageReference Include="AwesomeAssertions" Version="9.6.0" />
+        <PackageReference Include="Moq" Version="4.21.0" />
+    </ItemGroup>
+
+</Project>
