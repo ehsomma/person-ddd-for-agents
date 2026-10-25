@@ -24,7 +24,14 @@ internal sealed class PersonValidator : AbstractValidator<Dto.Person>
 
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.FullName).NotEmpty().MaximumLength(62);
-        RuleFor(x => x.Email).NotEmpty().MaximumLength(362).EmailAddress();
+
+        // NOTE: Misma regex que el value object Email del dominio (ver ahí qué acepta y qué no), escrita
+        // a mano para no acoplar la API al dominio. Si la cambiás acá, cambiala también ahí:
+        // PersonValidatorTests.Validate_WhenEmailIsChecked_ShouldAcceptTheSameEmailsAsTheDomain falla
+        // si las dos reglas no aceptan los mismos emails. No se usa EmailAddress() de FluentValidation
+        // porque solo pide una "@" y dejaba pasar emails que el dominio rechaza.
+        RuleFor(x => x.Email).NotEmpty().MaximumLength(362).Matches(@"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)+$");
+
         RuleFor(x => x.Phone).MaximumLength(60);
         RuleFor(x => x.Gender)
             .NotEmpty()

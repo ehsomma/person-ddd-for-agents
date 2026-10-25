@@ -26,6 +26,9 @@ public sealed class EmailTests
     [InlineData("johndoe@gmail.com")]
     [InlineData("john.doe@mail.example.com")]
     [InlineData("john-doe@example.com")]
+    [InlineData("john+news@gmail.com")] // Plus addressing de Gmail.
+    [InlineData("john_doe@gmail.com")]
+    [InlineData("o'brien@gmail.com")]
     public void Build_WhenValueIsValid_ShouldKeepValue(string value)
     {
         // Arrange.
@@ -86,28 +89,15 @@ public sealed class EmailTests
     [InlineData("john@doe@gmail.com")] // Dos @.
     [InlineData("johndoe@")] // Sin dominio.
     [InlineData("john doe@gmail.com")] // Con espacios.
+    [InlineData("johndoe@gmail")] // Sin punto en el dominio.
+    [InlineData("johndoe@gmail..com")] // Punto vacío en el dominio.
+    [InlineData("johndoe@gmail.com con texto")] // Texto de más después del dominio.
     public void Build_WhenFormatIsInvalid_ShouldThrowDomainValidationException(string value)
     {
         // Arrange.
 
         // Act.
         Action act = () => Email.Build(value);
-
-        // Assert.
-        act.Should().Throw<DomainValidationException>();
-    }
-
-    [Fact]
-    public void Build_WhenLocalPartHasPlusSign_ShouldThrowDomainValidationException()
-    {
-        // Arrange.
-        // TODO: La regex solo acepta letras, números, "-" y "." en la parte local, así que rechaza
-        // emails válidos como "john+news@gmail.com" (plus addressing) o "john_doe@gmail.com". Hay que
-        // decidir si se amplía la regex; si se amplía, este test pasa a ser un caso válido.
-        const string Value = "john+news@gmail.com";
-
-        // Act.
-        Action act = () => Email.Build(Value);
 
         // Assert.
         act.Should().Throw<DomainValidationException>();

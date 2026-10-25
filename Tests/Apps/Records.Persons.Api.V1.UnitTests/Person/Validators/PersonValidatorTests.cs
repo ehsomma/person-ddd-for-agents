@@ -1,3 +1,6 @@
+using AwesomeAssertions;
+using BuildingBlocks.Domain.Exceptions;
+using BuildingBlocks.Domain.ValueObjects;
 using FluentValidation.TestHelper;
 using Records.Persons.Api.V1.Person.Validators;
 using Records.Persons.TestData;
@@ -117,6 +120,7 @@ public sealed class PersonValidatorTests
     [InlineData("")]
     [InlineData("johndoe")]
     [InlineData("johndoe@")]
+    [InlineData("johndoe@gmail")]
     public void Validate_WhenEmailIsMissingOrInvalid_ShouldHaveError(string? email)
     {
         // Arrange.
@@ -163,17 +167,31 @@ public sealed class PersonValidatorTests
     }
 
     [Theory]
+    [InlineData("johndoe@gmail.com")]
+    [InlineData("john.doe@mail.example.com")]
     [InlineData("john+news@gmail.com")]
     [InlineData("john_doe@gmail.com")]
-    public void Validate_WhenEmailIsRejectedByTheDomainRegex_ShouldNotHaveError(string email)
+    [InlineData("o'brien@gmail.com")]
+    [InlineData("john..doe@gmail.com")]
+    [InlineData("a@b.c")]
+    [InlineData("johndoe")]
+    [InlineData("@gmail.com")]
+    [InlineData("johndoe@")]
+    [InlineData("johndoe@gmail")]
+    [InlineData("johndoe@gmail..com")]
+    [InlineData("john@doe@gmail.com")]
+    [InlineData("john doe@gmail.com")]
+    [InlineData("johndoe@gmail.com ")]
+    public void Validate_WhenEmailIsChecked_ShouldAcceptTheSameEmailsAsTheDomain(string email)
     {
         // Arrange.
-        // TODO: EmailAddress() de FluentValidation solo pide una "@" con algo antes y después, y la
-        // regex del value object Email rechaza "+" y "_" en la parte local. Estos emails pasan el
-        // validator y los rechaza el dominio (400 con el mensaje técnico de la regex). Se resuelve
-        // junto con el TODO de la regex en EmailTests: si se amplía la regex, este test queda bien
-        // tal como está; si no, el validator tiene que usar la misma regex.
+        // El formato del email se valida con la misma regex en dos lugares: acá y en el value object
+        // Email del dominio (se decidió no compartirla para no acoplar la API al dominio). Este test
+        // compara las dos reglas con cada email: si alguien cambia una regex y se olvida de la otra,
+        // falla con el email en el que difieren. Si una regla acepta algo que la otra rechaza, el
+        // usuario recibe un 400 con el mensaje técnico del dominio en vez del de FluentValidation.
         Dto.Person personDto = new Dto.Person { Email = email };
+        bool isValidForTheDomain = IsValidForTheDomain(email);
 
         // Act.
         TestValidationResult<Dto.Person> result = _validator.TestValidate(
@@ -181,7 +199,8 @@ public sealed class PersonValidatorTests
             options => options.IncludeProperties(x => x.Email));
 
         // Assert.
-        result.ShouldNotHaveValidationErrorFor(x => x.Email);
+        bool isValidForTheValidator = result.Errors.TrueForAll(error => error.PropertyName != nameof(Dto.Person.Email));
+        isValidForTheValidator.Should().Be(isValidForTheDomain);
     }
 
     [Fact]
@@ -323,6 +342,27 @@ public sealed class PersonValidatorTests
     #endregion
 
     #region Private methods
+
+    /// <summary>
+    /// Indica si el value object <see cref="Email"/> del dominio acepta el email especificado.
+    /// </summary>
+    /// <param name="email">El email.</param>
+    /// <returns><see langword="true"/> si <see cref="Email.Build"/> no lanza la excepción.</returns>
+    private static bool IsValidForTheDomain(string email)
+    {
+        bool isValid = true;
+
+        try
+        {
+            Email.Build(email);
+        }
+        catch (DomainValidationException)
+        {
+            isValid = false;
+        }
+
+        return isValid;
+    }
 
     /// <summary>
     /// Arma un email válido del largo especificado, completando la parte local.
