@@ -20,11 +20,9 @@ dotnet test --solution Records.slnx                     # corre con Microsoft Te
 - El esquema de la base está en `RecordsPersons_Source.sql`.
 - Los tests están en `Tests/`, con la misma estructura de carpetas que `Src/`: xUnit v3, AwesomeAssertions y Moq.
   Hoy solo hay tests del dominio de Persons.
-- **La cobertura se corre solo cuando el usuario la pide**, con `Tests/coverage.ps1` (ReportGenerator). Para
-  analizarla, primero se lee `Tests/TestResults/coverage-report/Summary.txt` (porcentajes por clase) y después, solo
-  para las clases con huecos, el `Cobertura.xml` de la misma carpeta (líneas y branches con `hits="0"`, ya sumados de
-  todos los proyectos de test). El HTML es para la persona. Cada hueco se clasifica como test que falta, código muerto
-  o código que no vale la pena testear, y se sugiere la acción: no se borra código ni se persigue el 100%.
+- **Los tests nuevos se escriben solo a pedido**, con el código ya consensuado, pero los existentes se corren siempre
+  que se cambia `Src/`. **La cobertura se corre solo cuando el usuario la pide** (ReportGenerator). Cómo se escriben
+  los tests y cómo se interpreta la cobertura está en la skill `unit-tests`.
 
 ## Arquitectura
 
@@ -100,8 +98,8 @@ Las rutas son relativas a `Src/Modules/Persons/` salvo que se indique otra cosa.
 Las recetas están en dos skills, que se cargan solo cuando hacen falta:
 
 - **`new-usecase`**: un command, una query o un event handler de punta a punta, un aggregate nuevo en un módulo
-  existente o un cambio de esquema. Termina con una verificación (build, convenciones de nombre y arranque de la
-  API) que no se saltea.
+  existente o un cambio de esquema. Termina con una verificación (build, convenciones de nombre, tests existentes y
+  arranque de la API) que no se saltea.
 - **`new-module`**: un bounded context nuevo, su host y un proyecto nuevo a partir de esta plantilla.
 
 **El registro en DI es automático por convención de nombres** (Scrutor): una clase que no la respeta no se

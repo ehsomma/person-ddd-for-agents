@@ -1,6 +1,6 @@
 ---
 name: new-usecase
-description: Usar SIEMPRE al agregar un caso de uso de punta a punta en este repositorio (command, query o handler de un domain event, con su endpoint), al agregar un aggregate nuevo a un módulo existente o al agregar o cambiar un campo que se persiste (cambio de esquema). También cuando se pide "agregá un endpoint para…", "un caso de uso para…", "que la API permita…" o "agregá el campo X a…". Define el orden de los pasos por capa, qué archivo de referencia imitar, las convenciones de nombre y de visibilidad de las que depende el registro automático en DI (Scrutor), los archivos que toca un cambio de esquema y la verificación final (build, convenciones y arranque de la API). Si el caso de uso necesita un bounded context que todavía no existe, primero se usa la skill `new-module`.
+description: Usar SIEMPRE al agregar un caso de uso de punta a punta en este repositorio (command, query o handler de un domain event, con su endpoint), al agregar un aggregate nuevo a un módulo existente o al agregar o cambiar un campo que se persiste (cambio de esquema). También cuando se pide "agregá un endpoint para…", "un caso de uso para…", "que la API permita…" o "agregá el campo X a…". Define el orden de los pasos por capa, qué archivo de referencia imitar, las convenciones de nombre y de visibilidad de las que depende el registro automático en DI (Scrutor), los archivos que toca un cambio de esquema y la verificación final (build, convenciones, tests y arranque de la API). Si el caso de uso necesita un bounded context que todavía no existe, primero se usa la skill `new-module`.
 ---
 
 # Casos de uso nuevos
@@ -265,7 +265,11 @@ No cierres la tarea sin hacer estos pasos y sin reportar el resultado de cada un
      con su summary y sus responses. Si la ruta no está, el endpoint no implementa `IEndpoint`. Si está
      sin descripciones, el método del endpoint no es `public`.
    - Frená el proceso al terminar.
-4. **Lo que esta verificación no cubre:** un event handler mal tipado no da ningún error (revisalo a
+4. **Tests:** `dotnet test --solution Records.slnx`, con todos los tests en verde. Si un cambio rompe
+   un test existente, no se ajusta el test para que pase: se avisa en el reporte (ver la skill
+   `unit-tests`). Los tests nuevos del caso de uso no se escriben acá: se escriben a pedido, cuando
+   el usuario ya revisó el código.
+5. **Lo que esta verificación no cubre:** un event handler mal tipado no da ningún error (revisalo a
    mano, ver el paso 2), y el SQL no se prueba sin la base. Si no pudiste probar contra la base, decilo
    en el reporte en lugar de darlo por probado.
 
@@ -281,6 +285,6 @@ No cierres la tarea sin hacer estos pasos y sin reportar el resultado de cada un
 - [ ] El `CancellationToken` llega hasta el repositorio.
 - [ ] Si hubo un cambio de esquema, la búsqueda de la columna hermana y la del campo nuevo devuelven los
       mismos archivos.
-- [ ] El build da 0 warnings, los `grep` de convenciones no devuelven nada y la API arranca con la ruta
-      nueva en `/openapi/v1.json`.
+- [ ] El build da 0 warnings, los `grep` de convenciones no devuelven nada, `dotnet test` pasa entero
+      y la API arranca con la ruta nueva en `/openapi/v1.json`.
 - [ ] El reporte dice qué se verificó y qué no (por ejemplo, el SQL contra la base).
