@@ -13,10 +13,18 @@ estructura, naming y documentación. No inventes patrones nuevos sin consultar.
 dotnet build Records.slnx                               # objetivo: 0 warnings (incluye las reglas IDE del .editorconfig)
 dotnet build Records.slnx -p:CI=true                    # igual que el CI: TreatWarningsAsErrors, cualquier warning rompe el build
 dotnet run --project Src/Apps/Records.Persons.Api.V1    # Scalar en /v1/docs, requiere SQL Server
+dotnet test --solution Records.slnx                     # corre con Microsoft Testing Platform (global.json), lleva --solution
+./Tests/coverage.ps1 -Assemblies "+Records.Persons.Domain" -Open   # cobertura local, todo en Tests/TestResults
 ```
 
 - El esquema de la base está en `RecordsPersons_Source.sql`.
-- Todavía no hay proyectos de test.
+- Los tests están en `Tests/`, con la misma estructura de carpetas que `Src/`: xUnit v3, AwesomeAssertions y Moq.
+  Hoy solo hay tests del dominio de Persons.
+- **La cobertura se corre solo cuando el usuario la pide**, con `Tests/coverage.ps1` (ReportGenerator). Para
+  analizarla, primero se lee `Tests/TestResults/coverage-report/Summary.txt` (porcentajes por clase) y después, solo
+  para las clases con huecos, el `Cobertura.xml` de la misma carpeta (líneas y branches con `hits="0"`, ya sumados de
+  todos los proyectos de test). El HTML es para la persona. Cada hueco se clasifica como test que falta, código muerto
+  o código que no vale la pena testear, y se sugiere la acción: no se borra código ni se persigue el 100%.
 
 ## Arquitectura
 
