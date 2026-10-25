@@ -78,7 +78,22 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
             return false;
         }
 
-        return ReferenceEquals(this, other) || Equals(other.Id, Id);
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        // Mismo chequeo del tipo que Equals(object): este es el que usa el operador ==, y sin el
+        // chequeo una dirección y un bien personal con el mismo ID daban iguales con == y distintos
+        // con Equals(object).
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+
+        bool areEqual = Equals(other.Id, Id);
+
+        return areEqual;
     }
 
     /// <inheritdoc />

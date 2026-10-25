@@ -63,15 +63,12 @@ public sealed class EntityTests
     }
 
     [Fact]
-    public void Equals_WhenTypesAreDifferentWithSameId_ShouldDependOnTheOverload()
+    public void Equals_WhenTypesAreDifferentWithSameId_ShouldNotBeEqualWithAnyOverload()
     {
         // Arrange.
-        // TODO: Equals(object) compara el tipo, pero Equals(Entity<TId>) (el de IEquatable, que es el
-        // que usa el operador ==) no. Una dirección y un bien personal con el mismo ID dan:
-        //   entity.Equals((object)other) → false ✓
-        //   entity == other              → true  ✗
-        // Hay que decidir si Equals(Entity<TId>) agrega el chequeo del tipo; si se agrega, este test
-        // pasa a esperar false en los dos casos.
+        // Una dirección y un bien personal con el mismo ID son entidades distintas, y los dos Equals
+        // tienen que responder lo mismo: Equals(object) y Equals(Entity<TId>) (el de IEquatable, que
+        // es el que usa el operador ==).
         TestEntity entity = new TestEntity(7);
         OtherTestEntity otherEntity = new OtherTestEntity(7);
 
@@ -81,7 +78,7 @@ public sealed class EntityTests
 
         // Assert.
         areEqualAsObjects.Should().BeFalse();
-        areEqualAsEntities.Should().BeTrue();
+        areEqualAsEntities.Should().BeFalse();
     }
 
     [Fact]

@@ -106,10 +106,17 @@ public abstract class ValueObject : IEquatable<ValueObject>
     /// Checks values of the specified ValueObject are equal to the current valueObject.
     /// </summary>
     /// <param name="other">The valueObject to compare.</param>
-    /// <returns>True whether the two valueObjects are equals.</returns>
+    /// <returns>True whether the two valueObjects are of the same type and their values are equals.</returns>
     private bool ValuesEqual(ValueObject other)
     {
-        return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+        // Primero el tipo: sin esto, dos value objects distintos con el mismo valor serían iguales
+        // (los componentes de igualdad son solo los valores), igual que ya hace Enumeration.
+        //   Email("a@b.com") vs Email("a@b.com")        → iguales ✓
+        //   Email("a@b.com") vs PhoneNumber("a@b.com")  → distintos ✓ (antes daba iguales)
+        bool areEqual = GetType() == other.GetType()
+            && GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+
+        return areEqual;
     }
 
     #endregion

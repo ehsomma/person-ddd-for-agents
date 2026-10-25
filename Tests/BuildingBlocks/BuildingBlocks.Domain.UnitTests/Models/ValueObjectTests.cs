@@ -78,15 +78,11 @@ public sealed class ValueObjectTests
     }
 
     [Fact]
-    public void Equals_WhenTypesAreDifferentWithSameValue_ShouldBeEqual()
+    public void Equals_WhenTypesAreDifferentWithSameValue_ShouldNotBeEqual()
     {
         // Arrange.
-        // TODO: ValueObject compara solo los componentes de igualdad, no el tipo: un Email y un
-        // PhoneNumber con el mismo texto son "iguales". Lo mismo pasa con City y State en Persons
-        // (los dos son strings). Hoy no rompe nada porque no se comparan value objects de tipos
-        // distintos, pero no es lo esperado. Hay que decidir si ValuesEqual agrega
-        // GetType() == other.GetType() (como hace Enumeration); si se agrega, este test pasa a
-        // esperar que no sean iguales.
+        // Un Email y un PhoneNumber con el mismo texto son value objects distintos: además de los
+        // valores, se compara el tipo (lo mismo con City y State en Persons, que son strings).
         Email email = Email.Build("johndoe@gmail.com");
         PhoneNumber phoneNumber = PhoneNumber.Build("johndoe@gmail.com");
 
@@ -94,7 +90,7 @@ public sealed class ValueObjectTests
         bool areEqual = email.Equals(phoneNumber);
 
         // Assert.
-        areEqual.Should().BeTrue();
+        areEqual.Should().BeFalse();
     }
 
     #endregion
