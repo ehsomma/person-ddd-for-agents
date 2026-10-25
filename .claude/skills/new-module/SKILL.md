@@ -81,6 +81,9 @@ corresponde.
 6. **Base de datos:** el script `<Producto><Módulo>_Source.sql` en la raíz del repo (imitá
    `RecordsPersons_Source.sql`), con las tablas del módulo. Agregalo a la `.slnx` como `<File>` en la
    carpeta `/Src/Modules/<Módulo>/Infra/DatabaseScripts/`, igual que el del módulo de referencia.
+7. **Tests:** el módulo nace sin proyectos de test. Los tests se escriben a pedido, cuando el usuario ya
+   consensuó el código (skill `unit-tests`): recién ahí se crean `Tests/Modules/<Módulo>/<Producto>.<Módulo>.TestData`
+   (los object mothers) y los `<Proyecto>.UnitTests` que hagan falta. No los crees por tu cuenta.
 
 ## Host propio
 
@@ -137,13 +140,26 @@ Si es el primer módulo de un producto nuevo:
 
 1. **Se copia tal cual:**
    - `Src/Core/My.*` y `Src/BuildingBlocks/*`.
-   - `Directory.Build.props`, `Directory.Build.targets`, `stylecop.json` y `.editorconfig`.
+   - `Tests/BuildingBlocks/*`: los tests de los building blocks van con ellos, incluidos los `TODO` de
+     los comportamientos que todavía hay que decidir.
+   - `Directory.Build.props`, `Directory.Build.targets`, `stylecop.json`, `.editorconfig` (con la
+     sección `[Tests/**.cs]`) y `global.json` (fija el SDK y el runner de tests: sin
+     `"test": { "runner": "Microsoft.Testing.Platform" }`, `dotnet test` falla en .NET 10).
+   - La infraestructura de tests: `Tests/Directory.Build.props`, `dotnet-tools.json` (ReportGenerator)
+     y `Tests/coverage.ps1`.
+   - `.github/workflows/build.yml`, si el proyecto nuevo también usa GitHub Actions.
    - `.claude/skills/*` y `.claude/commands/handoff*`.
 2. **No se copian** `Docs/handoff/*` (es el historial de esta plantilla) ni el módulo Persons, que queda
-   solo como ejemplo.
+   solo como ejemplo, ni sus tests (`Tests/Modules/Persons`, `Tests/Apps/Records.Persons.Api.V1.UnitTests`).
 3. **La solución** se crea con `dotnet new sln -n <Producto>` (en .NET 10 ya genera `.slnx`), y los
-   proyectos se agregan con `dotnet sln add`.
-4. **Se cambia el prefijo** `Records.` por el del producto en los proyectos y los namespaces.
+   proyectos se agregan con `dotnet sln add`, incluidos los de `Tests/BuildingBlocks` (en la carpeta de
+   solución `Tests/BuildingBlocks`). Si la `.slnx` no se llama `Records.slnx`, actualizá el nombre en
+   `Tests/coverage.ps1` y en el workflow.
+4. **Se cambia el prefijo** `Records.` por el del producto en los proyectos y los namespaces, también en
+   los de `Tests/`. ⚠️ El `Directory.Build.props` expone los tipos `internal` de cada proyecto solo a
+   `<Proyecto>.UnitTests` (por convención de nombre): si se renombra un proyecto de `Src/` y no su
+   proyecto de test, el test deja de ver los handlers y los validators, y el build falla con errores de
+   tipos inaccesibles que no dicen la causa.
 5. **Se crea el módulo** con los pasos de arriba y su host propio.
 6. **Se crea el `CLAUDE.md` del proyecto nuevo** a partir del de esta plantilla. Se conservan las
    secciones de arquitectura, decisiones, convenciones, trampas y flujo de trabajo, y se actualizan los
@@ -166,5 +182,7 @@ Si es el primer módulo de un producto nuevo:
    de DI valida el grafo al arrancar, así que un assembly que falta en el `Program.cs` aparece como
    "Some services are not able to be constructed" en cuanto haya un handler que dependa de algo de ese
    assembly. Con el módulo vacío no hay nada que validar: la prueba real es el primer caso de uso.
-5. **Seguí con el primer caso de uso** con la skill `new-usecase`, que termina con su propia
+5. **Si es un proyecto nuevo, los tests copiados pasan:** `dotnet test --solution <Producto>.slnx` corre
+   los de `Tests/BuildingBlocks` en verde.
+6. **Seguí con el primer caso de uso** con la skill `new-usecase`, que termina con su propia
    verificación (incluida la ruta en `/openapi/v1.json`).
