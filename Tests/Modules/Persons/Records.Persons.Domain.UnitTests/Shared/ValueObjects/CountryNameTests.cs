@@ -7,17 +7,16 @@ namespace Records.Persons.Domain.UnitTests.Shared.ValueObjects;
 
 /// <summary>
 /// Tests del value object <see cref="CountryName"/>: opcional, acepta <see langword="null"/> y vacío,
-/// hasta 160 caracteres.
+/// hasta 60 caracteres.
 /// </summary>
 public sealed class CountryNameTests
 {
     #region Declarations
 
-    // TODO: El value object acepta hasta 160 caracteres, pero la columna Addresses.Country es
-    // nvarchar(60) (RecordsPersons_Source.sql): un país de 61 a 160 caracteres pasa el dominio y falla
-    // al insertar. Hay que decidir cuál es el límite correcto y alinear el value object, la columna y
-    // este test.
-    private const int MaxLength = 160;
+    // NOTE: Tiene que coincidir con el largo de la columna en la base (RecordsPersons_Source.sql).
+    // Si este test falla porque cambió el límite, revisá también la columna. 60 alcanza para el nombre
+    // de país más largo en uso ("The United Kingdom of Great Britain and Northern Ireland", 56).
+    private const int MaxLength = 60;
 
     #endregion
 

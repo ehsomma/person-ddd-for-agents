@@ -133,7 +133,7 @@ CREATE TABLE [dbo].[Persons](
 	[Id] [uniqueidentifier] NOT NULL,
 	[FullName] [nvarchar](62) NOT NULL,
 	[Email] [varchar](362) NULL,
-	[Phone] [nvarchar](20) NULL,
+	[Phone] [nvarchar](30) NULL,
 	[Gender] [varchar](10) NOT NULL,
 	[Birthdate] [datetime] NULL,
 	[CreatedOnUtc] [datetime] NULL,

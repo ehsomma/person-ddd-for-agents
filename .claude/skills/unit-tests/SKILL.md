@@ -357,12 +357,20 @@ base, un dato inválido que se acepta, un test existente que falla después de u
 3. Se avisa en el reporte, para que el usuario decida.
 
 ```csharp
-// TODO: El value object acepta hasta 160 caracteres, pero la columna Addresses.Country es
-// nvarchar(60) (RecordsPersons_Source.sql): un país de 61 a 160 caracteres pasa el dominio y falla
-// al insertar. Hay que decidir cuál es el límite correcto y alinear el value object, la columna y
-// este test.
-private const int MaxLength = 160;
+[Fact]
+public void Validate_WhenValueExceedsTheColumnPrecision_ShouldNotHaveError()
+{
+    // Arrange.
+    // TODO: La columna PersonalAssets.Value es decimal(9, 2): el máximo es 9.999.999,99. Ni el
+    // validator ni Money tienen un máximo, así que un valor de 10.000.000 pasa los dos y falla al
+    // insertar (500 en lugar de 400). [...] Hay que decidir si el validator (o el dominio) limita el
+    // valor y la cantidad de decimales; si se agrega, este test pasa a esperar el error.
+    Dto.PersonalAsset personalAssetDto = new Dto.PersonalAsset { Value = 10_000_000M };
+    ...
 ```
+
+Cuando el usuario decide, se cambia el código y el test pasa a esperar el comportamiento nuevo: se le
+saca el `TODO` (y si el nombre ya no describe el escenario, se renombra).
 
 **Por qué:** encontrar estas cosas es para lo que sirven los tests. Si el agente las tapa ajustando el
 test, o las "arregla" sin consultar, la decisión de negocio la toma el agente sin que nadie se entere.

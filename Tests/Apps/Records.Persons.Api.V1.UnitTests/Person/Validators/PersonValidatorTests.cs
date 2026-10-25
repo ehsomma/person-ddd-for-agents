@@ -30,7 +30,7 @@ public sealed class PersonValidatorTests
 
     private const int EmailMaxLength = 362;
 
-    private const int PhoneMaxLength = 60;
+    private const int PhoneMaxLength = 30;
 
     private readonly PersonValidator _validator = new PersonValidator();
 
@@ -207,8 +207,6 @@ public sealed class PersonValidatorTests
     public void Validate_WhenPhoneHasMaxLength_ShouldNotHaveError()
     {
         // Arrange.
-        // NOTE: Coincide con el value object PhoneNumber (60), pero no con la columna Persons.Phone
-        // (nvarchar(20)): ver el TODO de PhoneNumberTests.
         Dto.Person personDto = new Dto.Person { Phone = new string('1', PhoneMaxLength) };
 
         // Act.

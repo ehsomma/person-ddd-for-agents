@@ -32,7 +32,7 @@ internal sealed class PersonValidator : AbstractValidator<Dto.Person>
         // porque solo pide una "@" y dejaba pasar emails que el dominio rechaza.
         RuleFor(x => x.Email).NotEmpty().MaximumLength(362).Matches(@"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)+$");
 
-        RuleFor(x => x.Phone).MaximumLength(60);
+        RuleFor(x => x.Phone).MaximumLength(30);
         RuleFor(x => x.Gender)
             .NotEmpty()
             .Must(BeAValidGender)

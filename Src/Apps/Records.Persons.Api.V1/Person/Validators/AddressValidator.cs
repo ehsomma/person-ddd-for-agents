@@ -21,7 +21,7 @@ internal sealed class AddressValidator : AbstractValidator<Dto.Address>
         RuleFor(x => x.StreetLine2).Length(1, 60);
         RuleFor(x => x.City).Length(1, 50);
         RuleFor(x => x.State).Length(1, 50);
-        RuleFor(x => x.Country).MaximumLength(160);
+        RuleFor(x => x.Country).MaximumLength(60);
         RuleFor(x => x.LatLng).SetValidator(new LatLngValidator()!);
     }
 

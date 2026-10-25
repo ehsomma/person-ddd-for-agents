@@ -7,17 +7,17 @@ namespace BuildingBlocks.Domain.UnitTests.ValueObjects;
 
 /// <summary>
 /// Tests of the <see cref="PhoneNumber"/> value object: optional (accepts <see langword="null"/> and
-/// empty), up to 60 characters.
+/// empty), up to 30 characters.
 /// </summary>
 public sealed class PhoneNumberTests
 {
     #region Declarations
 
-    // TODO: El value object acepta hasta 60 caracteres, pero en Persons la columna Persons.Phone es
-    // nvarchar(20) (RecordsPersons_Source.sql): un teléfono de 21 a 60 caracteres pasa el dominio y
-    // falla al insertar. Hay que decidir cuál es el límite correcto y alinear el value object, la
-    // columna y este test.
-    private const int MaxLength = 60;
+    // NOTE: Es un value object compartido: cada módulo que lo persiste tiene que tener una columna de
+    // al menos este largo (en Persons, Persons.Phone es nvarchar(30), RecordsPersons_Source.sql). 30
+    // alcanza para un número con formato y extensión ("+54 11 4444-5555 int. 1234"). Si este test
+    // falla porque cambió el límite, revisá también esas columnas y el PersonValidator de la API.
+    private const int MaxLength = 30;
 
     #endregion
 

@@ -14,7 +14,7 @@ public sealed class CountryName : StringValueObjectNullable
     /// </summary>
     /// <param name="value">The country name.</param>
     private CountryName(string? value)
-        : base(value, "Country.Name", 160, 0)
+        : base(value, "Country.Name", 60, 0)
     {
     }
 

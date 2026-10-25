@@ -24,7 +24,7 @@ public sealed class AddressValidatorTests
 
     private const int CityAndStateMaxLength = 50;
 
-    private const int CountryMaxLength = 160;
+    private const int CountryMaxLength = 60;
 
     private readonly AddressValidator _validator = new AddressValidator();
 
@@ -219,8 +219,6 @@ public sealed class AddressValidatorTests
     public void Validate_WhenCountryExceedsMaxLength_ShouldHaveError()
     {
         // Arrange.
-        // NOTE: Coincide con el value object CountryName (160), pero no con la columna
-        // Addresses.Country (nvarchar(60)): ver el TODO de CountryNameTests.
         Dto.Address addressDto = new Dto.Address { Country = new string('a', CountryMaxLength + 1) };
 
         // Act.

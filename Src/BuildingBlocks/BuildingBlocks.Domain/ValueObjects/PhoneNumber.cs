@@ -12,7 +12,7 @@ public sealed class PhoneNumber : StringValueObjectNullable
     /// </summary>
     /// <param name="value">The phone number.</param>
     private PhoneNumber(string? value)
-        : base(value, "PhoneNumber", 60)
+        : base(value, "PhoneNumber", 30)
     {
     }
 
