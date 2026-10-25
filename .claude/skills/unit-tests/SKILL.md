@@ -1,6 +1,6 @@
 ---
 name: unit-tests
-description: Usar SIEMPRE al escribir, revisar o modificar unit tests en este repositorio (todo lo que está bajo `Tests/`), al crear un proyecto de test nuevo, o cuando se pide analizar o verificar la cobertura de código ("revisá el coverage", "qué queda sin cubrir"). Define cuándo se escriben los tests (a pedido, con el código ya consensuado), dónde van, qué se testea según el tipo (aggregate, entidad, value object, enumeración, servicio de dominio, command handler, mapper), cómo se escriben (xUnit v3, AwesomeAssertions, Moq, naming Method_WhenCondition_ShouldExpectedResult, AAA, object mother), qué hacer cuando un test descubre un comportamiento dudoso y cómo se interpreta la cobertura. Hoy cubre la capa Domain, los command handlers de Application y los mappers; las otras capas se agregan cuando se escriban sus primeros tests. Complementa a `team-standards` y `code-comments`, que aplican igual en los tests.
+description: Usar SIEMPRE al escribir, revisar o modificar unit tests en este repositorio (todo lo que está bajo `Tests/`), al crear un proyecto de test nuevo, o cuando se pide analizar o verificar la cobertura de código ("revisá el coverage", "qué queda sin cubrir"). Define cuándo se escriben los tests (a pedido, con el código ya consensuado), dónde van, qué se testea según el tipo (aggregate, entidad, value object, enumeración, servicio de dominio, command handler, mapper, validator), cómo se escriben (xUnit v3, AwesomeAssertions, Moq, naming Method_WhenCondition_ShouldExpectedResult, AAA, object mother), qué hacer cuando un test descubre un comportamiento dudoso y cómo se interpreta la cobertura. Hoy cubre la capa Domain, los command handlers de Application, los mappers y los validators de la API; las otras capas se agregan cuando se escriban sus primeros tests. Complementa a `team-standards` y `code-comments`, que aplican igual en los tests.
 ---
 
 # Unit tests
@@ -9,10 +9,11 @@ Cómo se escriben los tests de este repo. Los ejemplos salen de
 `Tests/Modules/Persons/Records.Persons.Domain.UnitTests/`: ante la duda, se imita ese proyecto.
 
 Es un documento vivo, igual que `team-standards`. **Hoy cubre la capa Domain** (la de los módulos y
-`BuildingBlocks.Domain`), **los command handlers de Application y los mappers** (ver
-[Command handlers](#command-handlers) y [Mappers](#mappers)). Para otra capa o tipo (query handlers,
-event handlers, validators, repositorios, infra) todavía no hay un patrón acordado: no lo inventes.
-Frená, proponé cómo encararlo, y cuando el usuario lo apruebe, agregá acá la sección.
+`BuildingBlocks.Domain`), **los command handlers de Application, los mappers y los validators** (ver
+[Command handlers](#command-handlers), [Mappers](#mappers) y
+[Validators](#validators-fluentvalidation)). Para otra capa o tipo (query handlers, event handlers,
+repositorios, endpoints, infra) todavía no hay un patrón acordado: no lo inventes. Frená, proponé
+cómo encararlo, y cuando el usuario lo apruebe, agregá acá la sección.
 
 ## Cuándo se escriben
 
@@ -312,6 +313,37 @@ mappedBackPerson.Should().BeEquivalentTo(
         .ComparingByMembers<DomainModel.Address>()
         .ComparingByMembers<DomainModel.PersonalAsset>());
 ```
+
+## Validators (FluentValidation)
+
+Ver `Tests/Apps/Records.Persons.Api.V1.UnitTests/Person/Validators/*`. Se usan los helpers de
+FluentValidation (`FluentValidation.TestHelper`), no AwesomeAssertions: `TestValidate` y
+`ShouldHaveValidationErrorFor(x => x.Email)`, que referencia la propiedad con una expresión (si se
+renombra, el test no compila).
+
+**Cada regla se prueba aislada,** con un DTO que solo tiene el dato que interesa y con
+`IncludeProperties`, así corre solo la regla de esa propiedad y los otros datos vacíos no suman
+errores:
+
+```csharp
+// Act.
+TestValidationResult<Dto.Person> result = _validator.TestValidate(
+    new Dto.Person { FullName = new string('a', FullNameMaxLength + 1) },
+    options => options.IncludeProperties(x => x.FullName));
+
+// Assert.
+result.ShouldHaveValidationErrorFor(x => x.FullName);
+```
+
+| Escenario | Qué se verifica |
+|---|---|
+| El DTO completo y válido | `ShouldNotHaveAnyValidationErrors()`, con el DTO de `PersonDtoMother`. |
+| Cada regla | El valor límite que pasa y el que falla, en tests separados (no un `[Theory]` con un `bool` de resultado esperado). Obligatorios: `null` y vacío. Opcionales: `null` pasa. |
+| Validators hijos | Desde el padre, un solo test por hijo que verifica que está enganchado (`SetValidator`, `RuleForEach`): `ShouldHaveValidationErrorFor(x => x.Address!.StreetLine1)` o `"PersonalAssets[1].Value"`. Sus reglas se prueban en su propia clase de test. |
+
+**Los límites tienen que coincidir con los del dominio.** Las constantes `MaxLength` llevan un `NOTE`
+que las ata al value object. Si el validator deja pasar algo que el dominio rechaza (o al revés), es un
+hallazgo y va con su `TODO` (ver [Cuando un test descubre algo raro](#cuando-un-test-descubre-algo-raro)).
 
 ## Cuando un test descubre algo raro
 

@@ -61,6 +61,9 @@
     <File Path="Tests/coverage.ps1" />
     <File Path="Tests/Directory.Build.props" />
   </Folder>
+  <Folder Name="/Tests/Apps/">
+    <Project Path="Tests/Apps/Records.Persons.Api.V1.UnitTests/Records.Persons.Api.V1.UnitTests.csproj" />
+  </Folder>
   <Folder Name="/Tests/BuildingBlocks/">
     <Project Path="Tests/BuildingBlocks/BuildingBlocks.Domain.UnitTests/BuildingBlocks.Domain.UnitTests.csproj" />
   </Folder>

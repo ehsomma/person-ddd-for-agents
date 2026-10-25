@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Src\Apps\Records.Persons.Api.V1\Records.Persons.Api.V1.csproj" />
+    <ProjectReference Include="..\..\Modules\Persons\Records.Persons.TestData\Records.Persons.TestData.csproj" />
+  </ItemGroup>
+
+</Project>
