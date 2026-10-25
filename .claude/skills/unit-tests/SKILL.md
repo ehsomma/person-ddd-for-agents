@@ -8,9 +8,10 @@ description: Usar SIEMPRE al escribir, revisar o modificar unit tests en este re
 Cómo se escriben los tests de este repo. Los ejemplos salen de
 `Tests/Modules/Persons/Records.Persons.Domain.UnitTests/`: ante la duda, se imita ese proyecto.
 
-Es un documento vivo, igual que `team-standards`. **Hoy cubre solo la capa Domain.** Para otra capa
-(Application, validators, infra) todavía no hay un patrón acordado: no lo inventes. Frená, proponé
-cómo encararlo, y cuando el usuario lo apruebe, agregá acá la sección de esa capa.
+Es un documento vivo, igual que `team-standards`. **Hoy cubre solo la capa Domain** (la de los módulos y
+`BuildingBlocks.Domain`). Para otra capa (Application, validators, infra) todavía no hay un patrón
+acordado: no lo inventes. Frená, proponé cómo encararlo, y cuando el usuario lo apruebe, agregá acá la
+sección de esa capa.
 
 ## Cuándo se escriben
 
@@ -153,10 +154,31 @@ queda corto y se ve qué distingue al escenario.
 Si el test necesita un dato inválido o un `null`, no se usa el mother: se llama a `Create` o `Build`
 directamente con ese dato (ver `Create_WhenAddressIsNull_ShouldThrowDomainValidationException`).
 
+### Clases base: test doubles
+
+Las clases base abstractas (`Entity`, `AggregateRoot`, `Enumeration`, `DomainEvent`) se testean con
+subclases mínimas del proyecto de test (`TestEntity`, `TestAggregate`, `TestColor`), en `TestData/`,
+`internal sealed` y declaradas igual que las de los módulos. Si la base tiene un hijo real en el mismo
+proyecto (`Email` para `ValueObject`), se usa el real. Ver `Tests/BuildingBlocks/BuildingBlocks.Domain.UnitTests`.
+
+### Operadores con `null`
+
+Para testear un `==` sobrecargado contra `null`, CA1508 marca la comparación como "siempre true/false"
+porque asume el `==` estándar. Se suprime en ese test, con la justificación:
+
+```csharp
+[SuppressMessage(
+    "Maintainability",
+    "CA1508:Avoid dead conditional code",
+    Justification = "Se testea la sobrecarga del operador == con null: el analyzer asume el == estándar.")]
+```
+
 ### Límites de los value objects
 
 El largo máximo va en una constante `MaxLength` con un `NOTE` que la ata a la columna de la base, y
-los valores se arman con `new string('a', MaxLength)` y `MaxLength + 1`:
+los valores se arman con `new string('a', MaxLength)` y `MaxLength + 1`. En los value objects
+compartidos de `BuildingBlocks`, el `NOTE` dice que cada módulo que lo persiste necesita una columna de
+al menos ese largo (ver `EmailTests`):
 
 ```csharp
 // NOTE: Tiene que coincidir con el largo de la columna en la base (RecordsPersons_Source.sql).
@@ -195,7 +217,9 @@ El test es `async Task`, y el `CancellationToken` que se pasa es `TestContext.Cu
 
 ### Comentarios
 
-Aplica `code-comments`, con el español de `Src/Modules`. Además:
+Aplica `code-comments`, con el idioma de la carpeta espejo de `Src/`: en `Tests/Modules` los XML docs
+van en español, y en `Tests/BuildingBlocks` y `Tests/Core`, en inglés. Los comentarios inline van en
+español en todos lados. Además:
 
 - La clase lleva un `<summary>` que dice qué se testea y, en los value objects, sus reglas
   ("obligatorio, de 1 a 62 caracteres").

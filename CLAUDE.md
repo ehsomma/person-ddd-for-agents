@@ -19,7 +19,7 @@ dotnet test --solution Records.slnx                     # corre con Microsoft Te
 
 - El esquema de la base está en `RecordsPersons_Source.sql`.
 - Los tests están en `Tests/`, con la misma estructura de carpetas que `Src/`: xUnit v3, AwesomeAssertions y Moq.
-  Hoy solo hay tests del dominio de Persons.
+  Hoy hay tests del dominio de Persons y de `BuildingBlocks.Domain`.
 - **Los tests nuevos se escriben solo a pedido**, con el código ya consensuado, pero los existentes se corren siempre
   que se cambia `Src/`. **La cobertura se corre solo cuando el usuario la pide** (ReportGenerator). Cómo se escriben
   los tests y cómo se interpreta la cobertura está en la skill `unit-tests`.
