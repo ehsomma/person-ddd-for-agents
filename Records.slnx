@@ -70,4 +70,7 @@
     <Project Path="Tests/Modules/Persons/Records.Persons.Domain.UnitTests/Records.Persons.Domain.UnitTests.csproj" />
     <Project Path="Tests/Modules/Persons/Records.Persons.TestData/Records.Persons.TestData.csproj" />
   </Folder>
+  <Folder Name="/Tests/Modules/Persons/Infra/">
+    <Project Path="Tests/Modules/Persons/Records.Persons.Infra.Persistence.Sql.UnitTests/Records.Persons.Infra.Persistence.Sql.UnitTests.csproj" />
+  </Folder>
 </Solution>

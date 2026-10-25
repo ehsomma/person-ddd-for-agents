@@ -1,6 +1,6 @@
 ---
 name: unit-tests
-description: Usar SIEMPRE al escribir, revisar o modificar unit tests en este repositorio (todo lo que está bajo `Tests/`), al crear un proyecto de test nuevo, o cuando se pide analizar o verificar la cobertura de código ("revisá el coverage", "qué queda sin cubrir"). Define cuándo se escriben los tests (a pedido, con el código ya consensuado), dónde van, qué se testea según el tipo (aggregate, entidad, value object, enumeración, servicio de dominio, command handler), cómo se escriben (xUnit v3, AwesomeAssertions, Moq, naming Method_WhenCondition_ShouldExpectedResult, AAA, object mother), qué hacer cuando un test descubre un comportamiento dudoso y cómo se interpreta la cobertura. Hoy cubre la capa Domain y los command handlers de Application; las otras capas se agregan cuando se escriban sus primeros tests. Complementa a `team-standards` y `code-comments`, que aplican igual en los tests.
+description: Usar SIEMPRE al escribir, revisar o modificar unit tests en este repositorio (todo lo que está bajo `Tests/`), al crear un proyecto de test nuevo, o cuando se pide analizar o verificar la cobertura de código ("revisá el coverage", "qué queda sin cubrir"). Define cuándo se escriben los tests (a pedido, con el código ya consensuado), dónde van, qué se testea según el tipo (aggregate, entidad, value object, enumeración, servicio de dominio, command handler, mapper), cómo se escriben (xUnit v3, AwesomeAssertions, Moq, naming Method_WhenCondition_ShouldExpectedResult, AAA, object mother), qué hacer cuando un test descubre un comportamiento dudoso y cómo se interpreta la cobertura. Hoy cubre la capa Domain, los command handlers de Application y los mappers; las otras capas se agregan cuando se escriban sus primeros tests. Complementa a `team-standards` y `code-comments`, que aplican igual en los tests.
 ---
 
 # Unit tests
@@ -9,10 +9,10 @@ Cómo se escriben los tests de este repo. Los ejemplos salen de
 `Tests/Modules/Persons/Records.Persons.Domain.UnitTests/`: ante la duda, se imita ese proyecto.
 
 Es un documento vivo, igual que `team-standards`. **Hoy cubre la capa Domain** (la de los módulos y
-`BuildingBlocks.Domain`) **y los command handlers de Application** (ver
-[Command handlers](#command-handlers)). Para otra capa o tipo (query handlers, event handlers,
-mappers, validators, infra) todavía no hay un patrón acordado: no lo inventes. Frená, proponé cómo
-encararlo, y cuando el usuario lo apruebe, agregá acá la sección.
+`BuildingBlocks.Domain`), **los command handlers de Application y los mappers** (ver
+[Command handlers](#command-handlers) y [Mappers](#mappers)). Para otra capa o tipo (query handlers,
+event handlers, validators, repositorios, infra) todavía no hay un patrón acordado: no lo inventes.
+Frená, proponé cómo encararlo, y cuando el usuario lo apruebe, agregá acá la sección.
 
 ## Cuándo se escriben
 
@@ -284,6 +284,34 @@ _context.Calls.Should().Equal(
 - Para que un mock devuelva valores distintos en llamadas sucesivas y además registre la llamada, se
   usa una `Queue` con `ReturnsAsync(() => queue.Dequeue())`. `SetupSequence` no acepta `Callback`, y un
   segundo `Setup` sobre la misma expresión reemplaza al primero.
+
+## Mappers
+
+Ver `Tests/Modules/Persons/Records.Persons.Application.UnitTests/Person/Mappers/PersonMapperTests.cs`
+(dominio → DTO) y
+`Tests/Modules/Persons/Records.Persons.Infra.Persistence.Sql.UnitTests/PersonAggregate/Mappers/PersonMapperTests.cs`
+(dominio ↔ data model). Son código puro: sin mocks, el mapper se crea con `new` y el aggregate sale
+de `PersonMother`.
+
+| Escenario | Qué se verifica |
+|---|---|
+| Un test por grupo de campos | Los datos de la persona, la dirección y los bienes personales, campo por campo. En persistencia, también las fechas de auditoría y el `PersonId` (FK) de los hijos. |
+| Opcionales en `null` | Que un aggregate con solo los datos obligatorios se mapea con `null` en los opcionales, sin romper. |
+| Ida y vuelta (persistencia) | Dominio → data model → dominio da el mismo aggregate. Es el test que detecta un campo nuevo mapeado en una sola dirección. |
+| Data model → dominio | `null` devuelve `null` (el servicio lanza el `NotFound`), no se registran eventos, y los datos corruptos (una sola coordenada) lanzan la excepción. |
+
+⚠️ **`BeEquivalentTo` con entidades:** las entidades redefinen `Equals` por ID, y AwesomeAssertions
+usa ese `Equals` en lugar de comparar los miembros. Sin `ComparingByMembers<T>()` para el aggregate y
+cada entidad hija, el test compara solo los IDs y pasa aunque falte un campo:
+
+```csharp
+mappedBackPerson.Should().BeEquivalentTo(
+    domainPerson,
+    options => options
+        .ComparingByMembers<DomainModel.Person>()
+        .ComparingByMembers<DomainModel.Address>()
+        .ComparingByMembers<DomainModel.PersonalAsset>());
+```
 
 ## Cuando un test descubre algo raro
 
