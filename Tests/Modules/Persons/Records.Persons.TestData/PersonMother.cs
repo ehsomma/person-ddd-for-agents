@@ -153,7 +153,7 @@ public static class PersonMother
     {
         PersonalAsset personalAsset = PersonalAsset.Create(
             PersonalAssetDescription.Build(description),
-            Money.Build(value));
+            PersonalAssetValue.Build(value));
 
         return personalAsset;
     }
@@ -170,7 +170,7 @@ public static class PersonMother
         PersonalAsset personalAsset = PersonalAsset.Load(
             id,
             PersonalAssetDescription.Build(description),
-            Money.Build(value));
+            PersonalAssetValue.Build(value));
 
         return personalAsset;
     }

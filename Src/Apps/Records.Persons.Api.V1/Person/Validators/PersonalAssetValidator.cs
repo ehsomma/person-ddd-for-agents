@@ -17,9 +17,12 @@ internal sealed class PersonalAssetValidator : AbstractValidator<Dto.PersonalAss
     {
         RuleFor(x => x.Description).NotEmpty().MaximumLength(255);
 
-        // TODO: Esta regla hoy solo existe acá: Money/PersonalAsset aceptan cualquier valor. Si es una
-        // regla de negocio, debería estar en el dominio.
-        RuleFor(x => x.Value).GreaterThan(0);
+        // NOTE: Misma regla que el value object PersonalAssetValue del dominio, escrita a mano para no
+        // acoplar la API al dominio: de 0 a 999.999.999,99 y hasta 2 decimales. PrecisionScale(11, 2)
+        // es exactamente la columna decimal(11, 2): hasta 9 dígitos enteros y 2 decimales (con
+        // ignoreTrailingZeros, 10.50 cuenta como 10.5). Si cambiás la regla, cambiala también en el
+        // dominio y en la columna.
+        RuleFor(x => x.Value).GreaterThanOrEqualTo(0).PrecisionScale(11, 2, true);
     }
 
     #endregion

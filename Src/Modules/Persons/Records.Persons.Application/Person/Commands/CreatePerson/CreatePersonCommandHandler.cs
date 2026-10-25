@@ -154,7 +154,7 @@ internal sealed class CreatePersonCommandHandler : CommandHandler<CreatePersonCo
             {
                 DomainModel.PersonalAsset domainPersonalAsset = DomainModel.PersonalAsset.Create(
                     PersonalAssetDescription.Build(personalAssetDto.Description),
-                    Money.Build(personalAssetDto.Value));
+                    PersonalAssetValue.Build(personalAssetDto.Value));
                 person.AddPersonalAsset(domainPersonalAsset);
             }
         }

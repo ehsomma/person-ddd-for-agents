@@ -321,8 +321,8 @@ mismo.
 // NOTE: Secuencial (no Task.WhenAll): los inserts comparten la misma conexión y transacción, y
 // SqlConnection no soporta comandos concurrentes (ni siquiera con MultipleActiveResultSets).
 
-// TODO: Esta regla hoy solo existe acá: Money y PersonalAsset aceptan cualquier valor. Si es una
-// regla de negocio, debería estar en el dominio.
+// TODO: Las entidades hijas nuevas tienen ID 0 hasta que se guardan, así que dos entidades nuevas
+// distintas son "iguales". Hay que decidir si una entidad sin ID solo es igual a sí misma.
 ```
 
 ## Código comentado

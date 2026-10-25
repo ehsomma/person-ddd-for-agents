@@ -1,6 +1,5 @@
 using AwesomeAssertions;
 using BuildingBlocks.Domain.Exceptions;
-using BuildingBlocks.Domain.ValueObjects;
 using Records.Persons.Domain.PersonAggregate.Models;
 using Records.Persons.Domain.PersonAggregate.ValueObjects;
 using Records.Persons.TestData;
@@ -36,7 +35,7 @@ public sealed class PersonalAssetTests
         // Arrange.
 
         // Act.
-        Action act = () => PersonalAsset.Create(null, Money.Build(1500M));
+        Action act = () => PersonalAsset.Create(null, PersonalAssetValue.Build(1500M));
 
         // Assert.
         act.Should().Throw<DomainValidationException>();

@@ -8,7 +8,7 @@ namespace Records.Persons.Api.V1.UnitTests.Person.Validators;
 
 /// <summary>
 /// Tests del validator <see cref="PersonalAssetValidator"/>: la descripción obligatoria, de 1 a 255
-/// caracteres, y el valor mayor a 0.
+/// caracteres, y el valor de 0 a 999.999.999,99 con hasta 2 decimales.
 /// </summary>
 public sealed class PersonalAssetValidatorTests
 {
@@ -84,14 +84,31 @@ public sealed class PersonalAssetValidatorTests
     }
 
     [Theory]
-    [InlineData(0)]
-    [InlineData(-0.01)]
-    public void Validate_WhenValueIsNotPositive_ShouldHaveError(double value)
+    [InlineData(0)] // Un bien sin valor declarado es válido.
+    [InlineData(0.01)]
+    [InlineData(10.5)]
+    [InlineData(999_999_999.99)] // El máximo de la columna decimal(11, 2).
+    public void Validate_WhenValueIsInRange_ShouldNotHaveError(double value)
     {
         // Arrange.
-        // NOTE: Esta regla hoy solo existe en el validator (ver el TODO de PersonalAssetValidator):
-        // Money acepta cualquier monto.
+        // NOTE: Misma regla que el value object PersonalAssetValue del dominio (ver
+        // PersonalAssetValueTests). InlineData no acepta decimal: se convierte acá.
         Dto.PersonalAsset personalAssetDto = new Dto.PersonalAsset { Value = (decimal)value };
+
+        // Act.
+        TestValidationResult<Dto.PersonalAsset> result = _validator.TestValidate(
+            personalAssetDto,
+            options => options.IncludeProperties(x => x.Value));
+
+        // Assert.
+        result.ShouldNotHaveValidationErrorFor(x => x.Value);
+    }
+
+    [Fact]
+    public void Validate_WhenValueIsNegative_ShouldHaveError()
+    {
+        // Arrange.
+        Dto.PersonalAsset personalAssetDto = new Dto.PersonalAsset { Value = -0.01M };
 
         // Act.
         TestValidationResult<Dto.PersonalAsset> result = _validator.TestValidate(
@@ -103,15 +120,11 @@ public sealed class PersonalAssetValidatorTests
     }
 
     [Fact]
-    public void Validate_WhenValueExceedsTheColumnPrecision_ShouldNotHaveError()
+    public void Validate_WhenValueExceedsMaxValue_ShouldHaveError()
     {
         // Arrange.
-        // TODO: La columna PersonalAssets.Value es decimal(9, 2): el máximo es 9.999.999,99. Ni el
-        // validator ni Money tienen un máximo, así que un valor de 10.000.000 pasa los dos y falla al
-        // insertar (500 en lugar de 400). Además, los decimales de más (p.ej. 10,555) SQL Server los
-        // redondea sin avisar. Hay que decidir si el validator (o el dominio) limita el valor y la
-        // cantidad de decimales; si se agrega, este test pasa a esperar el error.
-        Dto.PersonalAsset personalAssetDto = new Dto.PersonalAsset { Value = 10_000_000M };
+        // 1.000.000.000 tiene 10 dígitos enteros: no entra en decimal(11, 2), que admite 9.
+        Dto.PersonalAsset personalAssetDto = new Dto.PersonalAsset { Value = 1_000_000_000M };
 
         // Act.
         TestValidationResult<Dto.PersonalAsset> result = _validator.TestValidate(
@@ -119,7 +132,30 @@ public sealed class PersonalAssetValidatorTests
             options => options.IncludeProperties(x => x.Value));
 
         // Assert.
-        result.ShouldNotHaveValidationErrorFor(x => x.Value);
+        result.ShouldHaveValidationErrorFor(x => x.Value);
+    }
+
+    [Theory]
+    [InlineData("10.555")]
+    [InlineData("0.001")]
+    public void Validate_WhenValueHasMoreThanTwoDecimals_ShouldHaveError(string value)
+    {
+        // Arrange.
+        // Se rechaza en lugar de redondear: si se redondeara (o lo redondeara SQL Server), el valor
+        // guardado no sería el que se mandó y nadie se enteraría. El valor llega como string porque
+        // InlineData no acepta decimal.
+        Dto.PersonalAsset personalAssetDto = new Dto.PersonalAsset
+        {
+            Value = decimal.Parse(value, System.Globalization.CultureInfo.InvariantCulture),
+        };
+
+        // Act.
+        TestValidationResult<Dto.PersonalAsset> result = _validator.TestValidate(
+            personalAssetDto,
+            options => options.IncludeProperties(x => x.Value));
+
+        // Assert.
+        result.ShouldHaveValidationErrorFor(x => x.Value);
     }
 
     #endregion

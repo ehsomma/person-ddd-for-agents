@@ -326,7 +326,7 @@ public sealed class PersonValidatorTests
             new List<Dto.PersonalAsset>
             {
                 PersonDtoMother.PersonalAsset(),
-                PersonDtoMother.PersonalAsset(value: 0M),
+                PersonDtoMother.PersonalAsset(value: -1M),
             });
 
         // Act.

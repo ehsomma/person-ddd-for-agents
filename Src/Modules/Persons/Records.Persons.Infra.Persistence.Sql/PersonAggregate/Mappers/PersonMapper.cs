@@ -121,7 +121,7 @@ public class PersonMapper : IPersistenceMapper<DomainModel.Person, DataModel.Per
                     DomainModel.PersonalAsset domainPersonalAsset = DomainModel.PersonalAsset.Load(
                         dataPersonalAsset.Id,
                         PersonalAssetDescription.Build(dataPersonalAsset.Description),
-                        Money.Build(dataPersonalAsset.Value));
+                        PersonalAssetValue.Build(dataPersonalAsset.Value));
 
                     domainPerson.LoadPersonalAsset(domainPersonalAsset);
                 }

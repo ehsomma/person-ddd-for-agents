@@ -116,7 +116,7 @@ CREATE TABLE [dbo].[PersonalAssets](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PersonId] [uniqueidentifier] NOT NULL,
 	[Description] [nvarchar](255) NOT NULL,
-	[Value] [decimal](9, 2) NOT NULL,
+	[Value] [decimal](11, 2) NOT NULL,
  CONSTRAINT [PK_PersonalAssets] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

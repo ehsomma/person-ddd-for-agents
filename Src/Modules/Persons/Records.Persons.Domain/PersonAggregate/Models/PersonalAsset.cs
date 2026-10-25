@@ -1,6 +1,5 @@
 using BuildingBlocks.Domain.Exceptions;
 using BuildingBlocks.Domain.Models;
-using BuildingBlocks.Domain.ValueObjects;
 using Records.Persons.Domain.PersonAggregate.ValueObjects;
 using Throw;
 
@@ -23,7 +22,7 @@ public sealed class PersonalAsset : Entity<int>
     /// <param name="id">The PersonalAsset ID.</param>
     /// <param name="description">The description.</param>
     /// <param name="value">The monetary value.</param>
-    private PersonalAsset(int id, PersonalAssetDescription? description, Money? value)
+    private PersonalAsset(int id, PersonalAssetDescription? description, PersonalAssetValue? value)
         : base(id)
     {
         EnsureMinimalRequiredData(description, value);
@@ -40,7 +39,7 @@ public sealed class PersonalAsset : Entity<int>
     /// <param name="description">The description.</param>
     /// <param name="value">The monetary value.</param>
     /// <returns>The created <see cref="PersonalAsset"/>.</returns>
-    public static PersonalAsset Create(PersonalAssetDescription? description, Money? value)
+    public static PersonalAsset Create(PersonalAssetDescription? description, PersonalAssetValue? value)
     {
         PersonalAsset personalAsset = new PersonalAsset(0, description, value);
         ////personalAsset.RegisterDomainEvent(new PersonalAssetCreatedEvent(null, personalAsset));
@@ -56,7 +55,7 @@ public sealed class PersonalAsset : Entity<int>
     /// <param name="description">The description.</param>
     /// <param name="value">The monetary value.</param>
     /// <returns>The created <see cref="PersonalAsset"/>.</returns>
-    public static PersonalAsset Load(int id, PersonalAssetDescription? description, Money? value)
+    public static PersonalAsset Load(int id, PersonalAssetDescription? description, PersonalAssetValue? value)
     {
         PersonalAsset personalAsset = new PersonalAsset(id, description, value);
 
@@ -71,13 +70,13 @@ public sealed class PersonalAsset : Entity<int>
     public PersonalAssetDescription Description { get; private set; }
 
     /// <summary>The monetary value.</summary>
-    public Money Value { get; private set; }
+    public PersonalAssetValue Value { get; private set; }
 
     #endregion
 
     #region Private methods
 
-    private void EnsureMinimalRequiredData(PersonalAssetDescription? description, Money? value)
+    private void EnsureMinimalRequiredData(PersonalAssetDescription? description, PersonalAssetValue? value)
     {
         try
         {

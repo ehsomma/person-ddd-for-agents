@@ -358,14 +358,14 @@ base, un dato inválido que se acepta, un test existente que falla después de u
 
 ```csharp
 [Fact]
-public void Validate_WhenValueExceedsTheColumnPrecision_ShouldNotHaveError()
+public void Equals_WhenBothAreNewWithIdZero_ShouldBeEqual()
 {
     // Arrange.
-    // TODO: La columna PersonalAssets.Value es decimal(9, 2): el máximo es 9.999.999,99. Ni el
-    // validator ni Money tienen un máximo, así que un valor de 10.000.000 pasa los dos y falla al
-    // insertar (500 en lugar de 400). [...] Hay que decidir si el validator (o el dominio) limita el
-    // valor y la cantidad de decimales; si se agrega, este test pasa a esperar el error.
-    Dto.PersonalAsset personalAssetDto = new Dto.PersonalAsset { Value = 10_000_000M };
+    // TODO: Las entidades hijas nuevas tienen ID 0 hasta que se guardan, así que dos entidades
+    // nuevas distintas (dos bienes personales que se agregan juntos) son "iguales". [...] Hay que
+    // decidir si una entidad sin ID (transient) solo es igual a sí misma; si se decide, este test
+    // pasa a esperar false.
+    TestEntity entity = new TestEntity(0);
     ...
 ```
 

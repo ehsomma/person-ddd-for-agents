@@ -144,7 +144,7 @@ internal sealed class UpdatePersonCommandHandler : CommandHandler<UpdatePersonCo
                 DomainModel.PersonalAsset personalAsset = DomainModel.PersonalAsset.Load(
                     personalAssetDto.Id,
                     PersonalAssetDescription.Build(personalAssetDto.Description),
-                    Money.Build(personalAssetDto.Value));
+                    PersonalAssetValue.Build(personalAssetDto.Value));
                 person.LoadPersonalAsset(personalAsset);
             }
         }
