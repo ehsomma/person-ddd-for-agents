@@ -45,4 +45,13 @@
         <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 
+    <ItemGroup>
+        <!--
+        Cada proyecto expone sus tipos internal a su proyecto de unit tests (<Proyecto>.UnitTests), por convención de
+        nombre: los handlers, validators y endpoints son internal sealed y los tests los crean directamente. Si el
+        proyecto de tests no existe, el atributo no tiene efecto.
+        -->
+        <InternalsVisibleTo Include="$(AssemblyName).UnitTests" />
+    </ItemGroup>
+
 </Project>

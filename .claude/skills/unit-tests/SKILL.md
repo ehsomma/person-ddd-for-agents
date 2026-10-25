@@ -1,6 +1,6 @@
 ---
 name: unit-tests
-description: Usar SIEMPRE al escribir, revisar o modificar unit tests en este repositorio (todo lo que está bajo `Tests/`), al crear un proyecto de test nuevo, o cuando se pide analizar o verificar la cobertura de código ("revisá el coverage", "qué queda sin cubrir"). Define cuándo se escriben los tests (a pedido, con el código ya consensuado), dónde van, qué se testea según el tipo (aggregate, entidad, value object, enumeración, servicio de dominio), cómo se escriben (xUnit v3, AwesomeAssertions, Moq, naming Method_WhenCondition_ShouldExpectedResult, AAA, object mother), qué hacer cuando un test descubre un comportamiento dudoso y cómo se interpreta la cobertura. Hoy cubre la capa Domain; las otras capas se agregan cuando se escriban sus primeros tests. Complementa a `team-standards` y `code-comments`, que aplican igual en los tests.
+description: Usar SIEMPRE al escribir, revisar o modificar unit tests en este repositorio (todo lo que está bajo `Tests/`), al crear un proyecto de test nuevo, o cuando se pide analizar o verificar la cobertura de código ("revisá el coverage", "qué queda sin cubrir"). Define cuándo se escriben los tests (a pedido, con el código ya consensuado), dónde van, qué se testea según el tipo (aggregate, entidad, value object, enumeración, servicio de dominio, command handler), cómo se escriben (xUnit v3, AwesomeAssertions, Moq, naming Method_WhenCondition_ShouldExpectedResult, AAA, object mother), qué hacer cuando un test descubre un comportamiento dudoso y cómo se interpreta la cobertura. Hoy cubre la capa Domain y los command handlers de Application; las otras capas se agregan cuando se escriban sus primeros tests. Complementa a `team-standards` y `code-comments`, que aplican igual en los tests.
 ---
 
 # Unit tests
@@ -8,10 +8,11 @@ description: Usar SIEMPRE al escribir, revisar o modificar unit tests en este re
 Cómo se escriben los tests de este repo. Los ejemplos salen de
 `Tests/Modules/Persons/Records.Persons.Domain.UnitTests/`: ante la duda, se imita ese proyecto.
 
-Es un documento vivo, igual que `team-standards`. **Hoy cubre solo la capa Domain** (la de los módulos y
-`BuildingBlocks.Domain`). Para otra capa (Application, validators, infra) todavía no hay un patrón
-acordado: no lo inventes. Frená, proponé cómo encararlo, y cuando el usuario lo apruebe, agregá acá la
-sección de esa capa.
+Es un documento vivo, igual que `team-standards`. **Hoy cubre la capa Domain** (la de los módulos y
+`BuildingBlocks.Domain`) **y los command handlers de Application** (ver
+[Command handlers](#command-handlers)). Para otra capa o tipo (query handlers, event handlers,
+mappers, validators, infra) todavía no hay un patrón acordado: no lo inventes. Frená, proponé cómo
+encararlo, y cuando el usuario lo apruebe, agregá acá la sección.
 
 ## Cuándo se escriben
 
@@ -34,7 +35,12 @@ como correcto. Con el código consensuado, los tests salen de lo acordado y no d
   `Src/Modules/Persons/Records.Persons.Domain` → `Tests/Modules/Persons/Records.Persons.Domain.UnitTests`.
 - Dentro del proyecto, cada clase de test va en la misma carpeta relativa que la clase testeada y se
   llama `<Clase>Tests`: `PersonAggregate/Models/Person.cs` → `PersonAggregate/Models/PersonTests.cs`.
-- Los object mothers van en la carpeta `TestData/` del proyecto.
+- Los object mothers de un módulo van en un proyecto compartido, `Tests/Modules/<Módulo>/Records.<Módulo>.TestData`
+  (clases `public static`), que referencian todos los proyectos de test del módulo: el mismo
+  `PersonMother` sirve para los tests del dominio y para los de Application. No lleva el sufijo
+  `.UnitTests`, así que `Tests/Directory.Build.props` lo deja como librería común (sin xUnit ni
+  `OutputType Exe`).
+- Los helpers y test doubles propios de un proyecto de test van en su carpeta `TestData/`.
 
 ### Proyecto de test nuevo
 
@@ -44,7 +50,10 @@ como correcto. Con el código consensuado, los tests salen de lo acordado y no d
    `TargetFramework`, `ImplicitUsings`, `Nullable` y el `ProjectReference` al proyecto testeado.
 2. No se declara `<ArchLayer>`: `Directory.Build.targets` infiere la capa `Test` por la carpeta
    `Tests/`.
-3. Se agrega a la solución en la carpeta espejo:
+3. No hace falta `InternalsVisibleTo`: el `Directory.Build.props` de la raíz expone los tipos
+   `internal` de cada proyecto a `<Proyecto>.UnitTests`, por convención de nombre. Por eso el nombre del
+   proyecto de test tiene que ser exactamente el del testeado con el sufijo `.UnitTests`.
+4. Se agrega a la solución en la carpeta espejo:
    `dotnet sln Records.slnx add <ruta>.csproj --solution-folder Tests/Modules/<Módulo>`.
 
 ## Qué se testea según el tipo
@@ -228,6 +237,53 @@ español en todos lados. Además:
 - Todo escenario que no se entiende con el nombre lleva un comentario en el `Arrange` o el `Assert`
   que explica el porqué, con ejemplos alineados si ayudan (ver
   `Update_WhenEditedDataHasNewAndExistingPersonalAssets_ShouldAddOnlyTheNewOnes`).
+
+## Command handlers
+
+Ver `Tests/Modules/Persons/Records.Persons.Application.UnitTests/Person/Commands/*`. Lo que se
+testea es el flujo del `CLAUDE.md`: cargar el aggregate, llamar al comportamiento,
+`ExecuteInTransaction`, publicar los eventos después del commit y sin `CancellationToken`.
+
+**Qué se mockea:** el `IUnitOfWork`, el `IDomainEventPublisher`, el repositorio, el servicio de
+dominio, el mapper y los settings. El aggregate va real, salido de `PersonMother`, y el DTO del command
+sale de `PersonDtoMother`.
+
+**El orden se verifica con callbacks, no con `MockSequence`.** `CommandHandlerTestContext`
+(`TestData/` del proyecto) arma el `IUnitOfWork` y el `IDomainEventPublisher` con callbacks que
+registran cada llamada en `Calls`, y guarda los eventos publicados y el token con el que se publicaron.
+Los mocks del repositorio y del servicio registran sus llamadas con `RecordCall(nameof(...))`. El
+`Assert` compara la lista:
+
+```csharp
+_context.Calls.Should().Equal(
+    nameof(IUnitOfWork.BeginTransactionAsync),
+    nameof(IPersonRepository.DeleteAsync),
+    nameof(IUnitOfWork.CommitAsync),
+    nameof(IDomainEventPublisher.Publish));
+```
+
+**Qué se testea en cada command handler:**
+
+| Escenario | Qué se verifica |
+|---|---|
+| El caso feliz | Que se persiste el aggregate correcto: el armado desde el DTO (Create) o el cargado por el servicio y actualizado (Update, Delete). |
+| Los eventos | Que el `Publish` va después del `CommitAsync`, con los eventos que registró el aggregate y con `CancellationToken.None`. |
+| La respuesta (si devuelve algo) | Que se relee la persona después del commit y se mapea esa, no la que se insertó. |
+| No existe | Que el `NotFound` se propaga (por `Error.Code`) y no se abre la transacción (`Calls` vacío). |
+| Falla la persistencia | Que se hace rollback, no hay commit y no se publica nada. |
+| Datos inválidos (Create, Update) | Que lanza `DomainValidationException` antes de abrir la transacción. |
+| Token | Que llega al servicio y al repositorio, y que con el token ya cancelado no se abre la transacción. |
+
+**Estructura de la clase:**
+
+- Los mocks y el `CommandHandlerTestContext` son fields. La configuración que comparten todos los tests
+  de la clase (p.ej. el `InsertAsync` que guarda el aggregate recibido) va en el constructor de la
+  clase de test: xUnit crea una instancia por test, así que no se comparte estado entre tests.
+- El handler se crea con un `CreateHandler()` privado, que se llama en el `Arrange` después de los
+  `Setup`.
+- Para que un mock devuelva valores distintos en llamadas sucesivas y además registre la llamada, se
+  usa una `Queue` con `ReturnsAsync(() => queue.Dequeue())`. `SetupSequence` no acepta `Callback`, y un
+  segundo `Setup` sobre la misma expresión reemplaza al primero.
 
 ## Cuando un test descubre algo raro
 

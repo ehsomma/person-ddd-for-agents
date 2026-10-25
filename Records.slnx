@@ -66,6 +66,8 @@
   </Folder>
   <Folder Name="/Tests/Modules/" />
   <Folder Name="/Tests/Modules/Persons/">
+    <Project Path="Tests/Modules/Persons/Records.Persons.Application.UnitTests/Records.Persons.Application.UnitTests.csproj" />
     <Project Path="Tests/Modules/Persons/Records.Persons.Domain.UnitTests/Records.Persons.Domain.UnitTests.csproj" />
+    <Project Path="Tests/Modules/Persons/Records.Persons.TestData/Records.Persons.TestData.csproj" />
   </Folder>
 </Solution>

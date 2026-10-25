@@ -6,7 +6,7 @@ using Records.Persons.Domain.PersonAggregate.Enumerators;
 using Records.Persons.Domain.PersonAggregate.Events;
 using Records.Persons.Domain.PersonAggregate.Models;
 using Records.Persons.Domain.PersonAggregate.ValueObjects;
-using Records.Persons.Domain.UnitTests.TestData;
+using Records.Persons.TestData;
 using Xunit;
 
 namespace Records.Persons.Domain.UnitTests.PersonAggregate.Models;

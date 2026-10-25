@@ -4,7 +4,7 @@ using Records.Persons.Domain.PersonAggregate.Models;
 using Records.Persons.Domain.PersonAggregate.ValueObjects;
 using Records.Persons.Domain.Shared.ValueObjects;
 
-namespace Records.Persons.Domain.UnitTests.TestData;
+namespace Records.Persons.TestData;
 
 /// <summary>
 /// Crea los objetos del aggregate de personas (<see cref="Person"/>) con datos válidos para los tests
@@ -16,7 +16,7 @@ namespace Records.Persons.Domain.UnitTests.TestData;
 /// usan <c>Load</c> (una persona ya guardada, tal como la devuelve el repositorio, sin eventos).
 /// </para>
 /// </summary>
-internal static class PersonMother
+public static class PersonMother
 {
     #region Declarations
 
