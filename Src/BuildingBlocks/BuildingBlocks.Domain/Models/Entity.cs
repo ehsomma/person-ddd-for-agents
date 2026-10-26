@@ -91,6 +91,16 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
             return false;
         }
 
+        // Una entidad transient (sin ID todavía) solo es igual a sí misma, y eso ya lo resolvió el
+        // ReferenceEquals de arriba. Si no, todas las entidades nuevas (ID 0) darían iguales entre sí:
+        //   Notebook (Id 0) == Celular (Id 0) → false ✓ (dos bienes nuevos distintos)
+        //   Notebook (Id 7) == Notebook (Id 7) → true  ✓ (la misma entidad, ya guardada)
+        // y un Contains, un Remove, un Distinct o un HashSet las trataría como una sola ⚠️.
+        if (IsTransient() || other.IsTransient())
+        {
+            return false;
+        }
+
         bool areEqual = Equals(other.Id, Id);
 
         return areEqual;
@@ -119,6 +129,12 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
             return false;
         }
 
+        // Mismo criterio que Equals(Entity<TId>): una entidad transient solo es igual a sí misma.
+        if (IsTransient() || other.IsTransient())
+        {
+            return false;
+        }
+
         return Equals(other.Id, Id);
     }
 
@@ -130,11 +146,31 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         //// ReSharper disable NonReadonlyMemberInGetHashCode
         if (!_requestedHashCode.HasValue)
         {
-            _requestedHashCode = Id!.GetHashCode() ^ 31; // XOR for random distribution (http://blogs.msdn.com/b/ericlippert/archive/2011/02/28/guidelines-and-rules-for-gethashcode.aspx)
+            // Una entidad transient usa el hash de la referencia (el de object), consistente con su
+            // Equals: si usara el del ID, todas las entidades nuevas caerían en el mismo bucket.
+            // Se puede cachear porque el Id es init y no cambia: después de guardar, la entidad no
+            // recibe el ID generado, se vuelve a leer (ver los handlers de Create y Update).
+            _requestedHashCode = IsTransient()
+                ? base.GetHashCode()
+                : Id!.GetHashCode() ^ 31; // XOR for random distribution (http://blogs.msdn.com/b/ericlippert/archive/2011/02/28/guidelines-and-rules-for-gethashcode.aspx)
         }
 
         return _requestedHashCode.Value;
         //// ReSharper restore NonReadonlyMemberInGetHashCode
+    }
+
+    /// <summary>
+    /// Indicates whether the entity is transient: it doesn't have an ID yet because it was just
+    /// created and hasn't been saved (e.g. a child entity with an IDENTITY ID, which is 0 until the
+    /// database generates it).
+    /// <para>A transient entity is only equal to itself.</para>
+    /// </summary>
+    /// <returns><see langword="true"/> if the ID is the default value of <typeparamref name="TId"/> (<c>0</c>, <see cref="Guid.Empty"/>).</returns>
+    public bool IsTransient()
+    {
+        bool isTransient = EqualityComparer<TId>.Default.Equals(Id, default);
+
+        return isTransient;
     }
 
     #endregion

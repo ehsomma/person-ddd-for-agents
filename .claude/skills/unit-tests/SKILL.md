@@ -370,7 +370,8 @@ public void Equals_WhenBothAreNewWithIdZero_ShouldBeEqual()
 ```
 
 Cuando el usuario decide, se cambia el código y el test pasa a esperar el comportamiento nuevo: se le
-saca el `TODO` (y si el nombre ya no describe el escenario, se renombra).
+saca el `TODO` (y si el nombre ya no describe el escenario, se renombra). Este ejemplo es un caso real
+que ya se resolvió así: hoy es `EntityTests.Equals_WhenBothAreTransient_ShouldNotBeEqualWithAnyOverload`.
 
 **Por qué:** encontrar estas cosas es para lo que sirven los tests. Si el agente las tapa ajustando el
 test, o las "arregla" sin consultar, la decisión de negocio la toma el agente sin que nadie se entere.

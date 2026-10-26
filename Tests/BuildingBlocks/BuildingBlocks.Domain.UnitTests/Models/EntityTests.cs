@@ -7,7 +7,8 @@ using Xunit;
 namespace BuildingBlocks.Domain.UnitTests.Models;
 
 /// <summary>
-/// Tests of the equality of the <see cref="Entity{TId}"/> base class (by ID, not by value).
+/// Tests of the equality of the <see cref="Entity{TId}"/> base class (by ID, not by value; a transient
+/// entity, without an ID yet, is only equal to itself).
 /// </summary>
 public sealed class EntityTests
 {
@@ -82,23 +83,91 @@ public sealed class EntityTests
     }
 
     [Fact]
-    public void Equals_WhenBothAreNewWithIdZero_ShouldBeEqual()
+    public void Equals_WhenBothAreTransient_ShouldNotBeEqualWithAnyOverload()
     {
         // Arrange.
-        // TODO: Las entidades hijas nuevas tienen ID 0 hasta que se guardan, así que dos entidades
-        // nuevas distintas (dos bienes personales que se agregan juntos) son "iguales". Hoy no rompe
-        // nada porque el dominio no las compara (Person.Update filtra por Id == 0), pero un
-        // Contains, un Distinct o un HashSet las trataría como una sola. Hay que decidir si una
-        // entidad sin ID (transient) solo es igual a sí misma; si se decide, este test pasa a esperar
-        // false.
+        // Las entidades hijas nuevas tienen ID 0 hasta que se guardan: dos entidades nuevas distintas
+        // (dos bienes personales que se agregan juntos) no son la misma entidad aunque compartan el
+        // ID 0.
         TestEntity entity = new TestEntity(0);
         TestEntity otherEntity = new TestEntity(0);
 
         // Act.
-        bool areEqual = entity == otherEntity;
+        bool areEqualAsObjects = entity.Equals((object)otherEntity);
+        bool areEqualAsEntities = entity == otherEntity;
+
+        // Assert.
+        areEqualAsObjects.Should().BeFalse();
+        areEqualAsEntities.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Equals_WhenTransientIsComparedWithItself_ShouldBeEqual()
+    {
+        // Arrange.
+        TestEntity entity = new TestEntity(0);
+        TestEntity sameEntity = entity;
+
+        // Act.
+        bool areEqual = entity == sameEntity;
 
         // Assert.
         areEqual.Should().BeTrue();
+    }
+
+    [Fact]
+    public void GetHashCode_WhenTwoTransientEntitiesAreAddedToAHashSet_ShouldKeepBoth()
+    {
+        // Arrange.
+        // El hash de una entidad transient es el de la referencia, consistente con su Equals: si
+        // fuera el del ID, el HashSet las trataría como una sola.
+        HashSet<TestEntity> entities = new HashSet<TestEntity>();
+
+        // Act.
+        entities.Add(new TestEntity(0));
+        entities.Add(new TestEntity(0));
+
+        // Assert.
+        entities.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public void IsTransient_WhenIntIdIsZero_ShouldBeTrue()
+    {
+        // Arrange.
+        TestEntity entity = new TestEntity(0);
+
+        // Act.
+        bool isTransient = entity.IsTransient();
+
+        // Assert.
+        isTransient.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsTransient_WhenGuidIdIsEmpty_ShouldBeTrue()
+    {
+        // Arrange.
+        TestAggregate aggregate = new TestAggregate(Guid.Empty);
+
+        // Act.
+        bool isTransient = aggregate.IsTransient();
+
+        // Assert.
+        isTransient.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsTransient_WhenIdIsAssigned_ShouldBeFalse()
+    {
+        // Arrange.
+        TestEntity entity = new TestEntity(7);
+
+        // Act.
+        bool isTransient = entity.IsTransient();
+
+        // Assert.
+        isTransient.Should().BeFalse();
     }
 
     #endregion
