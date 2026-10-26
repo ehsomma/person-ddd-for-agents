@@ -121,6 +121,12 @@ cuentan, porque en runtime no existen.
 4. **API:**
    - El validator, si hay body (imitá `PersonValidator`): las longitudes replican las de los value
      objects.
+     - **Un solo validator por DTO**, aunque lo usen varios endpoints (Create y Update comparten
+       `PersonValidator`). Dos `IValidator<Dto.Person>` registrados chocan en el contenedor de DI.
+     - El endpoint valida con `ValidateAndThrowExeption` (la extensión del repo), **nunca con el
+       `ValidateAndThrow()` de FluentValidation**. La nuestra lanza `My.Exceptions.ValidationException`,
+       que `GlobalExceptionHandler` convierte en un 400 con los `validationErrors`. La de FluentValidation
+       lanza su propia `ValidationException`, que el handler no reconoce, y el request termina en 500.
    - El endpoint (imitá `DeletePersonEndpoint` o `UpdatePersonEndpoint`), con el orden de parámetros, los
      atributos `[From...]` y los XML docs de `team-standards` y `code-comments`. Declará con
      `.Produces<ErrorResponse>(...)` y su `<response code>` solo los códigos propios del endpoint (por

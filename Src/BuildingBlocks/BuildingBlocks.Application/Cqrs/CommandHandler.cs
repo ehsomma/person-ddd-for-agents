@@ -67,6 +67,12 @@ public abstract class CommandHandler<TCommand, TResponse> : RequestHandler<TComm
     /// (e.g. inside the lambda). A cancellation during the operation rolls back, but the commit is never
     /// cancelled: if the operation succeeds, it's always committed.
     /// </para>
+    /// <para>
+    /// Every write goes inside this call, and it's called once per command. Nested calls throw (a second
+    /// transaction can't begin on the same connection), and two consecutive calls are two independent
+    /// transactions: if the second fails, the first is already committed. To write several things
+    /// atomically, pass a single <see langword="async"/> lambda that does all of them.
+    /// </para>
     /// </remarks>
     /// <param name="operation">The persistence operation to execute (e.g. <c>() => _repository.InsertAsync(entity, cancellationToken)</c>).</param>
     /// <param name="cancellationToken">Optional cancellation token.</param>

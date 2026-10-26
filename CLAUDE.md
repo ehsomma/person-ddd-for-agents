@@ -57,6 +57,10 @@ Estas son cosas que un agente suele hacer por costumbre y que **acá no se hacen
   una reserva), es un dato del command que viaja en el body. Si es identidad técnica del cliente, sale de la
   autenticación (`client_id`) cuando exista. No se crea un contexto del llamador (`ICallerContext`, `ICurrentUser`)
   hasta que exista un caso de uso que lo consuma.
+- **El dominio no lee configuración:** no referencia `*.Configuration` (da `ARCH002`). Una regla de negocio
+  parametrizable se modela en el dominio (un argumento, un value object o un puerto `I...Policy`), y Application le
+  pasa el valor que lee de `IOptions<...Settings>`. Los settings son un contrato con el `appsettings.json`, no con el
+  negocio.
 - **IDs:** `Guid` en los agregados, sin strongly-typed IDs. Las entidades hijas usan `int`, y `0` significa nueva.
 - **Validación en dos niveles:** FluentValidation en la API y las invariantes en el dominio. Los value objects tienen
   constructor privado y se crean con `static Build(...)`, que valida con la librería `Throw`.
@@ -162,24 +166,10 @@ registra y el build no avisa. El detalle está en `new-usecase`.
 
 - **Commits:** siempre con la skill `git-commit`. Son Conventional Commits en español, se muestra el mensaje y se
   espera confirmación antes de ejecutar, y no llevan trailers.
-- **Handoffs:** van en `Docs/handoff/` y **solo se crean o actualizan cuando el usuario corre `/handoff`**. No los
-  actualices por tu cuenta ni los pongas como paso de un plan. Para retomar una tarea se usa `/handoff-resume <nombre>`.
-- Antes de tocar un área, leé su handoff. Ahí están las decisiones y el porqué.
-
-| Handoff | Qué decisión registra |
-|---|---|
-| `architecture-build-validation` | La matriz de capas validada por MSBuild y la ubicación de las abstracciones de persistencia. |
-| `person-repository` | Dapper con data models y mapper manual, y `ExecuteInTransaction`. |
-| `queries` | El read side: query repositories que devuelven DTOs y `NOLOCK`. |
-| `usecase-delete-person` | Cargar el agregado completo, y el flujo de un command con eventos. |
-| `domain-event-handlers` | `DomainEventHandler<T>` y `DomainMessage<T>`. |
-| `fluentvalidation-on-api` | La validación en la API y en el dominio, y el `ErrorResponse` único. |
-| `mapeo-errores-statuscode` | El `ErrorType` como única fuente del status HTTP. |
-| `api-xml-comments` | Los XML docs de los endpoints en Scalar y las respuestas comunes. |
-| `editorconfig-vs-teamStandars` | Las reglas IDE en el build (`EnforceCodeStyleInBuild`), sin sufijos de severidad, y el skill alineado con el `.editorconfig`. |
-| `cancelationtoken-solo-hasta-commit` | El `CancellationToken` hasta el repositorio en el write side, respetado solo hasta el commit, y los eventos sin token. |
-| `connection-refactor` | La conexión de `DbSession` abierta de forma lazy y async, y el `IUnitOfWork` async (SqlClient no tiene transacciones async reales). |
-| `domain-events-sin-mediatr` | **Obsoleto**: el diseño inicial, reemplazado por `BuildingBlocks.Mediator`. |
+- **Handoffs:** sirven para pasar una sesión de una PC a otra. Van en `Docs/handoff/` y **solo se crean o
+  actualizan cuando el usuario corre `/handoff`**. No los actualices por tu cuenta ni los pongas como paso de un
+  plan. Para retomar una tarea se usa `/handoff-resume <nombre>`. No se leen por iniciativa propia: son fotos de un
+  momento, y las decisiones vigentes están en este archivo, en las skills y en el código.
 
 ## Usar este repo como plantilla en otro proyecto
 
