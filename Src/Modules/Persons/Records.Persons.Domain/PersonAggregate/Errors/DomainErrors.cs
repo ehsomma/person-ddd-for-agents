@@ -25,10 +25,6 @@ public static class DomainErrors
         public static Error NotFound =>
             new Error("ERR.PERSON.NOTFOUND", "Person not found.", ErrorType.NotFound);
 
-        /// <summary>Cuando el país de la dirección de la persona no es válido.</summary>
-        public static Error InvalidCountry =>
-            new Error("ERR.PERSON.INVALIDCOUNTRY", "Country not found, invalid.", ErrorType.Forbidden);
-
         #endregion
     }
 }
